@@ -5,7 +5,7 @@ class AppConstants {
   static const String isProfileCompletedKey = 'is_profile_completed';
 
   // Default Values
-  static const String defaultLanguage = 'ar';
+  static const String defaultLanguage = 'en';
   static const String defaultThemeMode = 'system';
 
   // Animation Durations

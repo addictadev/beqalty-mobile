@@ -76,4 +76,13 @@ class AppColors {
     colors: [homeGradientBlue, homeGradientCyan, homeGradientWhite],
     stops: [0.0, 0.48, 1.0],
   );
+
+  // Welcome screen colors
+  static const Color welcomeBackground = Color(0xFFF8F5FF);
+  static const Color welcomeTextPrimary = Color(0xFF424242);
+  static const Color welcomeTextSecondary = Color(0xFF666666);
+  static const Color characterSkinTone = Color(0xFFFFE0B2);
+  static const Color characterShirt = Color(0xFF1976D2);
+  static const Color characterApron = Color(0xFFE53935);
+  static const Color characterHalo = Color(0xFFFFF8E1);
 }

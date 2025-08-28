@@ -272,7 +272,7 @@ class AppTheme {
   }
 
   // Legacy light theme for backward compatibility
-  static ThemeData get lightTheme => createTheme('ar');
+  static ThemeData get lightTheme => createTheme('en');
 
   // Dark Theme (if needed in the future)
   static ThemeData darkTheme = createTheme('ar').copyWith(

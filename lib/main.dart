@@ -19,8 +19,8 @@ Future<void> main() async {
 
       await LocalizeAndTranslate.init(
         assetLoader: const AssetLoaderRootBundleJson('assets/translations/'),
-        supportedLocales: const [Locale('ar'), Locale('en')],
-        defaultType: LocalizationDefaultType.asDefined,
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        defaultType: LocalizationDefaultType.device,
       );
 
       await ServiceLocator.initialize();
@@ -34,7 +34,7 @@ Future<void> main() async {
         languageToSet = deviceLocale.languageCode;
 
         if (languageToSet != 'ar' && languageToSet != 'en') {
-          languageToSet = 'ar';
+          languageToSet = 'en';
         }
       } else {
         languageToSet = savedLanguage;
