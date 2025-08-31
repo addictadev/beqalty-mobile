@@ -21,5 +21,10 @@
   "forgot_password_title": "نسيت كلمة المرور؟",
   "forgot_password_description": "لا تقلق! يحدث ذلك. يرجى إدخال عنوان البريد الإلكتروني المرتبط بحسابك.",
   "send_code": "إرسال الرمز",
-  "remember_password": "تذكرت كلمة المرور؟ "
+  "remember_password": "تذكرت كلمة المرور؟ ",
+  "hello": "مرحباً،",
+  "good_morning": "صباح الخير",
+  "search_products": "البحث عن المنتجات",
+  "free_delivery_title": "توصيل مجاني على طلبك الأول!",
+  "place_order": "اطلب الآن"
 }

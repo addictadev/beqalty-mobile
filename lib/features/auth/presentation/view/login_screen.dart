@@ -5,6 +5,7 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
@@ -72,7 +73,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       SizedBox(height: 32),
 
-                      PrimaryButton(text: "login".tr(), onPressed: () {}),
+                      PrimaryButton(
+                        text: "login".tr(),
+                        onPressed: () {
+                          NavigationManager.navigateTo(HomeView());
+                        },
+                      ),
 
                       SizedBox(height: 40),
                     ],

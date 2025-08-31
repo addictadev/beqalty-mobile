@@ -12,4 +12,5 @@ class AppAssets {
   static const String splashIcon = "$_imagesPath/splash_icon.svg";
   static const String authBackground = "$_imagesPath/auth_background.png";
   static const String authLoginBackground = "$_imagesPath/auth_welcome.svg";
+  static const String shoppingBag = "$_iconsPath/cart_icon.svg";
 }

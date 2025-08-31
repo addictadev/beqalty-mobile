@@ -21,5 +21,10 @@
   "forgot_password_title": "Forgot Password?",
   "forgot_password_description": "Don't worry! It occurs. Please enter the email address linked with your account.",
   "send_code": "Send Code",
-  "remember_password": "Remember Password? "
+  "remember_password": "Remember Password? ",
+  "hello": "Hello,",
+  "good_morning": "good Morning",
+  "search_products": "Search Products",
+  "free_delivery_title": "Free Delivery on Your First Order!",
+  "place_order": "Place Order"
 }
