@@ -10,6 +10,7 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
+import '../widgets/auth_background_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -46,9 +47,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.loginBackground,
-      body: SafeArea(
+    return AuthBackgroundWidget(
+      backgroundHeight: 200,
+      overlayOpacity: 0.15,
+      child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
           child: Column(
@@ -217,68 +219,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-}
-
-class FoodPatternPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.foodDoodleColor
-      ..style = PaintingStyle.fill;
-
-    _drawPizzaSlice(canvas, Offset(size.width * 0.8, size.height * 0.1), paint);
-    _drawStrawberry(canvas, Offset(size.width * 0.9, size.height * 0.2), paint);
-    _drawBurger(canvas, Offset(size.width * 0.7, size.height * 0.15), paint);
-    _drawCheese(canvas, Offset(size.width * 0.85, size.height * 0.25), paint);
-    _drawDonut(canvas, Offset(size.width * 0.75, size.height * 0.3), paint);
-    _drawBroccoli(canvas, Offset(size.width * 0.95, size.height * 0.35), paint);
-  }
-
-  void _drawPizzaSlice(Canvas canvas, Offset center, Paint paint) {
-    final path = Path();
-    path.moveTo(center.dx, center.dy);
-    path.lineTo(center.dx + 8, center.dy - 8);
-    path.lineTo(center.dx + 12, center.dy);
-    path.close();
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawStrawberry(Canvas canvas, Offset center, Paint paint) {
-    canvas.drawCircle(center, 6, paint);
-
-    final seedPaint = Paint()..color = AppColors.white;
-    canvas.drawCircle(Offset(center.dx - 2, center.dy - 2), 1, seedPaint);
-    canvas.drawCircle(Offset(center.dx + 2, center.dy + 1), 1, seedPaint);
-  }
-
-  void _drawBurger(Canvas canvas, Offset center, Paint paint) {
-    final rect = RRect.fromRectAndRadius(
-      Rect.fromCenter(center: center, width: 16, height: 8),
-      Radius.circular(2),
-    );
-    canvas.drawRRect(rect, paint);
-  }
-
-  void _drawCheese(Canvas canvas, Offset center, Paint paint) {
-    final path = Path();
-    path.moveTo(center.dx - 6, center.dy);
-    path.lineTo(center.dx + 6, center.dy - 4);
-    path.lineTo(center.dx + 6, center.dy + 4);
-    path.close();
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawDonut(Canvas canvas, Offset center, Paint paint) {
-    canvas.drawCircle(center, 8, paint);
-    canvas.drawCircle(center, 4, Paint()..color = AppColors.loginBackground);
-  }
-
-  void _drawBroccoli(Canvas canvas, Offset center, Paint paint) {
-    canvas.drawCircle(center, 6, paint);
-    canvas.drawCircle(Offset(center.dx - 3, center.dy - 3), 3, paint);
-    canvas.drawCircle(Offset(center.dx + 3, center.dy - 2), 3, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
