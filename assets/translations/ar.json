@@ -17,5 +17,9 @@
   "confirm_password": "تأكيد كلمة المرور",
   "register": "تسجيل",
   "already_have_account": "لديك حساب بالفعل؟ ",
-  "login_now": "سجل دخول الآن"
+  "login_now": "سجل دخول الآن",
+  "forgot_password_title": "نسيت كلمة المرور؟",
+  "forgot_password_description": "لا تقلق! يحدث ذلك. يرجى إدخال عنوان البريد الإلكتروني المرتبط بحسابك.",
+  "send_code": "إرسال الرمز",
+  "remember_password": "تذكرت كلمة المرور؟ "
 }

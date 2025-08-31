@@ -17,5 +17,9 @@
   "confirm_password": "Confirm Password",
   "register": "Register",
   "already_have_account": "Already have an account? ",
-  "login_now": "Login Now"
+  "login_now": "Login Now",
+  "forgot_password_title": "Forgot Password?",
+  "forgot_password_description": "Don't worry! It occurs. Please enter the email address linked with your account.",
+  "send_code": "Send Code",
+  "remember_password": "Remember Password? "
 }

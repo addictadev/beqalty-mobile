@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'register_screen.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -136,14 +137,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildForgotPasswordLink() {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          NavigationManager.navigateTo(ForgotPasswordScreen());
+        },
         child: Text(
           "forgot_password".tr(),
           style: GoogleFonts.robotoFlex(
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
+            color: AppColors.textSecondary,
+            decoration: TextDecoration.underline,
           ),
         ),
       ),
