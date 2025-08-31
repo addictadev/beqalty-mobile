@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
-import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
+import 'package:baqalty/features/onboarding/presentation/view/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
 
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Timer(const Duration(seconds: 3), () {
-      NavigationManager.navigateToAndFinish(LoginScreen());
+      NavigationManager.navigateToAndFinish(OnboardingScreen());
     });
   }
 

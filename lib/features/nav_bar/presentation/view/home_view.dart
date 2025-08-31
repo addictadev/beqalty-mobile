@@ -4,6 +4,7 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import '../widget/home_header.dart';
 import '../widget/promotional_slider.dart';
+import '../widget/shop_by_category_section.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -49,6 +50,18 @@ class HomeView extends StatelessWidget {
                       height: 120,
                       onCardTap: () {
                         // Handle promotional card tap
+                      },
+                    ),
+
+                    SizedBox(height: 32),
+
+                    // Shop by Category Section
+                    ShopByCategorySection(
+                      onViewAllTap: () {
+                        // Handle view all categories tap
+                      },
+                      onCategoryTap: () {
+                        // Handle category tap
                       },
                     ),
 

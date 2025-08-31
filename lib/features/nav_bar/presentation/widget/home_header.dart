@@ -110,24 +110,14 @@ class HomeHeader extends StatelessWidget {
             ),
 
             Positioned(
-              top: 8,
-              right: 10,
+              top: 10,
+              right: 8,
               child: Container(
-                width: context.responsiveIconSize / 2,
-                height: context.responsiveIconSize / 2,
+                width: context.responsiveIconSize / 4,
+                height: context.responsiveIconSize / 4,
                 decoration: BoxDecoration(
                   color: AppColors.error,
                   shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    "1",
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                    ),
-                  ),
                 ),
               ),
             ),

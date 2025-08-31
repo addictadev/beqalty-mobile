@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:baqalty/core/theme/app_colors.dart';
 import 'promotional_card.dart';
 
 class PromotionalSlider extends StatefulWidget {
@@ -38,9 +37,8 @@ class _PromotionalSliderState extends State<PromotionalSlider> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Slider
         SizedBox(
-          height: widget.height,
+          height: widget.height * 1.2,
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -63,30 +61,7 @@ class _PromotionalSliderState extends State<PromotionalSlider> {
         ),
 
         SizedBox(height: 16),
-
-        // Page indicators
-        if (widget.cards.length > 1) _buildPageIndicators(),
       ],
-    );
-  }
-
-  Widget _buildPageIndicators() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        widget.cards.length,
-        (index) => Container(
-          margin: EdgeInsets.symmetric(horizontal: 4),
-          width: _currentPage == index ? 24 : 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: _currentPage == index
-                ? AppColors.primary
-                : AppColors.borderLight,
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-      ),
     );
   }
 }
