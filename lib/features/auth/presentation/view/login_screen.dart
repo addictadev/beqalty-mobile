@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildForgotPasswordLink() {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: () {
           NavigationManager.navigateTo(ForgotPasswordScreen());
