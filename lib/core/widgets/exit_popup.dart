@@ -8,7 +8,6 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
-
 class ExitPopUp extends StatefulWidget {
   const ExitPopUp({super.key});
 
@@ -99,8 +98,8 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
     final double dialogWidth = context.isMobile
         ? MediaQuery.of(context).size.width * 0.85
         : context.isTablet
-            ? 400
-            : 450;
+        ? 400
+        : 450;
 
     final double iconSize = context.responsiveIconSize * 2.5;
     final double borderRadius = context.responsiveBorderRadius * 2;
@@ -108,9 +107,7 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
 
     return Container(
       width: dialogWidth,
-      margin: EdgeInsets.symmetric(
-        horizontal: context.responsivePadding,
-      ),
+      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(borderRadius),
@@ -194,23 +191,21 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
           child: _buildCancelButton(context, buttonHeight, borderRadius),
         ),
         SizedBox(width: spacing),
-        Expanded(
-          child: _buildExitButton(context, buttonHeight, borderRadius),
-        ),
+        Expanded(child: _buildExitButton(context, buttonHeight, borderRadius)),
       ],
     );
   }
 
   Widget _buildCancelButton(
-      BuildContext context, double height, double borderRadius) {
+    BuildContext context,
+    double height,
+    double borderRadius,
+  ) {
     return Container(
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: AppColors.primary,
-          width: 1.5,
-        ),
+        border: Border.all(color: AppColors.primary, width: 1.5),
       ),
       child: Material(
         color: Colors.transparent,
@@ -234,7 +229,10 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
   }
 
   Widget _buildExitButton(
-      BuildContext context, double height, double borderRadius) {
+    BuildContext context,
+    double height,
+    double borderRadius,
+  ) {
     return Container(
       height: height,
       decoration: BoxDecoration(

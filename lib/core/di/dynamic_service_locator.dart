@@ -76,7 +76,8 @@ class DynamicServiceLocator {
       return _getIt<T>(instanceName: name);
     } catch (e) {
       throw ServiceNotFoundException(
-          'Service of type $T with name "$name" is not registered');
+        'Service of type $T with name "$name" is not registered',
+      );
     }
   }
 

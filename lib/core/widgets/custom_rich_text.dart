@@ -87,7 +87,8 @@ class WelcomeText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = textStyle ??
+    final style =
+        textStyle ??
         GoogleFonts.robotoFlex(
           fontSize: 28,
           fontWeight: FontWeight.w700,

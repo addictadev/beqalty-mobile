@@ -48,11 +48,15 @@ class AppColors {
   // Login screen specific colors
   static const Color loginButtonColor = Color(0xFF424242); // Dark grey button
   static const Color loginBackground = Color(0xFFF8F9FA); // Light background
-  static const Color foodDoodleColor = Color(0xFFE0E0E0); // Light grey for food doodles
+  static const Color foodDoodleColor = Color(
+    0xFFE0E0E0,
+  ); // Light grey for food doodles
   static const Color characterShirtColor = Color(0xFF1976D2); // Dark blue shirt
   static const Color characterApronColor = Color(0xFFE53935); // Red apron
   static const Color characterSkinColor = Color(0xFFFFE0B2); // Skin tone
-  static const Color backButtonColor = Color(0xFFE0E0E0); // Light grey back button
+  static const Color backButtonColor = Color(
+    0xFFE0E0E0,
+  ); // Light grey back button
 
   // Gradient colors
   static const LinearGradient primaryGradient = LinearGradient(

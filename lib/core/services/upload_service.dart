@@ -15,7 +15,7 @@ class UploadService {
     'bmp',
     'webp',
     'tiff',
-    'tif'
+    'tif',
   ];
 
   static const List<String> _supportedFileExtensions = [
@@ -36,7 +36,7 @@ class UploadService {
     'rar',
     '7z',
     'tar',
-    'gz'
+    'gz',
   ];
 
   static const int _maxImageSize = 10 * 1024 * 1024;
@@ -66,10 +66,7 @@ class UploadService {
       }
       return null;
     } catch (e) {
-      ToastHelper.showErrorToast(
-        'camera_error'.tr(),
-        title: 'error'.tr(),
-      );
+      ToastHelper.showErrorToast('camera_error'.tr(), title: 'error'.tr());
       return null;
     }
   }
@@ -98,10 +95,7 @@ class UploadService {
       }
       return null;
     } catch (e) {
-      ToastHelper.showErrorToast(
-        'gallery_error'.tr(),
-        title: 'error'.tr(),
-      );
+      ToastHelper.showErrorToast('gallery_error'.tr(), title: 'error'.tr());
       return null;
     }
   }
@@ -121,7 +115,7 @@ class UploadService {
         type: FileType.custom,
         allowedExtensions: [
           ..._supportedImageExtensions,
-          ..._supportedFileExtensions
+          ..._supportedFileExtensions,
         ],
         allowMultiple: false,
       );
@@ -132,10 +126,7 @@ class UploadService {
       }
       return null;
     } catch (e) {
-      ToastHelper.showErrorToast(
-        'file_picker_error'.tr(),
-        title: 'error'.tr(),
-      );
+      ToastHelper.showErrorToast('file_picker_error'.tr(), title: 'error'.tr());
       return null;
     }
   }

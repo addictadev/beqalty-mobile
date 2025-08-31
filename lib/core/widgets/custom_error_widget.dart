@@ -58,7 +58,8 @@ class CustomErrorWidget extends StatelessWidget {
             if (showRetryButton && onRetry != null)
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: context.responsivePadding * 6),
+                  horizontal: context.responsivePadding * 6,
+                ),
                 child: PrimaryButton(
                   onPressed: onRetry,
                   text: retryText ?? 'retry'.tr(),
@@ -115,7 +116,8 @@ class CompactErrorWidget extends StatelessWidget {
                 const SizedBox(height: 12),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: context.responsivePadding * 6),
+                    horizontal: context.responsivePadding * 6,
+                  ),
                   child: PrimaryButton(
                     onPressed: onRetry,
                     text: 'retry'.tr(),

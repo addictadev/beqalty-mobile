@@ -1,4 +1,3 @@
-import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:sizer/sizer.dart';
 import '../widgets/auth_background_widget.dart';
 import 'password_changed_screen.dart';
 
@@ -16,12 +14,14 @@ class CreateNewPasswordScreen extends StatefulWidget {
   const CreateNewPasswordScreen({super.key});
 
   @override
-  State<CreateNewPasswordScreen> createState() => _CreateNewPasswordScreenState();
+  State<CreateNewPasswordScreen> createState() =>
+      _CreateNewPasswordScreenState();
 }
 
 class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordValid = false;
   bool _isConfirmPasswordValid = false;
@@ -139,8 +139,9 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         setState(() {
           _isPasswordValid = value.length >= 8;
           // Also check confirm password when password changes
-          _isConfirmPasswordValid = _confirmPasswordController.text.isNotEmpty && 
-                                   _confirmPasswordController.text == value;
+          _isConfirmPasswordValid =
+              _confirmPasswordController.text.isNotEmpty &&
+              _confirmPasswordController.text == value;
         });
       },
     );
@@ -164,7 +165,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       },
       onChanged: (value) {
         setState(() {
-          _isConfirmPasswordValid = value == _passwordController.text && value.isNotEmpty;
+          _isConfirmPasswordValid =
+              value == _passwordController.text && value.isNotEmpty;
         });
       },
     );
@@ -187,23 +189,17 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       SnackBar(
         content: Text(
           "password_reset_success".tr(),
-          style: GoogleFonts.robotoFlex(
-            color: AppColors.white,
-          ),
+          style: GoogleFonts.robotoFlex(color: AppColors.white),
         ),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
-    
+
     // Navigate to password changed success screen
     Future.delayed(const Duration(seconds: 1), () {
       NavigationManager.navigateToAndFinish(PasswordChangedScreen());
     });
   }
-
-
 }

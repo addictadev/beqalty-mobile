@@ -3,9 +3,7 @@ import 'dart:developer';
 
 class SecureStorageService {
   static const FlutterSecureStorage _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
     webOptions: WebOptions(
       dbName: 'secure_storage',
       publicKey: 'secure_storage_key',

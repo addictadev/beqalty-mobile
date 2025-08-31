@@ -22,8 +22,9 @@ class CustomSvgImage extends StatelessWidget {
         assetName,
         width: width,
         height: height,
-        colorFilter:
-            color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        colorFilter: color != null
+            ? ColorFilter.mode(color!, BlendMode.srcIn)
+            : null,
         placeholderBuilder: (context) => Icon(
           Icons.help_outline,
           size: width ?? height ?? 24,

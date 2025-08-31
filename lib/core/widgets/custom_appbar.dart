@@ -1,7 +1,6 @@
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../utils/responsive_utils.dart';
 import '../images_preview/app_assets.dart';
 import '../images_preview/custom_asset_img.dart';
 import 'package:sizer/sizer.dart';

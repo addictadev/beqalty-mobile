@@ -58,10 +58,7 @@ class CustomDropdownField extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-            border: Border.all(
-              color: AppColors.borderLight,
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.borderLight, width: 1),
           ),
           child: DropdownButtonFormField<String>(
             decoration: InputDecoration(
@@ -81,7 +78,8 @@ class CustomDropdownField extends StatelessWidget {
                 ),
                 color: AppColors.textTertiary,
               ),
-              suffixIcon: suffixIcon ??
+              suffixIcon:
+                  suffixIcon ??
                   Icon(
                     Icons.keyboard_arrow_down,
                     color: AppColors.primary,

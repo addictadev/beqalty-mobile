@@ -42,11 +42,7 @@ class CustomBackButton extends StatelessWidget {
           ],
         ),
         child: Center(
-          child: Icon(
-            ic,
-            color: icColor,
-            size: buttonSize * 0.4,
-          ),
+          child: Icon(ic, color: icColor, size: buttonSize * 0.4),
         ),
       ),
     );

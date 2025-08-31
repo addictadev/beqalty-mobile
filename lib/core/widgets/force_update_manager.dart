@@ -18,7 +18,8 @@ class ForceUpdateManager {
       BuildContext context,
       VoidCallback onUpdateNow,
       VoidCallback? onSkip,
-    )? customUpdateDialog,
+    )?
+    customUpdateDialog,
   }) : _customUpdateDialog = customUpdateDialog;
 
   String _installedVersion = "";
@@ -34,7 +35,8 @@ class ForceUpdateManager {
     BuildContext context,
     VoidCallback onUpdateNow,
     VoidCallback? onSkip,
-  )? _customUpdateDialog;
+  )?
+  _customUpdateDialog;
 
   // Add a flag to prevent multiple dialog displays
   bool _isDialogShowing = false;
@@ -122,7 +124,9 @@ class ForceUpdateManager {
           final Map<String, dynamic> entry = results.first;
           final String storeVersion = entry['version'];
 
-          log('Store version: $storeVersion, Installed version: $_installedVersion');
+          log(
+            'Store version: $storeVersion, Installed version: $_installedVersion',
+          );
 
           if (_isUpdateRequired(_installedVersion, storeVersion) &&
               context.mounted) {
@@ -132,7 +136,9 @@ class ForceUpdateManager {
           log('No app information found in iTunes API response');
         }
       } else {
-        log('Failed to get app information from iTunes. Status code: ${response.statusCode}');
+        log(
+          'Failed to get app information from iTunes. Status code: ${response.statusCode}',
+        );
       }
     } catch (e) {
       log('Error checking for iOS update: $e', error: e);
@@ -140,11 +146,14 @@ class ForceUpdateManager {
   }
 
   bool _isUpdateRequired(String currentVersion, String storeVersion) {
-    final int installedVersionNumber =
-        _getExtendedVersionNumber(currentVersion);
+    final int installedVersionNumber = _getExtendedVersionNumber(
+      currentVersion,
+    );
     final int storeVersionNumber = _getExtendedVersionNumber(storeVersion);
 
-    log('Comparing versions: $currentVersion ($installedVersionNumber) vs $storeVersion ($storeVersionNumber)');
+    log(
+      'Comparing versions: $currentVersion ($installedVersionNumber) vs $storeVersion ($storeVersionNumber)',
+    );
 
     return storeVersionNumber > installedVersionNumber;
   }
@@ -172,38 +181,40 @@ class ForceUpdateManager {
 
     if (_customUpdateDialog != null) {
       showCupertinoDialog(
-          barrierDismissible: !isMandatoryUpdate,
-          context: context,
-          builder: (BuildContext dialogContext) {
-            // Create callbacks that handle navigation properly
-            void onUpdateNow() {
-              // Close dialog first, then open store
+        barrierDismissible: !isMandatoryUpdate,
+        context: context,
+        builder: (BuildContext dialogContext) {
+          // Create callbacks that handle navigation properly
+          void onUpdateNow() {
+            // Close dialog first, then open store
+            Navigator.of(dialogContext).pop();
+            _openAppStore();
+          }
+
+          void onSkip() {
+            if (!isMandatoryUpdate) {
               Navigator.of(dialogContext).pop();
-              _openAppStore();
             }
+          }
 
-            void onSkip() {
-              if (!isMandatoryUpdate) {
-                Navigator.of(dialogContext).pop();
-              }
-            }
-
-            return _customUpdateDialog(
-              dialogContext,
-              onUpdateNow,
-              isMandatoryUpdate ? null : onSkip,
-            );
-          }).then((_) {
+          return _customUpdateDialog(
+            dialogContext,
+            onUpdateNow,
+            isMandatoryUpdate ? null : onSkip,
+          );
+        },
+      ).then((_) {
         // Reset flag when dialog is closed
         _isDialogShowing = false;
       });
     } else {
       showCupertinoDialog(
-          barrierDismissible: !isMandatoryUpdate,
-          context: context,
-          builder: (BuildContext dialogContext) {
-            return _buildDefaultUpdateDialog(dialogContext);
-          }).then((_) {
+        barrierDismissible: !isMandatoryUpdate,
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return _buildDefaultUpdateDialog(dialogContext);
+        },
+      ).then((_) {
         // Reset flag when dialog is closed
         _isDialogShowing = false;
       });
@@ -215,7 +226,8 @@ class ForceUpdateManager {
       canPop: isMandatoryUpdate ? false : true,
       child: AlertDialog(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        ),
         title: const Text(
           'Update Available',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -274,10 +286,7 @@ class ForceUpdateManager {
       // Check if the URL can be launched before attempting
       if (await canLaunchUrl(uri)) {
         log('✅ URL can be launched, opening store...');
-        await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
         log('✅ Store opened successfully');
       } else {
         log('❌ Cannot launch primary URL, trying fallback...');
@@ -311,10 +320,7 @@ class ForceUpdateManager {
 
       if (await canLaunchUrl(fallbackUri)) {
         log('✅ Fallback URL can be launched, opening web store...');
-        await launchUrl(
-          fallbackUri,
-          mode: LaunchMode.externalApplication,
-        );
+        await launchUrl(fallbackUri, mode: LaunchMode.externalApplication);
         log('✅ Web store opened successfully');
       } else {
         log('❌ Cannot launch fallback URL either');

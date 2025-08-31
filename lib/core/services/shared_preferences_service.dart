@@ -100,7 +100,8 @@ class SharedPreferencesService {
   }
 
   String getLanguage() {
-    return _preferences!.getString(_languageKey) ?? AppConstants.defaultLanguage;
+    return _preferences!.getString(_languageKey) ??
+        AppConstants.defaultLanguage;
   }
 
   // Theme Methods

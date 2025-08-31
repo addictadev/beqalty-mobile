@@ -48,15 +48,16 @@ class _CustomOtpFieldState extends State<CustomOtpField> {
       widget.length,
       (index) => TextEditingController(),
     );
-    _focusNodes = List.generate(
-      widget.length,
-      (index) => FocusNode(),
-    );
+    _focusNodes = List.generate(widget.length, (index) => FocusNode());
     _otpValues = List.filled(widget.length, '');
 
     // Set initial values if provided
     if (widget.initialValue != null) {
-      for (int i = 0; i < widget.initialValue!.length && i < widget.length; i++) {
+      for (
+        int i = 0;
+        i < widget.initialValue!.length && i < widget.length;
+        i++
+      ) {
         _controllers[i].text = widget.initialValue![i];
         _otpValues[i] = widget.initialValue![i];
       }
@@ -112,10 +113,7 @@ class _CustomOtpFieldState extends State<CustomOtpField> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        widget.length,
-        (index) => _buildOtpBox(index),
-      ),
+      children: List.generate(widget.length, (index) => _buildOtpBox(index)),
     );
   }
 
@@ -140,7 +138,8 @@ class _CustomOtpFieldState extends State<CustomOtpField> {
             FilteringTextInputFormatter.digitsOnly,
             LengthLimitingTextInputFormatter(1),
           ],
-          style: widget.textStyle ??
+          style:
+              widget.textStyle ??
               const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,

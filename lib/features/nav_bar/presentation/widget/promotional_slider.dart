@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
-import 'package:sizer/sizer.dart';
 import 'promotional_card.dart';
 
 class PromotionalSlider extends StatefulWidget {

@@ -94,7 +94,8 @@ class CustomImageNetWork extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image)),
+      errorBuilder: (context, error, stackTrace) =>
+          const Center(child: Icon(Icons.image)),
     );
 
     if (color != null) {

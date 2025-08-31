@@ -28,21 +28,13 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
     _animationController.forward();
   }
@@ -72,7 +64,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
           children: [
             // Confetti-like background shapes
             ..._buildConfettiShapes(),
-            
+
             // Main content
             SafeArea(
               child: Center(
@@ -208,15 +200,11 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
               color: AppColors.success,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.check,
-              color: AppColors.white,
-              size: 40,
-            ),
+            child: const Icon(Icons.check, color: AppColors.white, size: 40),
           ),
-          
+
           SizedBox(height: 4.h),
-          
+
           // Title
           Text(
             "password_changed".tr(),
@@ -228,9 +216,9 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           SizedBox(height: 2.h),
-          
+
           // Description
           Text(
             "password_changed_success".tr(),
@@ -242,9 +230,9 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           SizedBox(height: 5.h),
-          
+
           // Back to login button
           PrimaryButton(
             text: "back_to_login".tr(),

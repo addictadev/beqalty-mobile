@@ -4,7 +4,8 @@ import '../theme/app_colors.dart';
 import '../utils/responsive_utils.dart';
 
 /// A custom app bar that integrates background image into the app bar shape
-class CustomAppBarWithBackground extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarWithBackground extends StatelessWidget
+    implements PreferredSizeWidget {
   final String? title;
   final VoidCallback? onBackPressed;
   final List<Widget>? actions;
@@ -76,9 +77,15 @@ class CustomAppBarWithBackground extends StatelessWidget implements PreferredSiz
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              (overlayColor ?? AppColors.black).withValues(alpha: overlayOpacity),
-              (overlayColor ?? AppColors.black).withValues(alpha: overlayOpacity * 0.7),
-              (overlayColor ?? AppColors.black).withValues(alpha: overlayOpacity * 0.5),
+              (overlayColor ?? AppColors.black).withValues(
+                alpha: overlayOpacity,
+              ),
+              (overlayColor ?? AppColors.black).withValues(
+                alpha: overlayOpacity * 0.7,
+              ),
+              (overlayColor ?? AppColors.black).withValues(
+                alpha: overlayOpacity * 0.5,
+              ),
             ],
           ),
         ),
@@ -100,18 +107,14 @@ class CustomAppBarWithBackground extends StatelessWidget implements PreferredSiz
                   SizedBox(width: 4.w),
                   Expanded(
                     child: centerTitle
-                        ? Center(
-                            child: titleWidget ?? _buildTitle(context),
-                          )
+                        ? Center(child: titleWidget ?? _buildTitle(context))
                         : titleWidget ?? _buildTitle(context),
                   ),
                 ] else
                   const Spacer(),
 
                 // Actions
-                if (actions != null) ...[
-                  ...actions!,
-                ],
+                if (actions != null) ...[...actions!],
               ],
             ),
           ),
@@ -159,12 +162,14 @@ class CustomAppBarWithBackground extends StatelessWidget implements PreferredSiz
       title!,
       style: ResponsiveUtils.getResponsiveTextStyle(
         context,
-        fontSize: titleFontSize ?? ResponsiveUtils.getResponsiveFontSize(
-          context,
-          mobile: 20,
-          tablet: 22,
-          desktop: 24,
-        ),
+        fontSize:
+            titleFontSize ??
+            ResponsiveUtils.getResponsiveFontSize(
+              context,
+              mobile: 20,
+              tablet: 22,
+              desktop: 24,
+            ),
         fontWeight: titleFontWeight ?? FontWeight.w600,
         color: titleColor ?? AppColors.white,
       ),

@@ -39,7 +39,10 @@ class AuthBackgroundWidget extends StatelessWidget {
                   image: AssetImage(AppAssets.authBackground),
                   fit: backgroundFit,
                   alignment: Alignment.bottomCenter,
-                  colorFilter: ColorFilter.mode(AppColors.primary.withOpacity(overlayOpacity), BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                    AppColors.primary.withOpacity(overlayOpacity),
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
               // child: Container(

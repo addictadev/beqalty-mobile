@@ -50,8 +50,9 @@ class BorderedButton extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(borderRadius),
           splashColor: (borderColor ?? AppColors.white).withValues(alpha: 0.1),
-          highlightColor:
-              (borderColor ?? AppColors.white).withValues(alpha: 0.05),
+          highlightColor: (borderColor ?? AppColors.white).withValues(
+            alpha: 0.05,
+          ),
           onTap: loading ? null : onPressed,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -71,15 +72,19 @@ class BorderedButton extends StatelessWidget {
                     children: [
                       Text(
                         text,
-                        style: textStyle ??
+                        style:
+                            textStyle ??
                             theme.textTheme.labelLarge?.copyWith(
                               color: textColor ?? AppColors.white,
                               fontWeight: FontWeight.w600,
                               fontSize: 18,
                             ),
                       ),
-                      Icon(Icons.arrow_forward_ios,
-                          color: AppColors.primary, size: 16),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppColors.primary,
+                        size: 16,
+                      ),
                     ],
                   ),
           ),

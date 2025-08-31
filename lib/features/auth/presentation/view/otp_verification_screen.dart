@@ -1,4 +1,3 @@
-import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
@@ -118,18 +117,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       context: context,
       controller: _otpController,
       length: 4,
-              onChanged: (value) {
-          setState(() {
-            _otpCode = value;
-            _isOtpComplete = value.length == 4;
-          });
-        },
-        oncomplete: (value) {
-          setState(() {
-            _otpCode = value;
-            _isOtpComplete = true;
-          });
-        },
+      onChanged: (value) {
+        setState(() {
+          _otpCode = value;
+          _isOtpComplete = value.length == 4;
+        });
+      },
+      oncomplete: (value) {
+        setState(() {
+          _otpCode = value;
+          _isOtpComplete = true;
+        });
+      },
     );
   }
 
@@ -166,10 +165,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget _buildVerifyButton() {
     return PrimaryButton(
       text: "verify".tr(),
-      onPressed: _isOtpComplete ? () {
-        // Handle OTP verification logic
-        _handleOtpVerification();
-      } : null,
+      onPressed: _isOtpComplete
+          ? () {
+              // Handle OTP verification logic
+              _handleOtpVerification();
+            }
+          : null,
     );
   }
 
@@ -186,18 +187,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         ),
         content: Text(
           "resend_code_description".tr(),
-          style: GoogleFonts.robotoFlex(
-            color: AppColors.textSecondary,
-          ),
+          style: GoogleFonts.robotoFlex(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               "cancel".tr(),
-              style: GoogleFonts.robotoFlex(
-                color: AppColors.textSecondary,
-              ),
+              style: GoogleFonts.robotoFlex(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -224,38 +221,30 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       SnackBar(
         content: Text(
           "verification_code_sent".tr(),
-          style: GoogleFonts.robotoFlex(
-            color: AppColors.white,
-          ),
+          style: GoogleFonts.robotoFlex(color: AppColors.white),
         ),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
 
-      void _handleOtpVerification() {
+  void _handleOtpVerification() {
     // Simulate OTP verification
     if (_otpCode == "5131") {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-                  content: Text(
-          "otp_verified_success".tr(),
-          style: GoogleFonts.robotoFlex(
-            color: AppColors.white,
+          content: Text(
+            "otp_verified_success".tr(),
+            style: GoogleFonts.robotoFlex(color: AppColors.white),
           ),
-        ),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
-      
+
       // Navigate to create new password screen
       Future.delayed(const Duration(seconds: 1), () {
         NavigationManager.navigateTo(CreateNewPasswordScreen());
@@ -263,17 +252,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-                  content: Text(
-          "invalid_otp_code".tr(),
-          style: GoogleFonts.robotoFlex(
-            color: AppColors.white,
+          content: Text(
+            "invalid_otp_code".tr(),
+            style: GoogleFonts.robotoFlex(color: AppColors.white),
           ),
-        ),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
     }

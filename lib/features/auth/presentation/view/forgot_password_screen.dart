@@ -1,4 +1,3 @@
-import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';

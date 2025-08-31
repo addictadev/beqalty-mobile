@@ -8,11 +8,13 @@ class NavigationManager {
     Print.green('Navigating to => $screen');
 
     if (replace) {
-      return navigatorKey.currentState
-          ?.pushReplacement(FadePageRoute<T>(builder: (_) => screen));
+      return navigatorKey.currentState?.pushReplacement(
+        FadePageRoute<T>(builder: (_) => screen),
+      );
     } else {
-      return navigatorKey.currentState
-          ?.push<T>(FadePageRoute<T>(builder: (_) => screen));
+      return navigatorKey.currentState?.push<T>(
+        FadePageRoute<T>(builder: (_) => screen),
+      );
     }
   }
 
@@ -41,22 +43,19 @@ class FadePageRoute<T> extends PageRouteBuilder<T> {
   final WidgetBuilder builder;
 
   FadePageRoute({required this.builder})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              builder(context),
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        );
+    : super(
+        pageBuilder:
+            (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+            ) => builder(context),
+        transitionsBuilder:
+            (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,
+            ) => FadeTransition(opacity: animation, child: child),
+      );
 }

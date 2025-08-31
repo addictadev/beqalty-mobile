@@ -3,11 +3,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../theme/app_colors.dart';
 
 class CustomUpdateDialog extends StatelessWidget {
-  const CustomUpdateDialog({
-    super.key,
-    required this.onUpdateNow,
-    this.onSkip,
-  });
+  const CustomUpdateDialog({super.key, required this.onUpdateNow, this.onSkip});
 
   final VoidCallback onUpdateNow;
   final VoidCallback? onSkip;
@@ -67,7 +63,9 @@ class CustomUpdateDialog extends StatelessWidget {
                         child: Text(
                           'skip'.tr(),
                           style: const TextStyle(
-                              fontSize: 16, color: AppColors.primary),
+                            fontSize: 16,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -85,8 +83,10 @@ class CustomUpdateDialog extends StatelessWidget {
                       ),
                       child: Text(
                         'update_now'.tr(),
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.white),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

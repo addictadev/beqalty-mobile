@@ -6,7 +6,6 @@ enum ServiceTypeEnum {
   realEstate, // Company - العقاري
   attestations, // Company - التوثيقات
   legalTranslation, // Company - الترجمة القانونية
-
   // Individual Services
   inheritanceDistribution, // Individual - خدمة توزيع الإرث
   inheritanceServices, // Individual - خدمة التركات
