@@ -1,3 +1,4 @@
+import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utils/responsive_utils.dart';
@@ -88,7 +89,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (title != null) {
       return Text(
         title!,
-        style: titleStyle ??
+        style:
+            titleStyle ??
             theme.textTheme.titleLarge?.copyWith(
               color: defaultTitleColor,
               fontWeight: FontWeight.w600,
@@ -120,24 +122,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildBackButton(BuildContext context, Color defaultIconColor) {
-    return GestureDetector(
-      onTap: onBackPressed ?? () => Navigator.of(context).pop(),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Container(
-          width: context.responsiveIconSize + 10,
-          height: context.responsiveIconSize + 10,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Icon(
-            Icons.arrow_back_ios_outlined,
-            color: defaultIconColor,
-            size: 16,
-          ),
-        ),
-      ),
+    return CustomBackButton(
+      backgroundColor: AppColors.backButtonColor,
+      iconColor: AppColors.black,
+      icon: Icons.chevron_left,
+      size: 40,
     );
   }
 

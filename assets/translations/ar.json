@@ -3,5 +3,19 @@
   "welcome_back": "مرحباً بعودتك!",
   "glad_to_see_you": "سعيد برؤيتك،",
   "again": "مرة أخرى!",
-  "back": "رجوع"
+  "back": "رجوع",
+  "phone_number": "رقم الهاتف",
+  "password": "كلمة المرور",
+  "forgot_password": "نسيت كلمة المرور؟",
+  "login": "تسجيل الدخول",
+  "dont_have_account": "ليس لديك حساب؟ ",
+  "register_now": "سجل الآن",
+  "hello_register": "مرحباً! سجل",
+  "to_get_started": "للبدء",
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "confirm_password": "تأكيد كلمة المرور",
+  "register": "تسجيل",
+  "already_have_account": "لديك حساب بالفعل؟ ",
+  "login_now": "سجل دخول الآن"
 }

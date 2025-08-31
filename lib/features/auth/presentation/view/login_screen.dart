@@ -1,11 +1,17 @@
-import 'package:baqalty/core/images_preview/custom_asset_img.dart';
-import 'package:baqalty/features/auth/presentation/widgets/customed_image_appbar.dart';
-import 'package:flutter/material.dart';
-import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/utils/responsive_utils.dart';
+import 'package:baqalty/core/widgets/custom_back_button.dart';
+import 'package:baqalty/core/widgets/custom_textform_field.dart';
+import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,66 +25,156 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body: CustomScrollView(
-        slivers: [
-          CustomImageAppBar(
-            backgroundImagePath: AppAssets.authBackground,
-            expandedHeight: 200.0,
-          ),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 16),
+
+              CustomBackButton(
+                iconColor: AppColors.black,
+                icon: Icons.chevron_left,
+                size: 40,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomImageAsset(
-                        assetName: AppAssets.appIcon,
-                        width: 50.w,
-                        height: 50.w,
+                      SizedBox(height: 20),
+
+                      _buildWelcomeSection(),
+
+                      SizedBox(height: 40),
+
+                      CustomTextFormField(
+                        label: "phone_number".tr(),
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              style:
-                                  LocalizeAndTranslate.getLanguageCode() == 'ar'
-                                  ? GoogleFonts.cairo(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.black,
-                                      height: 1.2,
-                                      fontStyle: FontStyle.italic,
-                                    )
-                                  : GoogleFonts.robotoFlex(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.black,
-                                      height: 1.2,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                              children: [
-                                TextSpan(text: "welcome_back".tr()),
-                                const TextSpan(text: "\n"),
-                                TextSpan(text: "glad_to_see_you".tr()),
-                                const TextSpan(text: "\n"),
-                                TextSpan(text: "again".tr()),
-                              ],
-                            ),
-                          ),
-                        ],
+
+                      SizedBox(height: 20),
+
+                      CustomTextFormField(
+                        label: "password".tr(),
+                        obscureText: true,
+                        showVisibilityToggle: true,
+                        textInputAction: TextInputAction.done,
                       ),
+
+                      SizedBox(height: 16),
+
+                      _buildForgotPasswordLink(),
+
+                      SizedBox(height: 32),
+
+                      PrimaryButton(text: "login".tr(), onPressed: () {}),
+
+                      SizedBox(height: 40),
                     ],
                   ),
+                ),
+              ),
+
+              _buildRegisterLink(),
+
+              SizedBox(height: 5.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CustomSvgImage(
+          assetName: AppAssets.authLoginBackground,
+          width: 30.w,
+          height: 30.w,
+        ),
+        SizedBox(width: 10.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                style: LocalizeAndTranslate.getLanguageCode() == 'ar'
+                    ? GoogleFonts.cairo(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                        height: 1.2,
+                        fontStyle: FontStyle.italic,
+                      )
+                    : GoogleFonts.robotoFlex(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                        height: 1.2,
+                        fontStyle: FontStyle.italic,
+                      ),
+                children: [
+                  TextSpan(text: "welcome_back".tr()),
+                  const TextSpan(text: "\n"),
+                  TextSpan(text: "glad_to_see_you".tr()),
+                  const TextSpan(text: "\n"),
+                  TextSpan(text: "again".tr()),
                 ],
               ),
             ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildForgotPasswordLink() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: GestureDetector(
+        onTap: () {},
+        child: Text(
+          "forgot_password".tr(),
+          style: GoogleFonts.robotoFlex(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterLink() {
+    return Center(
+      child: RichText(
+        text: TextSpan(
+          style: GoogleFonts.robotoFlex(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textSecondary,
+          ),
+          children: [
+            TextSpan(text: "dont_have_account".tr()),
+            TextSpan(
+              text: "register_now".tr(),
+              style: GoogleFonts.robotoFlex(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  NavigationManager.navigateTo(RegisterScreen());
+                },
+            ),
+          ],
+        ),
       ),
     );
   }

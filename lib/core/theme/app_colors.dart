@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Existing colors
-  static const Color primary = Color(0xFF1195F7);
+  static const Color primary = Color(0xFF2D3043);
   static const Color primaryLight = Color(0xFF44AAFD);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
@@ -44,6 +44,15 @@ class AppColors {
   static const Color chatSpecialButton = Color(0xFFADD8E6);
   static const Color chatCircularButton = Color(0xFFE0E0E0);
   static const Color messagebackColor = Color(0xFF060C32);
+
+  // Login screen specific colors
+  static const Color loginButtonColor = Color(0xFF424242); // Dark grey button
+  static const Color loginBackground = Color(0xFFF8F9FA); // Light background
+  static const Color foodDoodleColor = Color(0xFFE0E0E0); // Light grey for food doodles
+  static const Color characterShirtColor = Color(0xFF1976D2); // Dark blue shirt
+  static const Color characterApronColor = Color(0xFFE53935); // Red apron
+  static const Color characterSkinColor = Color(0xFFFFE0B2); // Skin tone
+  static const Color backButtonColor = Color(0xFFE0E0E0); // Light grey back button
 
   // Gradient colors
   static const LinearGradient primaryGradient = LinearGradient(
