@@ -2,6 +2,7 @@ import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
+import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
@@ -12,6 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'register_screen.dart';
+import 'forgot_password_screen.dart';
+import '../widgets/auth_background_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,14 +26,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
+    return AuthBackgroundWidget(
+      backgroundHeight: 200,
+      overlayOpacity: 0.15,
+      child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
               SizedBox(height: 16),
 
@@ -138,12 +141,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Align(
       alignment: Alignment.centerLeft,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          NavigationManager.navigateTo(ForgotPasswordScreen());
+        },
         child: Text(
           "forgot_password".tr(),
           style: GoogleFonts.robotoFlex(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+            fontSize: FontSizes.s14,
+            color: AppColors.primary,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
