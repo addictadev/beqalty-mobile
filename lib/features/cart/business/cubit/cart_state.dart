@@ -17,6 +17,7 @@ class CartLoaded extends CartState {
   final double deliveryFee;
   final double discount;
   final double total;
+  final bool isCartSaved;
 
   const CartLoaded({
     required this.cartItems,
@@ -24,10 +25,11 @@ class CartLoaded extends CartState {
     required this.deliveryFee,
     required this.discount,
     required this.total,
+    required this.isCartSaved,
   });
 
   @override
-  List<Object> get props => [cartItems, subTotal, deliveryFee, discount, total];
+  List<Object> get props => [cartItems, subTotal, deliveryFee, discount, total, isCartSaved];
 }
 
 class CartError extends CartState {
