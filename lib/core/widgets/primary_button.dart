@@ -14,12 +14,14 @@ class PrimaryButton extends StatelessWidget {
   final bool isLoading;
   final Widget? loadingWidget;
   final bool showIcon;
+  final EdgeInsets? margin;
 
   const PrimaryButton({
     super.key,
     required this.text,
     this.onPressed,
     this.icon,
+    this.margin,
     this.color,
     this.borderRadius = 30,
     this.textStyle,
@@ -36,6 +38,7 @@ class PrimaryButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
+      margin: margin ?? EdgeInsets.zero,
       width: width ?? double.infinity,
       height: height ?? 56,
       decoration: BoxDecoration(

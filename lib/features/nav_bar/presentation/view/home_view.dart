@@ -40,47 +40,50 @@ class HomeView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                   horizontal: context.responsivePadding,
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 24),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: context.responsiveMargin * 1.5),
 
-                    // Promotional Slider
-                    PromotionalSlider(
-                      cards: promotionalCards,
-                      height: 120,
-                      onCardTap: () {
-                        // Handle promotional card tap
-                      },
-                    ),
+                      // Promotional Slider
+                      PromotionalSlider(
+                        cards: promotionalCards,
+                        height: context.responsiveContainerHeight * 0.6,
+                        onCardTap: () {
+                          // Handle promotional card tap
+                        },
+                      ),
 
-                    SizedBox(height: 32),
+                      SizedBox(height: context.responsiveMargin * 2),
 
-                    // Shop by Category Section
-                    ShopByCategorySection(
-                      onViewAllTap: () {
-                        // Handle view all categories tap
-                      },
-                      onCategoryTap: () {
-                        // Handle category tap
-                      },
-                    ),
+                      // Shop by Category Section
+                      ShopByCategorySection(
+                        onViewAllTap: () {
+                          // Handle view all categories tap
+                        },
+                        onCategoryTap: () {
+                          // Handle category tap
+                        },
+                      ),
 
-                    SizedBox(height: 32),
+                      SizedBox(height: context.responsiveMargin * 2),
 
-                    // Placeholder for other content
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Other Home Content',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textPrimary,
+                      // Placeholder for other content
+                      SizedBox(
+                        height: context.responsiveContainerHeight * 0.3,
+                        child: Center(
+                          child: Text(
+                            'Other Home Content',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

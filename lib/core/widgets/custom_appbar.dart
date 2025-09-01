@@ -122,10 +122,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildBackButton(BuildContext context, Color defaultIconColor) {
     return CustomBackButton(
-      backgroundColor: AppColors.backButtonColor,
-      iconColor: AppColors.black,
       icon: Icons.chevron_left,
-      size: 40,
+      size: 30,
     );
   }
 

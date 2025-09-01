@@ -14,6 +14,7 @@ class AppColors {
   static const Color textPrimary = Color(0xFF1A1A1A);
   static const Color textSecondary = Color(0xFF6C757D);
   static const Color textLight = Color(0xFF9CA3AF);
+  static const Color bgProfile = Color(0xFFE9E9FF);
   // Extended colors for forms and UI
   static const Color scaffoldBackground = Color(0xFFF5F7FF);
   static const Color scaffoldColor = Color(0xFFF8F9FA);

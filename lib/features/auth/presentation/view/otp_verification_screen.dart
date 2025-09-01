@@ -79,7 +79,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   Widget _buildBackButton() {
     return CustomBackButton(
-      iconColor: AppColors.black,
       icon: Icons.chevron_left,
       size: 40,
     );

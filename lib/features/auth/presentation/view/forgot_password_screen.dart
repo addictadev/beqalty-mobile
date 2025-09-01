@@ -80,7 +80,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget _buildBackButton() {
     return CustomBackButton(
-      iconColor: AppColors.black,
       icon: Icons.chevron_left,
       size: 40,
     );

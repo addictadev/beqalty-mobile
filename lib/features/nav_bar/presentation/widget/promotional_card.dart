@@ -21,7 +21,10 @@ class PromotionalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.responsiveContainerHeight * 2,
+      constraints: BoxConstraints(
+        minHeight: 100,
+        maxHeight: context.responsiveContainerHeight * 1.8,
+      ),
       margin: EdgeInsets.symmetric(horizontal: context.responsivePadding / 2),
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -69,23 +72,28 @@ class PromotionalCard extends StatelessWidget {
   Widget _buildContentSection() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Center(
+        Flexible(
           child: Text(
             title ?? "free_delivery_title".tr(),
-            textAlign: TextAlign.start,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w700,
               color: AppColors.white,
               height: 1.2,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        SizedBox(height: 16),
+        SizedBox(height: 12),
 
-        _buildPlaceOrderButton(),
+        Flexible(
+          child: _buildPlaceOrderButton(),
+        ),
       ],
     );
   }
@@ -94,7 +102,7 @@ class PromotionalCard extends StatelessWidget {
     return GestureDetector(
       onTap: onPlaceOrderTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(20),
@@ -106,6 +114,7 @@ class PromotionalCard extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: AppColors.primary,
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
