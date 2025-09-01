@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/app_assets.dart' show AppAssets;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'product_card.dart';
@@ -17,32 +18,32 @@ class SpecialOffersSection extends StatelessWidget {
     final products = [
       ProductData(
         name: "Juhayna Yogurt Plain",
-        image: "assets/images/small_patern.png", // Using existing placeholder
+        image: AppAssets.juhaynaCoconutMilk, // Using existing placeholder
         currentPrice: 12.25,
         originalPrice: 14.0,
       ),
       ProductData(
-        name: "Juhayna Yogurt Strawberry",
-        image: "assets/images/small_patern.png", // Using existing placeholder
+        name: "Al Marai Milk",
+        image: AppAssets.alMaraiMilk, // Using existing placeholder
         currentPrice: 13.50,
         originalPrice: 15.0,
       ),
       ProductData(
-        name: "Juhayna Yogurt Vanilla",
-        image: "assets/images/small_patern.png", // Using existing placeholder
+        name: "Chocolate Milk",
+        image: AppAssets.chocolateMilk, // Using existing placeholder
         currentPrice: 11.75,
         originalPrice: 13.5,
       ),
       ProductData(
-        name: "Juhayna Yogurt Mango",
-        image: "assets/images/small_patern.png", // Using existing placeholder
+        name: "Juhayna Yogurt",
+        image: AppAssets.alMaraiMilk, // Using existing placeholder
         currentPrice: 12.00,
         originalPrice: 14.0,
       ),
     ];
 
     return SizedBox(
-      height: context.responsiveContainerHeight * 0.6,
+      height: context.responsiveContainerHeight * 0.55,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
