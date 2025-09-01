@@ -503,14 +503,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       children: [
         // Add to Cart Button
       
-       Row(children: [
+       Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
         Text(
-            "253".tr(),
-            style: TextStyles.textViewBold18.copyWith(
+            "253",
+            style: TextStyles.textViewBold20.copyWith(
               color: Colors.green,
             ),
           ),
-          Text('EGP'.tr(), style: TextStyles.textViewBold18.copyWith(color: AppColors.textPrimary),),
+          Text('EGP', style: TextStyles.textViewBold16.copyWith(color: Colors.green),),
        ]),
       
         PrimaryButton(
@@ -541,14 +543,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         SizedBox(height: context.responsiveMargin),
         
                   SizedBox(
-            height: context.responsiveContainerHeight * 0.6,
+            height: context.responsiveContainerHeight * 1.1, // Made bigger as requested
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemCount: 3,
             itemBuilder: (context, index) {
               return Container(
-                width: context.responsiveWidth * 0.4,
+                width: context.responsiveWidth * 0.42,
                 margin: EdgeInsets.only(right: context.responsiveMargin),
                 decoration: BoxDecoration(
                   color: AppColors.white,
@@ -566,17 +568,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ],
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min, // Fix overflow
                   children: [
                     // Product Image
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding: EdgeInsets.all(context.responsivePadding),
-                        child: Stack(
-                          children: [
-                            ClipRRect(
+                       ClipRRect(
                               borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
                               child: Image.asset(
+                                height: 13.h,
                                 AppAssets.juhaynaCoconutMilk, // Placeholder image
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
@@ -591,65 +589,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 },
                               ),
                             ),
-                            // Product badges
-                            Positioned(
-                              top: 4,
-                              right: 4,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  "natural_100".tr(),
-                                  style: TextStyles.textViewRegular8.copyWith(
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 4,
-                              left: 4,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white.withValues(alpha: 0.9),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  "net_weight".tr(),
-                                  style: TextStyles.textViewRegular8.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    
                     
                     // Product Info
-                    Expanded(
-                      flex: 1,
+                    Flexible( // Changed from Expanded to Flexible to prevent overflow
                       child: Padding(
                         padding: EdgeInsets.all(context.responsivePadding),
                         child: Column(
+                          mainAxisSize: MainAxisSize.min, // Fix overflow
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "juhayna_yogurt_plain".tr(),
-                              style: TextStyles.textViewMedium12.copyWith(
+                              style: TextStyles.textViewMedium14.copyWith(
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -657,23 +609,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             
-                            SizedBox(height: context.responsiveMargin * 0.3),
-                            
-                            // Product details
-                            Text(
-                              "natural_yogurt".tr(),
-                              style: TextStyles.textViewRegular10.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                       
                             
                             SizedBox(height: context.responsiveMargin * 0.3),
                             
                             Text(
                               "12.25 ${"egp".tr()}",
-                              style: TextStyles.textViewBold14.copyWith(
+                              style: TextStyles.textViewBold16.copyWith(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w700,
                               ),
