@@ -1,3 +1,6 @@
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
+import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -5,6 +8,7 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -13,10 +17,8 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: CustomAppBar(
-        title: "Settings",
-        backgroundColor: AppColors.white,
+        title: "settings".tr(),
         titleColor: AppColors.textPrimary,
         iconColor: AppColors.textPrimary,
         leading: CustomBackButton(
@@ -27,14 +29,15 @@ class SettingsScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(context.responsivePadding),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // General Section
-              _buildSectionHeader(context, "General"),
+              _buildSectionHeader(context, "general".tr()),
               SizedBox(height: context.responsiveMargin),
               
               _buildSettingsItem(
                 context,
-                title: "Reset Password",
+                title: "reset_password".tr(),
                 onTap: () {
                   debugPrint('Reset Password tapped');
                 },
@@ -42,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
               
               _buildSettingsItem(
                 context,
-                title: "Notifications",
+                title: "notifications".tr(),
                 onTap: () {
                   debugPrint('Notifications tapped');
                 },
@@ -50,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
               
               _buildSettingsItem(
                 context,
-                title: "Language",
+                title: "language".tr(),
                 onTap: () {
                   debugPrint('Language tapped');
                 },
@@ -58,7 +61,7 @@ class SettingsScreen extends StatelessWidget {
               
               _buildSettingsItem(
                 context,
-                title: "Delete Account",
+                title: "delete_account".tr(),
                 onTap: () {
                   debugPrint('Delete Account tapped');
                 },
@@ -69,13 +72,13 @@ class SettingsScreen extends StatelessWidget {
               SizedBox(height: context.responsiveMargin * 2),
               
               // Security Section
-              _buildSectionHeader(context, "Security"),
+              _buildSectionHeader(context, "security".tr()),
               SizedBox(height: context.responsiveMargin),
               
               _buildSettingsItem(
                 context,
-                title: "Privacy Policy",
-                subtitle: "what data you share with us?",
+                title: "privacy_policy".tr(),
+                subtitle: "privacy_policy_sub".tr(),
                 onTap: () {
                   debugPrint('Privacy Policy tapped');
                 },
@@ -85,29 +88,27 @@ class SettingsScreen extends StatelessWidget {
               
               // Logout Button
               PrimaryButton(
-                text: "Logout",
+                
+                text: "logout".tr(),
                 onPressed: () {
                   // Show confirmation dialog
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
                       return AlertDialog(
-                        title: Text('Logout'),
-                        content: Text('Are you sure you want to logout?'),
+                        title: Text('logout_confirm_title'.tr()),
+                        content: Text('logout_confirm_body'.tr()),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(dialogContext).pop(),
-                            child: Text('Cancel'),
+                            child: Text('cancel'.tr()),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                              // Handle logout logic
-                              debugPrint('Logout confirmed');
-                              Navigator.of(context).pop(); // Go back to profile
+                            NavigationManager.navigateToAndFinish(LoginScreen());
                             },
                             child: Text(
-                              'Logout',
+                              'logout'.tr(),
                               style: TextStyle(color: AppColors.error),
                             ),
                           ),
@@ -116,7 +117,7 @@ class SettingsScreen extends StatelessWidget {
                     },
                   );
                 },
-                color: AppColors.white,
+                color: Colors.transparent,
                 textStyle: TextStyles.textViewMedium16.copyWith(
                   color: AppColors.error,
                 ),
@@ -129,11 +130,12 @@ class SettingsScreen extends StatelessWidget {
               Center(
                 child: Text(
                   "Baqalty © 2025 v1.0",
-                  style: TextStyles.textViewRegular12.copyWith(
+                  style: TextStyles.textViewRegular14.copyWith(
                     color: AppColors.textSecondary,
                   ),
                 ),
-              ),
+              ),              SizedBox(height: context.responsiveMargin * 2),
+
             ],
           ),
         ),
@@ -146,8 +148,9 @@ class SettingsScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: context.responsiveMargin),
       child: Text(
         title,
-        style: TextStyles.textViewBold16.copyWith(
-          color: AppColors.primary,
+        style: TextStyles.textViewSemiBold16.copyWith(
+          color: AppColors.textLight,
+          fontSize: FontSizes.s16,
         ),
       ),
     );
@@ -171,12 +174,11 @@ class SettingsScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(context.responsivePadding),
             decoration: BoxDecoration(
-              color: AppColors.white,
               borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-              border: Border.all(
-                color: AppColors.borderLight,
-                width: 1,
-              ),
+              // border: Border.all(
+              //   color: AppColors.borderLight,
+              //   width: 1,
+              // ),
             ),
             child: Row(
               children: [
@@ -206,7 +208,7 @@ class SettingsScreen extends StatelessWidget {
                   Icon(
                     Icons.chevron_right,
                     color: AppColors.textSecondary,
-                    size: context.responsiveIconSize * 0.8,
+                    size: context.responsiveIconSize * 1.0,
                   ),
               ],
             ),

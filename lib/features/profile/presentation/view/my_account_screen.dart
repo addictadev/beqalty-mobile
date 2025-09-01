@@ -34,7 +34,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "My Account",
+        title: "my_account".tr(),
         titleColor: AppColors.textPrimary,
         iconColor: AppColors.textPrimary,
         leading: CustomBackButton(
@@ -106,12 +106,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 // Input Fields
                 CustomTextFormField(
                   controller: _nameController,
-                  label: "Name",
-                  hint: "Enter your name",
+                  label: "name".tr(),
+                  hint: "enter_your_name".tr(),
                   prefixIcon: Icon(Icons.person_outline),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
+                      return 'please_enter_name'.tr();
                     }
                     return null;
                   },
@@ -121,13 +121,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 
                 CustomTextFormField(
                   controller: _phoneController,
-                  label: "Phone Number",
-                  hint: "Enter your phone number",
+                  label: "phone_number".tr(),
+                  hint: "enter_your_phone".tr(),
                   prefixIcon: Icon(Icons.phone_outlined),
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
+                      return 'please_enter_phone'.tr();
                     }
                     return null;
                   },
@@ -137,7 +137,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 
                 // Save Button
                 PrimaryButton(
-                  text: "Save".tr(),
+                  text: "save".tr(),
                   margin: EdgeInsets.only(bottom: 2.h),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

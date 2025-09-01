@@ -6,6 +6,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import '../profile_widgets/profile_menu_item.dart';
 
@@ -34,17 +35,17 @@ class ProfileScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Profile",
+                          "profile".tr(),
                           style: TextStyles.textViewBold16.copyWith(
                             color: AppColors.white,
                           ),
                         ),
                         GestureDetector(
                           onTap: () {
-                            debugPrint('Edit profile tapped');
+NavigationManager.navigateTo(MyAccountScreen());
                           },
                           child:  Text(
-                              "Edit Profile",
+                              "edit_profile".tr(),
                               style: TextStyles.textViewMedium16.copyWith(
                                 color: AppColors.white,
                               ),
@@ -153,56 +154,56 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           ProfileMenuItem(
                             iconPath: AppAssets.profilePerson,
-                            title: "My Account",
+                            title: "my_account".tr(),
                             onTap: () {
                              NavigationManager.navigateTo(MyAccountScreen());
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileWallet,
-                            title: "My Wallet",
+                            title: "my_wallet".tr(),
                             onTap: () {
                               debugPrint('My Wallet tapped');
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileOrders,
-                            title: "Orders",
+                            title: "orders".tr(),
                             onTap: () {
                               debugPrint('Orders tapped');
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileSavedCarts,
-                            title: "Saved Carts",
+                            title: "saved_carts".tr(),
                             onTap: () {
                               debugPrint('Saved Carts tapped');
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileHeart,
-                            title: "Saved Items",
+                            title: "saved_items".tr(),
                             onTap: () {
                               debugPrint('Saved Items tapped');
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileSettings,
-                            title: "Settings",
+                            title: "settings".tr(),
                             onTap: () {
                              NavigationManager.navigateTo(SettingsScreen());
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileHelp,
-                            title: "Help Center",
+                            title: "help_center".tr(),
                             onTap: () {
                               debugPrint('Help Center tapped');
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profilePhone,
-                            title: "Contact",
+                            title: "contact".tr(),
                             onTap: () {
                               debugPrint('Contact tapped');
                             },
