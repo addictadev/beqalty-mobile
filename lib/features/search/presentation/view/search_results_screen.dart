@@ -5,18 +5,14 @@ import 'package:baqalty/features/product_details/presentation/view/product_detai
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
+
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 import '../widgets/search_product_card.dart';
 
 class SearchResultsScreen extends StatefulWidget {
-
-  const SearchResultsScreen({
-    super.key,
-  });
+  const SearchResultsScreen({super.key});
 
   @override
   State<SearchResultsScreen> createState() => _SearchResultsScreenState();
@@ -40,45 +36,45 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body:AuthBackgroundWidget(child: 
-      
-      
-      SafeArea(
-        child: Column(
-          children: [
-            CustomAppBar(
-              title: "search_products".tr(),
-              onBackPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            SizedBox(height: context.responsiveMargin),
-            // App Bar with Search
-           Padding(padding: EdgeInsets.symmetric(horizontal: context.responsivePadding), child: 
-            CustomTextFormField(
-              controller: _searchController,
-              hint: "search_products".tr(),
-              fillColor: Colors.transparent,
-              borderColor: AppColors.borderLight,
-       
-              prefixIcon: Icon(
-                Iconsax.search_normal,
-                color: AppColors.textSecondary,
+      body: AuthBackgroundWidget(
+        child: SafeArea(
+          child: Column(
+            children: [
+              CustomAppBar(
+                title: "search_products".tr(),
+                onBackPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
-              onChanged: (value) {
-                // Handle search
-              },
-            ) ),
-            // Search Results
-            Expanded(
-              child: _buildSearchResults(context),
-            ),
-          ],
+              SizedBox(height: context.responsiveMargin),
+              // App Bar with Search
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsivePadding,
+                ),
+                child: CustomTextFormField(
+                  controller: _searchController,
+                  hint: "search_products".tr(),
+                  fillColor: Colors.transparent,
+                  borderColor: AppColors.borderLight,
+
+                  prefixIcon: Icon(
+                    Iconsax.search_normal,
+                    color: AppColors.textSecondary,
+                  ),
+                  onChanged: (value) {
+                    // Handle search
+                  },
+                ),
+              ),
+              // Search Results
+              Expanded(child: _buildSearchResults(context)),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
-
 
   Widget _buildSearchResults(BuildContext context) {
     // Sample milk products data
@@ -95,14 +91,13 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         'price': 75.00,
         'image': AppAssets.juhaynaCoconutMilk,
       },
-          {
+      {
         'name': 'juhayna_cream_milk'.tr(),
         'category': 'milk_category'.tr(),
         'price': 48.75,
         'image': AppAssets.alMaraiMilk,
       },
-     
-  
+
       {
         'name': 'chocolate_milk'.tr(),
         'category': 'milk_category'.tr(),
@@ -114,7 +109,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         'category': 'milk_category'.tr(),
         'price': 48.75,
         'image': AppAssets.alMaraiMilk,
-      },      {
+      },
+      {
         'name': 'juhayna_milk'.tr(),
         'category': 'milk_category'.tr(),
         'price': 25.50,

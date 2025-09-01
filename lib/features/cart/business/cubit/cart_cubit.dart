@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/cart_item_model.dart';
@@ -15,7 +16,7 @@ class CartCubit extends Cubit<CartState> {
       id: '1',
       productName: 'chocolate_milk',
       category: 'milk_category',
-      productImage: 'assets/images/small_patern.png',
+      productImage: AppAssets.chocolateMilk,
       price: 12.25,
       quantity: 2,
     ),
@@ -23,7 +24,7 @@ class CartCubit extends Cubit<CartState> {
       id: '2',
       productName: 'nido_milk',
       category: 'milk_category',
-      productImage: 'assets/images/small_patern.png',
+      productImage:  AppAssets.alMaraiMilk,
       price: 12.25,
       quantity: 1,
     ),
@@ -31,7 +32,7 @@ class CartCubit extends Cubit<CartState> {
       id: '3',
       productName: 'al_marai_milk',
       category: 'milk_category',
-      productImage: 'assets/images/small_patern.png',
+      productImage:   AppAssets.juhaynaMilk,
       price: 12.25,
       quantity: 1,
     ),
