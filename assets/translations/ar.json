@@ -106,5 +106,10 @@
   "search_results": "نتائج البحث",
   "juhayna_milk": "حليب جهينة",
   "juhayna_coconut_milk": "حليب جوز الهند جهينة",
-  "juhayna_cream_milk": "حليب القشدة جهينة"
+  "juhayna_cream_milk": "حليب القشدة جهينة",
+  "quantity": "الكمية",
+  "description": "الوصف",
+  "product_description": "منتج حليب طازج ومغذي بمعايير جودة عالية. مثالي للاستهلاك اليومي واحتياجات الطهي.",
+  "add_to_cart": "أضف إلى السلة",
+  "buy_now": "اشتر الآن"
 }

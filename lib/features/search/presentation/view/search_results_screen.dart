@@ -1,6 +1,7 @@
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
+import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart' show ProductDetailsScreen;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -136,8 +137,17 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               productPrice: product['price'],
               productImage: product['image'],
               onTap: () {
-                // Handle product tap
-                debugPrint('Product tapped: ${product['name']}');
+                // Navigate to product details
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetailsScreen(
+                      productName: product['name'],
+                      productImage: product['image'],
+                      productPrice: product['price'],
+                      productCategory: product['category'],
+                    ),
+                  ),
+                );
               },
             ),
           );
