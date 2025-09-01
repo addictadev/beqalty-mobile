@@ -1,3 +1,4 @@
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
@@ -38,22 +39,14 @@ class HomeView extends StatelessWidget {
         children: [
           HomeHeader(
             onSearchTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SearchResultsScreen(
-                
-                  ),
-                ),
-              );
+              NavigationManager.navigateTo(SearchResultsScreen());
             },
             onNotificationTap: () {},
           ),
 
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 4. w,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
@@ -80,15 +73,15 @@ class HomeView extends StatelessWidget {
 
                     Align(
                       alignment: Alignment.centerLeft,
-                      
-                        child: Text(
-                          "special_offer".tr(),
-                          style: TextStyles.textViewBold16.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
+
+                      child: Text(
+                        "special_offer".tr(),
+                        style: TextStyles.textViewBold16.copyWith(
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                    
+                    ),
+
                     SizedBox(height: 2.h),
 
                     SpecialOffersSection(

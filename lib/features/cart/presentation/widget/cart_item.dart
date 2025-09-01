@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class CartItem extends StatelessWidget {
@@ -48,10 +49,10 @@ class CartItem extends StatelessWidget {
         children: [
           // Product Image
           Container(
-            width: context.responsiveWidth * 0.2,
-            height: context.responsiveWidth * 0.2,
+            width: context.responsiveWidth * 0.25,
+            height: context.responsiveWidth * 0.25,
             decoration: BoxDecoration(
-              color: AppColors.scaffoldBackground,
+              color: AppColors.borderLight.withValues(alpha: .4),
               borderRadius: BorderRadius.circular(
                 context.responsiveBorderRadius,
               ),
@@ -115,64 +116,64 @@ class CartItem extends StatelessWidget {
           // Quantity Controls
           Row(
             children: [
-              // Decrease/Remove Button
+              // Decrease Button
               GestureDetector(
                 onTap: quantity == 1 ? onRemove : onDecrease,
                 child: Container(
-                  width: context.responsiveIconSize * 1.2,
-                  height: context.responsiveIconSize * 1.2,
+                  width: context.responsiveIconSize * 1.5,
+                  height: context.responsiveIconSize * 1.5,
                   decoration: BoxDecoration(
-                    color: quantity == 1
-                        ? AppColors.error
-                        : AppColors.textSecondary,
-                    shape: BoxShape.circle,
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(
+                      context.responsiveBorderRadius * 0.8,
+                    ),
+                    border: Border.all(
+                      color: quantity == 1
+                          ? AppColors.error
+                          : AppColors.textPrimary,
+                      width: 1.5,
+                    ),
                   ),
                   child: Icon(
-                    quantity == 1 ? Icons.delete : Icons.remove,
-                    color: AppColors.white,
-                    size: context.responsiveIconSize * 0.6,
+                    quantity == 1 ? Iconsax.trash : Icons.remove,
+                    color: quantity == 1
+                        ? AppColors.error
+                        : AppColors.textPrimary,
+                    size: context.responsiveIconSize * 0.7,
                   ),
                 ),
               ),
 
-              SizedBox(width: context.responsiveMargin * 0.8),
-
               // Quantity Display
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.responsivePadding * 0.8,
-                  vertical: context.responsiveMargin * 0.3,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.scaffoldBackground,
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius,
-                  ),
+                  horizontal: context.responsivePadding * 1.2,
+                  vertical: context.responsiveMargin * 0.5,
                 ),
                 child: Text(
                   quantity.toString(),
-                  style: TextStyles.textViewBold14.copyWith(
+                  style: TextStyles.textViewBold16.copyWith(
                     color: AppColors.textPrimary,
                   ),
                 ),
               ),
 
-              SizedBox(width: context.responsiveMargin * 0.8),
-
               // Increase Button
               GestureDetector(
                 onTap: onIncrease,
                 child: Container(
-                  width: context.responsiveIconSize * 1.2,
-                  height: context.responsiveIconSize * 1.2,
+                  width: context.responsiveIconSize * 1.5,
+                  height: context.responsiveIconSize * 1.5,
                   decoration: BoxDecoration(
-                    color: AppColors.textSecondary,
-                    shape: BoxShape.circle,
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(
+                      context.responsiveBorderRadius * 0.8,
+                    ),
                   ),
                   child: Icon(
                     Icons.add,
                     color: AppColors.white,
-                    size: context.responsiveIconSize * 0.6,
+                    size: context.responsiveIconSize * 0.7,
                   ),
                 ),
               ),

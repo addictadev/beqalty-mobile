@@ -1,3 +1,5 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -25,6 +27,10 @@ class OrderSummary extends StatelessWidget {
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.textPrimary,
+        image: DecorationImage(
+          image: AssetImage(AppAssets.promotionalCard),
+          fit: BoxFit.cover,
+        ),
         borderRadius: BorderRadius.circular(
           context.responsiveBorderRadius * 1.5,
         ),
@@ -53,13 +59,27 @@ class OrderSummary extends StatelessWidget {
             isDiscount: true,
           ),
           SizedBox(height: context.responsiveMargin * 1.5),
-          Container(height: 1, color: AppColors.white.withValues(alpha: 0.2)),
-          SizedBox(height: context.responsiveMargin * 1.5),
           _buildSummaryRow(
             context,
             label: "total",
             value: total,
             isTotal: true,
+          ),
+          SizedBox(height: context.responsiveMargin * 1.5),
+          Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: context.responsivePadding * 2,
+            ),
+            child: PrimaryButton(
+              text: "checkout".tr(),
+              onPressed: () {
+                debugPrint('Checkout pressed');
+              },
+              color: AppColors.white,
+              textStyle: TextStyles.textViewBold16.copyWith(
+                color: AppColors.textPrimary,
+              ),
+            ),
           ),
         ],
       ),

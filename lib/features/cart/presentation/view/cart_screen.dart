@@ -7,8 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-
-import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 import '../widget/cart_item.dart';
@@ -35,103 +34,91 @@ class CartScreenBody extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackground,
       body: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
-          return Column(
-            children: [
-              SizedBox(height: context.responsiveMargin * 6),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.responsivePadding,
-                  vertical: context.responsiveMargin,
-                ),
-                child: Row(
-                  children: [
-                    // Back Button
-                    Container(
-                      width: context.responsiveIconSize * 1.5,
-                      height: context.responsiveIconSize * 1.5,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadowLight,
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          context.read<NavBarCubit>().changeTab(0);
-                        },
-                        icon: Icon(
-                          Icons.chevron_left,
-                          color: AppColors.textPrimary,
-                          size: context.responsiveIconSize,
-                        ),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                    ),
-
-                    // Title
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          "my_cart".tr(),
-                          style: TextStyles.textViewBold18.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Bookmark with Plus Icon
-                    GestureDetector(
-                      onTap: () {
-                        context.read<CartCubit>().toggleCartSave();
-                      },
-                      child: Container(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: context.responsiveMargin * 6),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.responsivePadding,
+                    vertical: context.responsiveMargin,
+                  ),
+                  child: Row(
+                    children: [
+                      // Back Button
+                      Container(
                         width: context.responsiveIconSize * 1.5,
                         height: context.responsiveIconSize * 1.5,
-                        padding: EdgeInsets.all(
-                          context.responsivePadding * 0.5,
-                        ),
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.shadowLight,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
                         ),
-                        child: CustomSvgImage(
-                          assetName: (state as CartLoaded).isCartSaved
-                              ? AppAssets.savedIcon
-                              : AppAssets.addSaveIcon,
+                        child: IconButton(
+                          onPressed: () {
+                            context.read<NavBarCubit>().changeTab(0);
+                          },
+                          icon: Icon(
+                            Icons.chevron_left,
+                            color: AppColors.textPrimary,
+                            size: context.responsiveIconSize,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
                         ),
                       ),
-                    ),
-                  ],
+
+                      // Title
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            "my_cart".tr(),
+                            style: TextStyles.textViewBold18.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Bookmark with Plus Icon
+                      GestureDetector(
+                        onTap: () {
+                          context.read<CartCubit>().toggleCartSave();
+                        },
+                        child: Container(
+                          width: context.responsiveIconSize * 1.5,
+                          height: context.responsiveIconSize * 1.5,
+                          padding: EdgeInsets.all(
+                            context.responsivePadding * 0.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: CustomSvgImage(
+                            assetName: (state as CartLoaded).isCartSaved
+                                ? AppAssets.savedIcon
+                                : AppAssets.addSaveIcon,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: context.responsiveMargin * 2),
+                SizedBox(height: context.responsiveMargin * 2),
 
-              // Share Cart Section
-              _buildShareCartSection(context),
+                // Share Cart Section
+                _buildShareCartSection(context),
 
-              // Cart Items
-              Expanded(child: _buildCartItemsList(context, state)),
+                // Cart Items Section
+                _buildCartItemsSection(context, state),
 
-              // Order Summary
-              _buildOrderSummary(context, state),
+                // Order Summary
+                _buildOrderSummary(context, state),
 
-              // Checkout Button
-              _buildCheckoutButton(context, state),
-            ],
+                // Bottom spacing for safe area
+                SizedBox(height: context.responsiveMargin * 4),
+              ],
+            ),
           );
         },
       ),
@@ -140,20 +127,25 @@ class CartScreenBody extends StatelessWidget {
 
   Widget _buildShareCartSection(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(context.responsivePadding),
+      margin: EdgeInsets.symmetric(vertical: context.responsivePadding),
       padding: EdgeInsets.all(context.responsivePadding),
-      decoration: BoxDecoration(
-        color: AppColors.textPrimary,
-        borderRadius: BorderRadius.circular(
-          context.responsiveBorderRadius * 1.5,
-        ),
-      ),
+      decoration: BoxDecoration(color: AppColors.primary),
       child: Row(
         children: [
-          Icon(
-            Icons.people,
-            color: AppColors.white,
-            size: context.responsiveIconSize,
+          Container(
+            width: context.responsiveIconSize * 1.2,
+            height: context.responsiveIconSize * 1.2,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(
+                context.responsiveBorderRadius * 0.5,
+              ),
+            ),
+            child: Icon(
+              Iconsax.people,
+              color: AppColors.primary,
+              size: context.responsiveIconSize * 0.8,
+            ),
           ),
           SizedBox(width: context.responsiveMargin),
           Expanded(
@@ -174,42 +166,47 @@ class CartScreenBody extends StatelessWidget {
     );
   }
 
-  Widget _buildCartItemsList(BuildContext context, CartState state) {
+  Widget _buildCartItemsSection(BuildContext context, CartState state) {
     if (state is CartLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return SizedBox(
+        height: 200,
+        child: const Center(child: CircularProgressIndicator()),
+      );
     }
 
     if (state is CartLoaded) {
       if (state.cartItems.isEmpty) {
-        return _buildEmptyCartState(context);
+        return SizedBox(height: 300, child: _buildEmptyCartState(context));
       }
 
-      return ListView.builder(
+      return Padding(
         padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
-        itemCount: state.cartItems.length,
-        itemBuilder: (context, index) {
-          final item = state.cartItems[index];
-          return CartItem(
-            productName: item.productName,
-            category: item.category,
-            productImage: item.productImage,
-            price: item.price,
-            quantity: item.quantity,
-            onIncrease: () => context.read<CartCubit>().updateQuantity(
-              item.id,
-              item.quantity + 1,
+        child: Column(
+          children: [
+            ...state.cartItems.map(
+              (item) => CartItem(
+                productName: item.productName,
+                category: item.category,
+                productImage: item.productImage,
+                price: item.price,
+                quantity: item.quantity,
+                onIncrease: () => context.read<CartCubit>().updateQuantity(
+                  item.id,
+                  item.quantity + 1,
+                ),
+                onDecrease: () => context.read<CartCubit>().updateQuantity(
+                  item.id,
+                  item.quantity - 1,
+                ),
+                onRemove: () => context.read<CartCubit>().removeItem(item.id),
+              ),
             ),
-            onDecrease: () => context.read<CartCubit>().updateQuantity(
-              item.id,
-              item.quantity - 1,
-            ),
-            onRemove: () => context.read<CartCubit>().removeItem(item.id),
-          );
-        },
+          ],
+        ),
       );
     }
 
-    return _buildEmptyCartState(context);
+    return SizedBox(height: 300, child: _buildEmptyCartState(context));
   }
 
   Widget _buildEmptyCartState(BuildContext context) {
@@ -252,27 +249,6 @@ class CartScreenBody extends StatelessWidget {
       deliveryFee: state.deliveryFee,
       discount: state.discount,
       total: state.total,
-    );
-  }
-
-  Widget _buildCheckoutButton(BuildContext context, CartState state) {
-    if (state is! CartLoaded || state.cartItems.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      margin: EdgeInsets.all(context.responsivePadding),
-      child: PrimaryButton(
-        text: "checkout".tr(),
-        onPressed: () {
-          // TODO: Navigate to checkout
-          debugPrint('Checkout pressed');
-        },
-        color: AppColors.white,
-        textStyle: TextStyles.textViewBold16.copyWith(
-          color: AppColors.textPrimary,
-        ),
-      ),
     );
   }
 }
