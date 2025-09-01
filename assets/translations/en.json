@@ -95,5 +95,12 @@
   "enter_your_name": "Enter your name",
   "enter_your_phone": "Enter your phone number",
   "please_enter_name": "Please enter your name",
-  "please_enter_phone": "Please enter your phone number"
+  "please_enter_phone": "Please enter your phone number",
+  "home": "Home",
+  "categories": "Categories",
+  "your_points": "Your Points",
+  "points": "Points",
+  "redeem": "Redeem",
+  "special_offer": "Special Offer",
+  "egp": "EGP"
 }

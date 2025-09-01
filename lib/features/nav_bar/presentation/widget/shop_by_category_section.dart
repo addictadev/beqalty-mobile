@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -23,25 +24,17 @@ class ShopByCategorySection extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppColors.borderLight, width: 1),
       ),
       child: Padding(
         padding: EdgeInsets.all(context.responsivePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             _buildHeader(),
 
             SizedBox(height: 24),
 
-            // Category grid
             _buildCategoryGrid(),
           ],
         ),
@@ -78,37 +71,37 @@ class ShopByCategorySection extends StatelessWidget {
     final categories = [
       CategoryData(
         title: "hot_deals".tr(),
-        icon: Iconsax.flash,
+        icon: AppAssets.hotmealIcon,
         iconBackgroundColor: const Color(0xFFFFE5E5),
         iconColor: const Color(0xFFFF4444),
       ),
       CategoryData(
         title: "snacks".tr(),
-        icon: Iconsax.cake,
+        icon: AppAssets.snacksIcon,
         iconBackgroundColor: const Color(0xFFFFF8E1),
         iconColor: const Color(0xFFFFB300),
       ),
       CategoryData(
         title: "bread".tr(),
-        icon: Iconsax.box,
+        icon: AppAssets.breadIcon,
         iconBackgroundColor: const Color(0xFFFFF3E0),
         iconColor: const Color(0xFFFF9800),
       ),
       CategoryData(
         title: "fruits".tr(),
-        icon: Iconsax.heart,
+        icon: AppAssets.fruitsIcon,
         iconBackgroundColor: const Color(0xFFFFF3E0),
         iconColor: const Color(0xFFFF9800),
       ),
       CategoryData(
         title: "vegetables".tr(),
-        icon: Iconsax.tree,
+        icon: AppAssets.vegetableIcon,
         iconBackgroundColor: const Color(0xFFE8F5E8),
         iconColor: const Color(0xFF4CAF50),
       ),
       CategoryData(
         title: "meat".tr(),
-        icon: Iconsax.bag,
+        icon: AppAssets.meatIcon,
         iconBackgroundColor: const Color(0xFFFFE5E5),
         iconColor: const Color(0xFFE91E63),
       ),
@@ -142,7 +135,7 @@ class ShopByCategorySection extends StatelessWidget {
 
 class CategoryData {
   final String title;
-  final IconData icon;
+  final String icon;
   final Color iconBackgroundColor;
   final Color iconColor;
 

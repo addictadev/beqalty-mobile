@@ -1,9 +1,12 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart'
     show HomeView;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
+import '../../../../core/images_preview/custom_svg_img.dart';
 import 'profile_screen.dart';
 import '../../../cart/presentation/view/cart_screen.dart';
 import '../../../categories/presentation/view/categories_screen.dart';
@@ -28,10 +31,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
       body: _screens[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: AppColors.scaffoldBackground,
           boxShadow: [
             BoxShadow(
               color: AppColors.shadowLight,
@@ -56,7 +60,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                       end: Alignment.bottomCenter,
                       colors: [
                         AppColors.scaffoldBackground,
-                        AppColors.scaffoldBackground.withOpacity(0.8),
+                        AppColors.scaffoldBackground.withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.only(
@@ -82,27 +86,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   children: [
                     _buildNavItem(
                       index: 0,
-                      icon: Icons.home_outlined,
-                      activeIcon: Icons.home,
-                      label: "Home",
+                      icon: AppAssets.homeIcon,
+                      activeIcon: AppAssets.homeIcon,
+                      label: "home".tr(),
                     ),
                     _buildNavItem(
                       index: 1,
-                      icon: Icons.shopping_cart_outlined,
-                      activeIcon: Icons.shopping_cart,
-                      label: "Cart",
+                      icon: AppAssets.orderIcon,
+                      activeIcon: AppAssets.orderIcon,
+                      label: "orders".tr(),
                     ),
                     _buildNavItem(
                       index: 2,
-                      icon: Icons.category_outlined,
-                      activeIcon: Icons.category,
-                      label: "Categories",
+                      icon: AppAssets.categoryIcon,
+                      activeIcon: AppAssets.categoryIcon,
+                      label: "categories".tr(),
                     ),
                     _buildNavItem(
                       index: 3,
-                      icon: Icons.person_outline,
-                      activeIcon: Icons.person,
-                      label: "Profile",
+                      icon: AppAssets.profileIcon,
+                      activeIcon: AppAssets.profileIcon,
+                      label: "profile".tr(),
                     ),
                   ],
                 ),
@@ -116,8 +120,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   Widget _buildNavItem({
     required int index,
-    required IconData icon,
-    required IconData activeIcon,
+    required String icon,
+    required String activeIcon,
     required String label,
   }) {
     final isActive = _currentIndex == index;
@@ -130,12 +134,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: context.responsiveMargin,
+          horizontal: context.responsiveMargin * 1.5,
           vertical: context.responsiveMargin * 0.5,
         ),
         decoration: BoxDecoration(
           color: isActive
-              ? AppColors.primary.withOpacity(0.1)
+              ? AppColors.primary.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         ),
@@ -153,12 +157,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-
-            Icon(
-              isActive ? activeIcon : icon,
+            CustomSvgImage(
+              assetName: isActive ? activeIcon : icon,
               color: isActive ? AppColors.primary : AppColors.textSecondary,
-              size: context.responsiveIconSize,
+              width: context.responsiveIconSize,
             ),
+
             SizedBox(height: context.responsiveMargin * 0.3),
             Text(
               label,

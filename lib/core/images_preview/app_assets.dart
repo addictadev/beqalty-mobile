@@ -26,4 +26,19 @@ class AppAssets {
 
   static const String onboardingPattern = "$_imagesPath/on_boarding_patern.png";
   static const String profileCamera = "$_imagesPath/cam.png";
+  static const String promotionalCard = "$_imagesPath/small_patern.png";
+    static const String homeIcon = "$_iconsPath/home_icon.svg";
+    static const String orderIcon = "$_iconsPath/orders_icon.svg";
+    static const String categoryIcon = "$_iconsPath/category_icon.svg";
+    static const String profileIcon = "$_iconsPath/profile_icon.svg";
+    static const String breadIcon = "$_iconsPath/bread.svg";
+    static const String fruitsIcon = "$_iconsPath/fruits.svg";
+    static const String hotmealIcon = "$_iconsPath/hot-meal.svg";
+    static const String meatIcon = "$_iconsPath/meat.svg";
+    static const String snacksIcon = "$_iconsPath/snaks.svg";
+    static const String vegetableIcon = "$_iconsPath/vegetables.svg";
+    static const String padgeIcon = "$_iconsPath/padge.svg";
+
+
+
 }

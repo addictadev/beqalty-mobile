@@ -21,6 +21,7 @@ class PromotionalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       constraints: BoxConstraints(
         minHeight: 100,
         maxHeight: context.responsiveContainerHeight * 1.8,
@@ -28,22 +29,10 @@ class PromotionalCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: context.responsivePadding / 2),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(AppAssets.authBackground),
-          alignment: Alignment.bottomCenter,
-          colorFilter: ColorFilter.mode(
-            AppColors.primary.withValues(alpha: 0.8),
-            BlendMode.srcIn,
-          ),
+          image: AssetImage(AppAssets.promotionalCard),
+          fit: BoxFit.cover,
         ),
-        color: AppColors.primary,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowMedium,
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Padding(
         padding: EdgeInsets.all(context.responsivePadding),
@@ -54,7 +43,7 @@ class PromotionalCard extends StatelessWidget {
 
             SizedBox(width: context.responsivePadding),
 
-            Expanded(child: _buildContentSection()),
+            Expanded(child: _buildContentSection(context)),
           ],
         ),
       ),
@@ -69,7 +58,7 @@ class PromotionalCard extends StatelessWidget {
     );
   }
 
-  Widget _buildContentSection() {
+  Widget _buildContentSection(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -89,7 +78,7 @@ class PromotionalCard extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 12),
+        SizedBox(height: context.responsiveMargin),
 
         Flexible(child: _buildPlaceOrderButton()),
       ],

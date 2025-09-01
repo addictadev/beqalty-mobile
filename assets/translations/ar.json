@@ -72,5 +72,12 @@
   "enter_your_name": "أدخل اسمك",
   "enter_your_phone": "أدخل رقم هاتفك",
   "please_enter_name": "يرجى إدخال الاسم",
-  "please_enter_phone": "يرجى إدخال رقم الهاتف"
+  "please_enter_phone": "يرجى إدخال رقم الهاتف",
+  "home": "الرئيسية",
+  "categories": "الفئات",
+  "your_points": "نقاطك",
+  "points": "نقاط",
+  "redeem": "استبدال",
+  "special_offer": "عرض خاص",
+  "egp": "ج.م"
 }
