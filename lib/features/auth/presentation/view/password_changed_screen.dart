@@ -95,7 +95,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
             width: 20,
             height: 20,
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.3),
+              color: Colors.green.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -109,7 +109,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
           width: 15,
           height: 15,
           decoration: BoxDecoration(
-            color: Colors.pink.withOpacity(0.4),
+            color: Colors.pink.withValues(alpha: 0.4),
             shape: BoxShape.circle,
           ),
         ),
@@ -124,7 +124,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
             width: 12,
             height: 12,
             decoration: BoxDecoration(
-              color: Colors.yellow.withOpacity(0.5),
+              color: Colors.yellow.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -138,7 +138,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
           width: 25,
           height: 8,
           decoration: BoxDecoration(
-            color: Colors.lightBlue.withOpacity(0.3),
+            color: Colors.lightBlue.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
@@ -151,7 +151,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
           width: 18,
           height: 18,
           decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.3),
+            color: Colors.orange.withValues(alpha: 0.3),
             shape: BoxShape.circle,
           ),
         ),
@@ -165,7 +165,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
             width: 16,
             height: 16,
             decoration: BoxDecoration(
-              color: Colors.purple.withOpacity(0.4),
+              color: Colors.purple.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(3),
             ),
           ),
@@ -183,7 +183,7 @@ class _PasswordChangedScreenState extends State<PasswordChangedScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

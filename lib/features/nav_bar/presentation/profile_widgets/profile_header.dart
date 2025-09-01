@@ -55,7 +55,7 @@ class ProfileHeader extends StatelessWidget {
                         vertical: context.responsiveMargin,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.white.withOpacity(0.2),
+                        color: AppColors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(
                           context.responsiveBorderRadius,
                         ),
@@ -117,7 +117,7 @@ class ProfileHeader extends StatelessWidget {
                         Text(
                           userEmail,
                           style: TextStyles.textViewRegular14.copyWith(
-                            color: AppColors.white.withOpacity(0.9),
+                            color: AppColors.white.withValues(alpha: 0.9),
                           ),
                         ),
                       ],

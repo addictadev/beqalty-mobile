@@ -102,5 +102,16 @@
   "points": "Points",
   "redeem": "Redeem",
   "special_offer": "Special Offer",
-  "egp": "EGP"
+  "egp": "EGP",
+  "all_categories": "All Categories",
+  "search_transactions": "Search transactions",
+
+  "dairy": "Dairy",
+  "grains": "Grains",
+  "seafood": "Seafood",
+  "nuts": "Nuts",
+  "legumes": "Legumes",
+  "poultry": "Poultry",
+  "breakfast_list": "Breakfast List",
+  "weekend": "Weekend"
 }

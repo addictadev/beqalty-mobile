@@ -9,7 +9,6 @@ import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

@@ -118,9 +118,6 @@ class _CustomOtpFieldState extends State<CustomOtpField> {
   }
 
   Widget _buildOtpBox(int index) {
-    final isFocused = _focusNodes[index].hasFocus;
-    final hasValue = _otpValues[index].isNotEmpty;
-
     return Container(
       margin: EdgeInsets.only(
         right: index < widget.length - 1 ? widget.spacing : 0,
@@ -173,7 +170,7 @@ class _CustomOtpFieldState extends State<CustomOtpField> {
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               borderSide: BorderSide(
-                color: AppColors.borderLight.withOpacity(0.5),
+                color: AppColors.borderLight.withValues(alpha: 0.5),
                 width: 1.5,
               ),
             ),

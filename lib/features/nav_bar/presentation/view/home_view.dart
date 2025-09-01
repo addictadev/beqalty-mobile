@@ -8,6 +8,7 @@ import '../widget/promotional_slider.dart';
 import '../widget/shop_by_category_section.dart';
 import '../widget/points_card.dart';
 import '../widget/special_offers_section.dart';
+import '../widget/saved_carts_section.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -44,8 +45,6 @@ class HomeView extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    SizedBox(height: context.responsiveMargin * 1.5),
-
                     SizedBox(height: context.responsiveMargin * 2),
 
                     PromotionalSlider(
@@ -65,6 +64,7 @@ class HomeView extends StatelessWidget {
 
                     PointsCard(points: 1250, onRedeemTap: () {}),
                     SizedBox(height: context.responsiveMargin * 2),
+
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -85,6 +85,9 @@ class HomeView extends StatelessWidget {
                       onViewAllTap: () {},
                       onProductTap: () {},
                     ),
+                    SizedBox(height: context.responsiveMargin * 2),
+                    SavedCartsSection(onViewAllTap: () {}, onCartTap: () {}),
+
                     SizedBox(height: context.responsiveMargin * 2),
                   ],
                 ),

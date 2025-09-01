@@ -101,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                               Text(
                                 "iamcollinsdonye@gmail.com",
                                 style: TextStyles.textViewRegular14.copyWith(
-                                  color: AppColors.white.withOpacity(0.9),
+                                  color: AppColors.white.withValues(alpha: 0.9),
                                 ),
                               ),
                             ],

@@ -40,11 +40,11 @@ class CustomPageIndicator extends StatelessWidget {
             borderRadius: BorderRadius.circular(height / 2),
             color: index == currentPage
                 ? activeColor
-                : inactiveColor ?? activeColor.withOpacity(0.3),
+                : inactiveColor ?? activeColor.withValues(alpha: 0.3),
             boxShadow: index == currentPage
                 ? [
                     BoxShadow(
-                      color: activeColor.withOpacity(0.3),
+                      color: activeColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

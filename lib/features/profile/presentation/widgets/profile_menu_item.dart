@@ -44,7 +44,7 @@ class ProfileMenuItem extends StatelessWidget {
                   width: context.responsiveIconSize * 1.9,
                   height: context.responsiveIconSize * 1.9,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(
                       context.responsiveBorderRadius * 0.8,
                     ),

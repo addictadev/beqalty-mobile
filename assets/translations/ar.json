@@ -79,5 +79,16 @@
   "points": "نقاط",
   "redeem": "استبدال",
   "special_offer": "عرض خاص",
-  "egp": "ج.م"
+  "egp": "ج.م",
+  "all_categories": "جميع الفئات",
+  "search_transactions": "البحث في المعاملات",
+ 
+  "dairy": "ألبان",
+  "grains": "حبوب",
+  "seafood": "مأكولات بحرية",
+  "nuts": "مكسرات",
+  "legumes": "بقوليات",
+  "poultry": "دواجن",
+  "breakfast_list": "قائمة الإفطار",
+  "weekend": "عطلة نهاية الأسبوع"
 }

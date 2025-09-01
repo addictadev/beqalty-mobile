@@ -19,7 +19,6 @@ class PromotionalSlider extends StatefulWidget {
 
 class _PromotionalSliderState extends State<PromotionalSlider> {
   late PageController _pageController;
-  int _currentPage = 0;
 
   @override
   void initState() {
@@ -42,9 +41,7 @@ class _PromotionalSliderState extends State<PromotionalSlider> {
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
+              // Page changed callback if needed in the future
             },
             itemCount: widget.cards.length,
             itemBuilder: (context, index) {
