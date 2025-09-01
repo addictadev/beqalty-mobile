@@ -134,5 +134,18 @@
   "description": "Description",
   "product_description": "Fresh and nutritious milk product with high quality standards. Perfect for daily consumption and cooking needs.",
   "add_to_cart": "Add to Cart",
-  "buy_now": "Buy Now"
+  "buy_now": "Buy Now",
+  "product_details": "Product Details",
+  "crunchy_chicken_nuggets": "Crunchy Chicken Nuggets 20 Pieces",
+  "chicken_nuggets_description": "Perfect for smaller meals or snacks, Chicken Nuggets 20 Pieces are essential for every child's lunchbox.",
+  "size": "Size",
+  "flavor": "Flavor",
+  "more_like_this": "More Like This",
+  "place_order": "Place Order",
+  "juhayna_yogurt_plain": "Juhayna Yogurt Plain",
+  "natural_yogurt": "Natural Yogurt",
+  "sterilized": "Sterilized",
+  "creamy": "Creamy",
+  "natural_100": "100% Natural",
+  "net_weight": "105 gm"
 }

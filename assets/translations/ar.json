@@ -111,5 +111,18 @@
   "description": "الوصف",
   "product_description": "منتج حليب طازج ومغذي بمعايير جودة عالية. مثالي للاستهلاك اليومي واحتياجات الطهي.",
   "add_to_cart": "أضف إلى السلة",
-  "buy_now": "اشتر الآن"
+  "buy_now": "اشتر الآن",
+  "product_details": "تفاصيل المنتج",
+  "crunchy_chicken_nuggets": "قطع الدجاج المقرمشة 20 قطعة",
+  "chicken_nuggets_description": "مثالية للوجبات الصغيرة أو الوجبات الخفيفة، قطع الدجاج 20 قطعة ضرورية لكل صندوق غداء للأطفال.",
+  "size": "الحجم",
+  "flavor": "النكهة",
+  "more_like_this": "المزيد من هذا",
+  "place_order": "اطلب الآن",
+  "juhayna_yogurt_plain": "زبادي جهينة عادي",
+  "natural_yogurt": "زبادي طبيعي",
+  "sterilized": "ستيرد",
+  "creamy": "كريمي",
+  "natural_100": "١٠٠٪ طبيعي",
+  "net_weight": "١٠٥ جم"
 }
