@@ -113,5 +113,17 @@
   "legumes": "Legumes",
   "poultry": "Poultry",
   "breakfast_list": "Breakfast List",
-  "weekend": "Weekend"
+  "weekend": "Weekend",
+  "my_cart": "My Cart",
+  "share_your_cart": "Share Your Cart",
+  "share_cart_description": "Let Friends Add Their Items!",
+  "milk_category": "Milk Category",
+  "chocolate_milk": "Chocolate Milk",
+  "nido_milk": "Nido Milk",
+  "al_marai_milk": "Al Marai Milk",
+  "sub_total": "Sub-Total",
+  "delivery_fee": "Delivery Fee",
+  "discount": "Discount",
+  "total": "Total",
+  "checkout": "Checkout"
 }

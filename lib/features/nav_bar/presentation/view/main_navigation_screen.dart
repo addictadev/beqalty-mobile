@@ -1,136 +1,127 @@
-import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
+import 'package:baqalty/features/nav_bar/business/models/nav_item_model.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart'
     show HomeView;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../../../core/images_preview/custom_svg_img.dart';
 import 'profile_screen.dart';
 import '../../../cart/presentation/view/cart_screen.dart';
 import '../../../categories/presentation/view/categories_screen.dart';
 
-class MainNavigationScreen extends StatefulWidget {
+class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => NavBarCubit(),
+      child: const MainNavigationScreenBody(),
+    );
+  }
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentIndex = 0;
+class MainNavigationScreenBody extends StatelessWidget {
+  const MainNavigationScreenBody({super.key});
 
-  final List<Widget> _screens = [
-    const HomeView(),
-    const CartScreen(),
-    const CategoriesScreen(),
-    const ProfileScreen(),
+  static const List<Widget> _screens = [
+    HomeView(),
+    CartScreen(),
+    CategoriesScreen(),
+    ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      body: _screens[_currentIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppColors.scaffoldBackground,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowLight,
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // Curved background with gradient
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: context.responsiveMargin * 3,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        AppColors.scaffoldBackground,
-                        AppColors.scaffoldBackground.withValues(alpha: 0.8),
-                      ],
+    return BlocBuilder<NavBarCubit, NavBarState>(
+      builder: (context, state) {
+        if (state is NavBarLoaded) {
+          return Scaffold(
+            backgroundColor: AppColors.scaffoldBackground,
+            body: _screens[state.currentIndex],
+            bottomNavigationBar: _buildBottomNavigationBar(context, state),
+          );
+        }
+
+        // Loading state
+        return const Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: Center(child: CircularProgressIndicator()),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomNavigationBar(BuildContext context, NavBarLoaded state) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.scaffoldBackground,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowLight,
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Stack(
+          children: [
+            // Curved background with gradient
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: context.responsiveMargin * 3,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.scaffoldBackground,
+                      AppColors.scaffoldBackground.withValues(alpha: 0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(
+                      context.responsiveBorderRadius * 2,
                     ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        context.responsiveBorderRadius * 2,
-                      ),
-                      topRight: Radius.circular(
-                        context.responsiveBorderRadius * 2,
-                      ),
+                    topRight: Radius.circular(
+                      context.responsiveBorderRadius * 2,
                     ),
                   ),
                 ),
               ),
+            ),
 
-              // Navigation items
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.responsivePadding,
-                  vertical: context.responsiveMargin,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildNavItem(
-                      index: 0,
-                      icon: AppAssets.homeIcon,
-                      activeIcon: AppAssets.homeIcon,
-                      label: "home".tr(),
-                    ),
-                    _buildNavItem(
-                      index: 1,
-                      icon: AppAssets.orderIcon,
-                      activeIcon: AppAssets.orderIcon,
-                      label: "orders".tr(),
-                    ),
-                    _buildNavItem(
-                      index: 2,
-                      icon: AppAssets.categoryIcon,
-                      activeIcon: AppAssets.categoryIcon,
-                      label: "categories".tr(),
-                    ),
-                    _buildNavItem(
-                      index: 3,
-                      icon: AppAssets.profileIcon,
-                      activeIcon: AppAssets.profileIcon,
-                      label: "profile".tr(),
-                    ),
-                  ],
-                ),
+            // Navigation items
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsivePadding,
+                vertical: context.responsiveMargin,
               ),
-            ],
-          ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: state.navItems.map((navItem) {
+                  return _buildNavItem(context, navItem);
+                }).toList(),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem({
-    required int index,
-    required String icon,
-    required String activeIcon,
-    required String label,
-  }) {
-    final isActive = _currentIndex == index;
-
+  Widget _buildNavItem(BuildContext context, NavItemModel navItem) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
+        context.read<NavBarCubit>().changeTab(navItem.index);
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -138,7 +129,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           vertical: context.responsiveMargin * 0.5,
         ),
         decoration: BoxDecoration(
-          color: isActive
+          color: navItem.isActive
               ? AppColors.primary.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
@@ -147,7 +138,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Active indicator dot
-            if (isActive)
+            if (navItem.isActive)
               Container(
                 width: 4,
                 height: 4,
@@ -158,20 +149,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 ),
               ),
             CustomSvgImage(
-              assetName: isActive ? activeIcon : icon,
-              color: isActive ? AppColors.primary : AppColors.textSecondary,
+              assetName: navItem.isActive ? navItem.activeIcon : navItem.icon,
+              color: navItem.isActive
+                  ? AppColors.primary
+                  : AppColors.textSecondary,
               width: context.responsiveIconSize,
             ),
 
             SizedBox(height: context.responsiveMargin * 0.3),
             Text(
-              label,
+              navItem.label.tr(),
               style:
-                  (isActive
+                  (navItem.isActive
                           ? TextStyles.textViewMedium12
                           : TextStyles.textViewRegular12)
                       .copyWith(
-                        color: isActive
+                        color: navItem.isActive
                             ? AppColors.primary
                             : AppColors.textSecondary,
                       ),

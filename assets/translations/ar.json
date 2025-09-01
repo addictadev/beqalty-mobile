@@ -90,5 +90,17 @@
   "legumes": "بقوليات",
   "poultry": "دواجن",
   "breakfast_list": "قائمة الإفطار",
-  "weekend": "عطلة نهاية الأسبوع"
+  "weekend": "عطلة نهاية الأسبوع",
+  "my_cart": "عربتي",
+  "share_your_cart": "شارك عربتك",
+  "share_cart_description": "دع الأصدقاء يضيفون منتجاتهم!",
+  "milk_category": "فئة الحليب",
+  "chocolate_milk": "حليب الشوكولاتة",
+  "nido_milk": "حليب نيدو",
+  "al_marai_milk": "حليب المراعي",
+  "sub_total": "المجموع الفرعي",
+  "delivery_fee": "رسوم التوصيل",
+  "discount": "الخصم",
+  "total": "المجموع",
+  "checkout": "إتمام الشراء"
 }

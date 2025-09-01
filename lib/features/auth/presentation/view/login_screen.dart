@@ -6,8 +6,8 @@ import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
-import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart'
-    show MainNavigationScreen;
+import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
@@ -75,7 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       PrimaryButton(
                         text: "login".tr(),
                         onPressed: () {
-                          NavigationManager.navigateTo(MainNavigationScreen());
+                          NavigationManager.navigateTo(
+                            MainNavigationScreen(),
+                          );
                         },
                       ),
 
