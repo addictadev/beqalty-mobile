@@ -38,6 +38,10 @@ class AppAssets {
     static const String snacksIcon = "$_iconsPath/snaks.svg";
     static const String vegetableIcon = "$_iconsPath/vegetables.svg";
     static const String padgeIcon = "$_iconsPath/padge.svg";
+    static const String addSaveIcon = "$_iconsPath/archive-add.svg";
+    static const String savedIcon = "$_iconsPath/saved_added.svg";
+
+
 
 
 

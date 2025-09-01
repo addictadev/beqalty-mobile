@@ -37,6 +37,8 @@ class CartCubit extends Cubit<CartState> {
     ),
   ];
 
+  bool _isCartSaved = false;
+
   void _loadInitialCart() {
     emit(CartLoading());
     _updateCartState();
@@ -50,13 +52,20 @@ class CartCubit extends Cubit<CartState> {
 
     final itemIndex = _cartItems.indexWhere((item) => item.id == itemId);
     if (itemIndex != -1) {
-      _cartItems[itemIndex] = _cartItems[itemIndex].copyWith(quantity: newQuantity);
+      _cartItems[itemIndex] = _cartItems[itemIndex].copyWith(
+        quantity: newQuantity,
+      );
       _updateCartState();
     }
   }
 
   void removeItem(String itemId) {
     _cartItems.removeWhere((item) => item.id == itemId);
+    _updateCartState();
+  }
+
+  void toggleCartSave() {
+    _isCartSaved = !_isCartSaved;
     _updateCartState();
   }
 
@@ -69,12 +78,15 @@ class CartCubit extends Cubit<CartState> {
     const discount = 20.0;
     final total = subTotal + deliveryFee - discount;
 
-    emit(CartLoaded(
-      cartItems: List.from(_cartItems),
-      subTotal: subTotal,
-      deliveryFee: deliveryFee,
-      discount: discount,
-      total: total,
-    ));
+    emit(
+      CartLoaded(
+        cartItems: List.from(_cartItems),
+        subTotal: subTotal,
+        deliveryFee: deliveryFee,
+        discount: discount,
+        total: total,
+        isCartSaved: _isCartSaved,
+      ),
+    );
   }
 }

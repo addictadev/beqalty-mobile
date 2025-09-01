@@ -1,3 +1,5 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/features/cart/business/cubit/cart_cubit.dart';
 import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:flutter/material.dart';
@@ -87,11 +89,14 @@ class CartScreenBody extends StatelessWidget {
                     // Bookmark with Plus Icon
                     GestureDetector(
                       onTap: () {
-                        debugPrint('Bookmark with plus tapped');
+                        context.read<CartCubit>().toggleCartSave();
                       },
                       child: Container(
                         width: context.responsiveIconSize * 1.5,
                         height: context.responsiveIconSize * 1.5,
+                        padding: EdgeInsets.all(
+                          context.responsivePadding * 0.5,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           shape: BoxShape.circle,
@@ -103,23 +108,10 @@ class CartScreenBody extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.bookmark_border,
-                              color: AppColors.textPrimary,
-                              size: context.responsiveIconSize * 0.8,
-                            ),
-                            Positioned(
-                              bottom: 2,
-                              child: Icon(
-                                Icons.add,
-                                color: AppColors.textPrimary,
-                                size: context.responsiveIconSize * 0.4,
-                              ),
-                            ),
-                          ],
+                        child: CustomSvgImage(
+                          assetName: (state as CartLoaded).isCartSaved
+                              ? AppAssets.savedIcon
+                              : AppAssets.addSaveIcon,
                         ),
                       ),
                     ),
