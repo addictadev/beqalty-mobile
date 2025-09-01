@@ -3,6 +3,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:sizer/sizer.dart';
 
 class SearchProductCard extends StatelessWidget {
   final String productName;
@@ -25,7 +26,7 @@ class SearchProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(context.responsivePadding),
+        padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
@@ -48,7 +49,7 @@ class SearchProductCard extends StatelessWidget {
               width: context.responsiveWidth * 0.25,
               height: context.responsiveWidth * 0.25,
               decoration: BoxDecoration(
-                color: AppColors.borderLight,
+                color: AppColors.borderLight.withValues(alpha: .4),
                 borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
               ),
               child: ClipRRect(

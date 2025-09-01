@@ -1,3 +1,6 @@
+import 'package:baqalty/core/widgets/custom_appbar.dart';
+import 'package:baqalty/core/widgets/custom_textform_field.dart';
+import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -36,12 +39,35 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
+      body:AuthBackgroundWidget(child: 
+      
+      
+      SafeArea(
         child: Column(
           children: [
+            CustomAppBar(
+              title: "search_products".tr(),
+              onBackPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(height: context.responsiveMargin),
             // App Bar with Search
-            _buildSearchAppBar(context),
-            
+           Padding(padding: EdgeInsets.symmetric(horizontal: context.responsivePadding), child: 
+            CustomTextFormField(
+              controller: _searchController,
+              hint: "search_products".tr(),
+              fillColor: Colors.transparent,
+              borderColor: AppColors.borderLight,
+       
+              prefixIcon: Icon(
+                Iconsax.search_normal,
+                color: AppColors.textSecondary,
+              ),
+              onChanged: (value) {
+                // Handle search
+              },
+            ) ),
             // Search Results
             Expanded(
               child: _buildSearchResults(context),
@@ -49,81 +75,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 
-  Widget _buildSearchAppBar(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.responsivePadding,
-        vertical: context.responsiveMargin,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Back Button
-          CustomBackButton(),
-          
-          SizedBox(width: context.responsiveMargin),
-          
-          // Search Bar
-          Expanded(
-            child: Container(
-              height: context.responsiveButtonHeight / 2,
-              decoration: BoxDecoration(
-                color: AppColors.scaffoldBackground,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: AppColors.borderLight,
-                  width: 1,
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
-                child: Row(
-                  children: [
-                    Icon(
-                      Iconsax.search_normal,
-                      color: AppColors.textSecondary,
-                      size: context.responsiveIconSize,
-                    ),
-                    
-                    SizedBox(width: context.responsiveMargin),
-                    
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText:'search_products'.tr(),
-                          hintStyle: TextStyles.textViewRegular14.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                        style: TextStyles.textViewRegular14.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildSearchResults(BuildContext context) {
     // Sample milk products data
@@ -140,12 +94,14 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         'price': 75.00,
         'image': AppAssets.juhaynaCoconutMilk,
       },
-      {
+          {
         'name': 'juhayna_cream_milk'.tr(),
         'category': 'milk_category'.tr(),
-        'price': 64.25,
-        'image': AppAssets.juhaynaCreamMilk,
+        'price': 48.75,
+        'image': AppAssets.alMaraiMilk,
       },
+     
+  
       {
         'name': 'chocolate_milk'.tr(),
         'category': 'milk_category'.tr(),
@@ -157,6 +113,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         'category': 'milk_category'.tr(),
         'price': 48.75,
         'image': AppAssets.alMaraiMilk,
+      },      {
+        'name': 'juhayna_milk'.tr(),
+        'category': 'milk_category'.tr(),
+        'price': 25.50,
+        'image': AppAssets.juhaynaMilk,
       },
     ];
 
