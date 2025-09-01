@@ -1,9 +1,9 @@
-import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart' show HomeView;
+import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart'
+    show HomeView;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:sizer/sizer.dart';
 import 'profile_screen.dart';
 import '../../../cart/presentation/view/cart_screen.dart';
 import '../../../categories/presentation/view/categories_screen.dart';
@@ -60,13 +60,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                       ],
                     ),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(context.responsiveBorderRadius * 2),
-                      topRight: Radius.circular(context.responsiveBorderRadius * 2),
+                      topLeft: Radius.circular(
+                        context.responsiveBorderRadius * 2,
+                      ),
+                      topRight: Radius.circular(
+                        context.responsiveBorderRadius * 2,
+                      ),
                     ),
                   ),
                 ),
               ),
-              
+
               // Navigation items
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -117,7 +121,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     required String label,
   }) {
     final isActive = _currentIndex == index;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -130,7 +134,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           vertical: context.responsiveMargin * 0.5,
         ),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+          color: isActive
+              ? AppColors.primary.withOpacity(0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         ),
         child: Column(
@@ -147,7 +153,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-            
+
             Icon(
               isActive ? activeIcon : icon,
               color: isActive ? AppColors.primary : AppColors.textSecondary,
@@ -156,9 +162,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             SizedBox(height: context.responsiveMargin * 0.3),
             Text(
               label,
-              style: (isActive ? TextStyles.textViewMedium12 : TextStyles.textViewRegular12).copyWith(
-                color: isActive ? AppColors.primary : AppColors.textSecondary,
-              ),
+              style:
+                  (isActive
+                          ? TextStyles.textViewMedium12
+                          : TextStyles.textViewRegular12)
+                      .copyWith(
+                        color: isActive
+                            ? AppColors.primary
+                            : AppColors.textSecondary,
+                      ),
             ),
           ],
         ),

@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-
 class CustomBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final double? size;
   final IconData? icon;
 
-  const CustomBackButton({
-    super.key,
-    this.onPressed,
-    this.size,
-
-    this.icon,
-  });
+  const CustomBackButton({super.key, this.onPressed, this.size, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +22,7 @@ class CustomBackButton extends StatelessWidget {
           color: Colors.white,
           shape: BoxShape.circle,
 
-          boxShadow: [
-       
-          ],
+          boxShadow: [],
         ),
         child: Center(
           child: Icon(ic, color: Colors.black, size: 7.w),

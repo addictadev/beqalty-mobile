@@ -5,7 +5,6 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
-import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -19,9 +18,7 @@ class SettingsScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         titleColor: AppColors.textPrimary,
         iconColor: AppColors.textPrimary,
-        leading: CustomBackButton(
-    
-        ),
+        leading: CustomBackButton(),
       ),
       body: SafeArea(
         child: Padding(
@@ -31,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
               // General Section
               _buildSectionHeader(context, "General"),
               SizedBox(height: context.responsiveMargin),
-              
+
               _buildSettingsItem(
                 context,
                 title: "Reset Password",
@@ -39,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Reset Password tapped');
                 },
               ),
-              
+
               _buildSettingsItem(
                 context,
                 title: "Notifications",
@@ -47,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Notifications tapped');
                 },
               ),
-              
+
               _buildSettingsItem(
                 context,
                 title: "Language",
@@ -55,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Language tapped');
                 },
               ),
-              
+
               _buildSettingsItem(
                 context,
                 title: "Delete Account",
@@ -65,13 +62,13 @@ class SettingsScreen extends StatelessWidget {
                 textColor: AppColors.error,
                 showArrow: false,
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Security Section
               _buildSectionHeader(context, "Security"),
               SizedBox(height: context.responsiveMargin),
-              
+
               _buildSettingsItem(
                 context,
                 title: "Privacy Policy",
@@ -80,9 +77,9 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Privacy Policy tapped');
                 },
               ),
-              
+
               const Spacer(),
-              
+
               // Logout Button
               PrimaryButton(
                 text: "Logout",
@@ -122,9 +119,9 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 width: double.infinity,
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Copyright
               Center(
                 child: Text(
@@ -146,9 +143,7 @@ class SettingsScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: context.responsiveMargin),
       child: Text(
         title,
-        style: TextStyles.textViewBold16.copyWith(
-          color: AppColors.primary,
-        ),
+        style: TextStyles.textViewBold16.copyWith(color: AppColors.primary),
       ),
     );
   }
@@ -172,11 +167,10 @@ class SettingsScreen extends StatelessWidget {
             padding: EdgeInsets.all(context.responsivePadding),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-              border: Border.all(
-                color: AppColors.borderLight,
-                width: 1,
+              borderRadius: BorderRadius.circular(
+                context.responsiveBorderRadius,
               ),
+              border: Border.all(color: AppColors.borderLight, width: 1),
             ),
             child: Row(
               children: [

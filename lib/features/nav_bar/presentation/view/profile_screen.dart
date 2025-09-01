@@ -21,9 +21,7 @@ class ProfileScreen extends StatelessWidget {
           // Dark header with profile info
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-            ),
+            decoration: const BoxDecoration(color: AppColors.primary),
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.all(context.responsivePadding),
@@ -43,19 +41,18 @@ class ProfileScreen extends StatelessWidget {
                           onTap: () {
                             debugPrint('Edit profile tapped');
                           },
-                          child:  Text(
-                              "Edit Profile",
-                              style: TextStyles.textViewMedium16.copyWith(
-                                color: AppColors.white,
-                              ),
+                          child: Text(
+                            "Edit Profile",
+                            style: TextStyles.textViewMedium16.copyWith(
+                              color: AppColors.white,
                             ),
                           ),
-                        
+                        ),
                       ],
                     ),
-                    
+
                     SizedBox(height: context.responsiveMargin * 4.5),
-                    
+
                     // User profile information
                     Row(
                       children: [
@@ -85,9 +82,9 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(width: context.responsiveMargin * 2),
-                        
+
                         // User details
                         Expanded(
                           child: Column(
@@ -111,14 +108,14 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     SizedBox(height: context.responsiveMargin * 2),
                   ],
                 ),
               ),
             ),
           ),
-          
+
           // Main content area with curved top
           Expanded(
             child: Container(
@@ -155,7 +152,7 @@ class ProfileScreen extends StatelessWidget {
                             iconPath: AppAssets.profilePerson,
                             title: "My Account",
                             onTap: () {
-                             NavigationManager.navigateTo(MyAccountScreen());
+                              NavigationManager.navigateTo(MyAccountScreen());
                             },
                           ),
                           ProfileMenuItem(
@@ -190,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
                             iconPath: AppAssets.profileSettings,
                             title: "Settings",
                             onTap: () {
-                             NavigationManager.navigateTo(SettingsScreen());
+                              NavigationManager.navigateTo(SettingsScreen());
                             },
                           ),
                           ProfileMenuItem(

@@ -91,9 +91,7 @@ class PromotionalCard extends StatelessWidget {
 
         SizedBox(height: 12),
 
-        Flexible(
-          child: _buildPlaceOrderButton(),
-        ),
+        Flexible(child: _buildPlaceOrderButton()),
       ],
     );
   }

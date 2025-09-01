@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:sizer/sizer.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
@@ -11,7 +10,11 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Sample categories data
     final categories = [
-      {'name': 'Electronics', 'icon': Icons.phone_android, 'color': Colors.blue},
+      {
+        'name': 'Electronics',
+        'icon': Icons.phone_android,
+        'color': Colors.blue,
+      },
       {'name': 'Fashion', 'icon': Icons.checkroom, 'color': Colors.pink},
       {'name': 'Home & Garden', 'icon': Icons.home, 'color': Colors.green},
       {'name': 'Sports', 'icon': Icons.sports_soccer, 'color': Colors.orange},
@@ -36,9 +39,9 @@ class CategoriesScreen extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Categories grid
               Expanded(
                 child: GridView.builder(
@@ -77,10 +80,7 @@ class CategoriesScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-        border: Border.all(
-          color: AppColors.borderLight,
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.borderLight, width: 1),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,

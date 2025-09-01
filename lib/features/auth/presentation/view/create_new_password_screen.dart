@@ -85,10 +85,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   }
 
   Widget _buildBackButton() {
-    return CustomBackButton(
-      icon: Icons.chevron_left,
-      size: 40,
-    );
+    return CustomBackButton(icon: Icons.chevron_left, size: 40);
   }
 
   Widget _buildTitleSection() {

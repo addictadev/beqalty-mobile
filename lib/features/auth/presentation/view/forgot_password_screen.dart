@@ -79,10 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildBackButton() {
-    return CustomBackButton(
-      icon: Icons.chevron_left,
-      size: 40,
-    );
+    return CustomBackButton(icon: Icons.chevron_left, size: 40);
   }
 
   Widget _buildTitleSection() {
