@@ -43,6 +43,11 @@ class AppAssets {
 
 
 
-
+    // Product images (placeholder)
+    static const String juhaynaMilk = "$_imagesPath/juhayna_milk.png";
+    static const String juhaynaCoconutMilk = "$_imagesPath/juhayna_coconut_milk.png";
+    static const String juhaynaCreamMilk = "$_imagesPath/juhayna_cream_milk.png";
+    static const String chocolateMilk = "$_imagesPath/chocolate_milk.png";
+    static const String alMaraiMilk = "$_imagesPath/al_marai_milk.png";
 
 }

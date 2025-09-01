@@ -46,7 +46,6 @@ class SpecialOffersSection extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];

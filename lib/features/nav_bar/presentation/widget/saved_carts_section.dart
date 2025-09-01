@@ -14,7 +14,6 @@ class SavedCartsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -49,27 +48,28 @@ class SavedCartsSection extends StatelessWidget {
 
           // Saved Cart Items
           SizedBox(
-            height: context.responsiveContainerHeight * 0.8,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+            child: Row(
               children: [
-                SavedCartItem(
-                  title: "breakfast_list",
-                  onTap: () {
-                    onCartTap?.call();
-                  },
+                Expanded(
+                  child: SavedCartItem(
+                    title: "breakfast_list",
+                    onTap: () {
+                      onCartTap?.call();
+                    },
+                  ),
                 ),
-                SavedCartItem(
-                  title: "weekend",
-                  onTap: () {
-                    onCartTap?.call();
-                  },
+                SizedBox(width: context.responsiveMargin),
+                Expanded(
+                  child: SavedCartItem(
+                    title: "weekend",
+                    onTap: () {
+                      onCartTap?.call();
+                    },
+                  ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: context.responsiveMargin * 1.5),
         ],
       ),
     );

@@ -125,5 +125,9 @@
   "delivery_fee": "Delivery Fee",
   "discount": "Discount",
   "total": "Total",
-  "checkout": "Checkout"
+  "checkout": "Checkout",
+  "search_results": "Search Results",
+  "juhayna_milk": "Juhayna Milk",
+  "juhayna_coconut_milk": "Juhayna Coconut Milk",
+  "juhayna_cream_milk": "Juhayna Cream Milk"
 }

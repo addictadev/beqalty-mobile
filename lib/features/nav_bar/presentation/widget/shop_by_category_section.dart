@@ -20,25 +20,22 @@ class ShopByCategorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+      padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.borderLight, width: 1),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(context.responsivePadding),
-        child: Column(
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-
-            SizedBox(height: 24),
+SizedBox(height: 2.h),
 
             _buildCategoryGrid(),
           ],
         ),
-      ),
+      
     );
   }
 
@@ -49,7 +46,7 @@ class ShopByCategorySection extends StatelessWidget {
         Text(
           "shop_by_category".tr(),
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 17.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
           ),
@@ -109,12 +106,13 @@ class ShopByCategorySection extends StatelessWidget {
 
     return GridView.builder(
       shrinkWrap: true,
+      padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 0.8,
+        childAspectRatio: 1.2,
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {

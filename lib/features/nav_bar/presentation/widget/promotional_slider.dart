@@ -39,6 +39,7 @@ class _PromotionalSliderState extends State<PromotionalSlider> {
         SizedBox(
           height: widget.height * 1.2,
           child: PageView.builder(
+            physics: const BouncingScrollPhysics(),
             controller: _pageController,
             onPageChanged: (index) {
               // Page changed callback if needed in the future
