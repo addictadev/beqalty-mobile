@@ -21,9 +21,7 @@ class SettingsScreen extends StatelessWidget {
         title: "settings".tr(),
         titleColor: AppColors.textPrimary,
         iconColor: AppColors.textPrimary,
-        leading: CustomBackButton(
-    
-        ),
+        leading: CustomBackButton(),
       ),
       body: SafeArea(
         child: Padding(
@@ -34,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
               // General Section
               _buildSectionHeader(context, "general".tr()),
               SizedBox(height: context.responsiveMargin),
-              
+
               _buildSettingsItem(
                 context,
                 title: "reset_password".tr(),
@@ -42,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Reset Password tapped');
                 },
               ),
-              
+
               _buildSettingsItem(
                 context,
                 title: "notifications".tr(),
@@ -50,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Notifications tapped');
                 },
               ),
-              
+
               _buildSettingsItem(
                 context,
                 title: "language".tr(),
@@ -58,7 +56,7 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Language tapped');
                 },
               ),
-              
+
               _buildSettingsItem(
                 context,
                 title: "delete_account".tr(),
@@ -68,13 +66,13 @@ class SettingsScreen extends StatelessWidget {
                 textColor: AppColors.error,
                 showArrow: false,
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Security Section
               _buildSectionHeader(context, "security".tr()),
               SizedBox(height: context.responsiveMargin),
-              
+
               _buildSettingsItem(
                 context,
                 title: "privacy_policy".tr(),
@@ -83,12 +81,11 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Privacy Policy tapped');
                 },
               ),
-              
+
               const Spacer(),
-              
+
               // Logout Button
               PrimaryButton(
-                
                 text: "logout".tr(),
                 onPressed: () {
                   // Show confirmation dialog
@@ -105,7 +102,9 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                            NavigationManager.navigateToAndFinish(LoginScreen());
+                              NavigationManager.navigateToAndFinish(
+                                LoginScreen(),
+                              );
                             },
                             child: Text(
                               'logout'.tr(),
@@ -123,9 +122,9 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 width: double.infinity,
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Copyright
               Center(
                 child: Text(
@@ -134,8 +133,8 @@ class SettingsScreen extends StatelessWidget {
                     color: AppColors.textSecondary,
                   ),
                 ),
-              ),              SizedBox(height: context.responsiveMargin * 2),
-
+              ),
+              SizedBox(height: context.responsiveMargin * 2),
             ],
           ),
         ),
@@ -174,7 +173,9 @@ class SettingsScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(context.responsivePadding),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+              borderRadius: BorderRadius.circular(
+                context.responsiveBorderRadius,
+              ),
               // border: Border.all(
               //   color: AppColors.borderLight,
               //   width: 1,

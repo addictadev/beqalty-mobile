@@ -19,8 +19,12 @@ class MyAccountScreen extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
-  final TextEditingController _nameController = TextEditingController(text: "Donye Collins");
-  final TextEditingController _phoneController = TextEditingController(text: "+23408146185683");
+  final TextEditingController _nameController = TextEditingController(
+    text: "Donye Collins",
+  );
+  final TextEditingController _phoneController = TextEditingController(
+    text: "+23408146185683",
+  );
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -37,9 +41,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         title: "my_account".tr(),
         titleColor: AppColors.textPrimary,
         iconColor: AppColors.textPrimary,
-        leading: CustomBackButton(
- 
-        ),
+        leading: CustomBackButton(),
       ),
       body: SafeArea(
         child: Padding(
@@ -78,7 +80,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           ),
                         ),
                       ),
-                      
+
                       // Camera edit icon
                       Positioned(
                         bottom: -1.w,
@@ -94,15 +96,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               width: 2,
                             ),
                           ),
-                          child:CustomImageAsset(assetName: AppAssets.profileCamera)
+                          child: CustomImageAsset(
+                            assetName: AppAssets.profileCamera,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                
+
                 SizedBox(height: context.responsiveMargin * 3),
-                
+
                 // Input Fields
                 CustomTextFormField(
                   controller: _nameController,
@@ -116,9 +120,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     return null;
                   },
                 ),
-                
+
                 SizedBox(height: context.responsiveMargin * 2),
-                
+
                 CustomTextFormField(
                   controller: _phoneController,
                   label: "phone_number".tr(),
@@ -132,9 +136,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     return null;
                   },
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Save Button
                 PrimaryButton(
                   text: "save".tr(),
@@ -144,7 +148,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       // Handle save logic
                       debugPrint('Name: ${_nameController.text}');
                       debugPrint('Phone: ${_phoneController.text}');
-                      
+
                       // Show success message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -152,7 +156,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           backgroundColor: AppColors.success,
                         ),
                       );
-                      
+
                       Navigator.of(context).pop();
                     }
                   },
@@ -161,10 +165,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
-                  
+
                   width: double.infinity,
                 ),
-                
+
                 SizedBox(height: context.responsiveMargin * 2),
               ],
             ),

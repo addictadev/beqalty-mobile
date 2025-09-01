@@ -6,8 +6,8 @@ import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
-import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart';
-import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart' show MainNavigationScreen;
+import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart'
+    show MainNavigationScreen;
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
@@ -39,10 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               SizedBox(height: 16),
 
-              CustomBackButton(
-                icon: Icons.chevron_left,
-                size: 40,
-              ),
+              CustomBackButton(icon: Icons.chevron_left, size: 40),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

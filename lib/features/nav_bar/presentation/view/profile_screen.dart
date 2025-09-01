@@ -22,9 +22,7 @@ class ProfileScreen extends StatelessWidget {
           // Dark header with profile info
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-            ),
+            decoration: const BoxDecoration(color: AppColors.primary),
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.all(context.responsivePadding),
@@ -42,21 +40,20 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-NavigationManager.navigateTo(MyAccountScreen());
+                            NavigationManager.navigateTo(MyAccountScreen());
                           },
-                          child:  Text(
-                              "edit_profile".tr(),
-                              style: TextStyles.textViewMedium16.copyWith(
-                                color: AppColors.white,
-                              ),
+                          child: Text(
+                            "Edit Profile".tr(),
+                            style: TextStyles.textViewMedium16.copyWith(
+                              color: AppColors.white,
                             ),
                           ),
-                        
+                        ),
                       ],
                     ),
-                    
+
                     SizedBox(height: context.responsiveMargin * 4.5),
-                    
+
                     // User profile information
                     Row(
                       children: [
@@ -86,9 +83,9 @@ NavigationManager.navigateTo(MyAccountScreen());
                             ),
                           ),
                         ),
-                        
+
                         SizedBox(width: context.responsiveMargin * 2),
-                        
+
                         // User details
                         Expanded(
                           child: Column(
@@ -112,14 +109,14 @@ NavigationManager.navigateTo(MyAccountScreen());
                         ),
                       ],
                     ),
-                    
+
                     SizedBox(height: context.responsiveMargin * 2),
                   ],
                 ),
               ),
             ),
           ),
-          
+
           // Main content area with curved top
           Expanded(
             child: Container(
@@ -156,7 +153,7 @@ NavigationManager.navigateTo(MyAccountScreen());
                             iconPath: AppAssets.profilePerson,
                             title: "my_account".tr(),
                             onTap: () {
-                             NavigationManager.navigateTo(MyAccountScreen());
+                              NavigationManager.navigateTo(MyAccountScreen());
                             },
                           ),
                           ProfileMenuItem(
@@ -191,7 +188,7 @@ NavigationManager.navigateTo(MyAccountScreen());
                             iconPath: AppAssets.profileSettings,
                             title: "settings".tr(),
                             onTap: () {
-                             NavigationManager.navigateTo(SettingsScreen());
+                              NavigationManager.navigateTo(SettingsScreen());
                             },
                           ),
                           ProfileMenuItem(

@@ -13,7 +13,7 @@ class AppAssets {
   static const String authBackground = "$_imagesPath/auth_background.png";
   static const String authLoginBackground = "$_imagesPath/auth_welcome.svg";
   static const String shoppingBag = "$_iconsPath/cart_icon.svg";
-  
+
   // Profile icons
   static const String profilePerson = "$_iconsPath/Icon.svg";
   static const String profileWallet = "$_iconsPath/wallett.svg";

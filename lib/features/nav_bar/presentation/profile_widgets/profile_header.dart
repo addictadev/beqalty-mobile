@@ -3,7 +3,6 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/images_preview/custom_asset_img.dart';
-import 'package:sizer/sizer.dart';
 
 class ProfileHeader extends StatelessWidget {
   final String userName;
@@ -71,9 +70,9 @@ class ProfileHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 3),
-              
+
               // User profile information
               Row(
                 children: [
@@ -84,10 +83,7 @@ class ProfileHeader extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppColors.characterSkinTone,
-                      border: Border.all(
-                        color: AppColors.white,
-                        width: 3,
-                      ),
+                      border: Border.all(color: AppColors.white, width: 3),
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.shadowMedium,
@@ -103,9 +99,9 @@ class ProfileHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(width: context.responsiveMargin * 2),
-                  
+
                   // User details
                   Expanded(
                     child: Column(
@@ -129,7 +125,7 @@ class ProfileHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
             ],
           ),

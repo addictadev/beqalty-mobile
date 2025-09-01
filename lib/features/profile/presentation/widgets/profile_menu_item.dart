@@ -3,7 +3,6 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
-import 'package:sizer/sizer.dart';
 
 class ProfileMenuItem extends StatelessWidget {
   final String iconPath;
@@ -34,7 +33,9 @@ class ProfileMenuItem extends StatelessWidget {
             padding: EdgeInsets.only(bottom: context.responsivePadding),
             decoration: BoxDecoration(
               color: backgroundColor ?? AppColors.white,
-              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+              borderRadius: BorderRadius.circular(
+                context.responsiveBorderRadius,
+              ),
             ),
             child: Row(
               children: [
@@ -55,9 +56,9 @@ class ProfileMenuItem extends StatelessWidget {
                     height: context.responsiveIconSize * 0.8,
                   ),
                 ),
-                
+
                 SizedBox(width: context.responsiveMargin * 1.5),
-                
+
                 // Title
                 Expanded(
                   child: Text(
@@ -67,7 +68,7 @@ class ProfileMenuItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Navigation arrow
                 Icon(
                   Icons.chevron_right,

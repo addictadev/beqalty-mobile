@@ -32,10 +32,12 @@ class ProfileMenuItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           onTap: onTap,
           child: Container(
-            padding: EdgeInsets.only(bottom:context.responsivePadding),
+            padding: EdgeInsets.only(bottom: context.responsivePadding),
             decoration: BoxDecoration(
               color: backgroundColor ?? AppColors.white,
-              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+              borderRadius: BorderRadius.circular(
+                context.responsiveBorderRadius,
+              ),
             ),
             child: Row(
               children: [
@@ -49,17 +51,17 @@ class ProfileMenuItem extends StatelessWidget {
                       context.responsiveBorderRadius * 0.8,
                     ),
                   ),
-                 padding: EdgeInsets.all(2.5.w),
-                 
+                  padding: EdgeInsets.all(2.5.w),
+
                   child: CustomSvgImage(
                     assetName: iconPath,
                     width: context.responsiveIconSize * 0.1,
                     height: context.responsiveIconSize * 0.1,
                   ),
                 ),
-                
+
                 SizedBox(width: context.responsiveMargin * 1.8),
-                
+
                 // Title
                 Expanded(
                   child: Text(
@@ -67,11 +69,11 @@ class ProfileMenuItem extends StatelessWidget {
                     style: TextStyles.textViewMedium16.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w500,
-                      fontSize: FontSizes.s16
+                      fontSize: FontSizes.s16,
                     ),
                   ),
                 ),
-                
+
                 // Navigation arrow
                 Icon(
                   Icons.chevron_right,

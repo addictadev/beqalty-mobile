@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
-import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
 
 class DemoApp extends StatelessWidget {

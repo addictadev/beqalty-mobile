@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:sizer/sizer.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -24,9 +23,9 @@ class CartScreen extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Empty cart state
               Expanded(
                 child: Center(
