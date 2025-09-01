@@ -26,7 +26,7 @@ class PromotionalCard extends StatelessWidget {
         minHeight: 100,
         maxHeight: context.responsiveContainerHeight * 1.8,
       ),
-      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding / 2),
+      margin: EdgeInsets.only(right: context.responsivePadding / 2),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(AppAssets.promotionalCard),

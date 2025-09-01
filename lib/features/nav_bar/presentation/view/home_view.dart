@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:sizer/sizer.dart';
+import 'package:baqalty/features/search/index.dart';
 import '../widget/home_header.dart';
 import '../widget/promotional_slider.dart';
 import '../widget/shop_by_category_section.dart';
@@ -34,18 +36,29 @@ class HomeView extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackground,
       body: Column(
         children: [
-          HomeHeader(onSearchTap: () {}, onNotificationTap: () {}),
+          HomeHeader(
+            onSearchTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SearchResultsScreen(
+                
+                  ),
+                ),
+              );
+            },
+            onNotificationTap: () {},
+          ),
 
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: context.responsivePadding,
+                horizontal: 4. w,
               ),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    SizedBox(height: context.responsiveMargin * 2),
+                    SizedBox(height: 2.h),
 
                     PromotionalSlider(
                       cards: promotionalCards,
@@ -53,24 +66,21 @@ class HomeView extends StatelessWidget {
                       onCardTap: () {},
                     ),
 
-                    SizedBox(height: context.responsiveMargin * 2),
+                    SizedBox(height: 1.h),
 
                     ShopByCategorySection(
                       onViewAllTap: () {},
                       onCategoryTap: () {},
                     ),
 
-                    SizedBox(height: context.responsiveMargin * 2),
+                    SizedBox(height: 2.h),
 
                     PointsCard(points: 1250, onRedeemTap: () {}),
-                    SizedBox(height: context.responsiveMargin * 2),
+                    SizedBox(height: 2.h),
 
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.responsivePadding,
-                        ),
+                      
                         child: Text(
                           "special_offer".tr(),
                           style: TextStyles.textViewBold16.copyWith(
@@ -78,17 +88,17 @@ class HomeView extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: context.responsiveMargin * 2),
+                    
+                    SizedBox(height: 2.h),
 
                     SpecialOffersSection(
                       onViewAllTap: () {},
                       onProductTap: () {},
                     ),
-                    SizedBox(height: context.responsiveMargin * 2),
+                    SizedBox(height: 2.h),
                     SavedCartsSection(onViewAllTap: () {}, onCartTap: () {}),
 
-                    SizedBox(height: context.responsiveMargin * 2),
+                    SizedBox(height: 2.h),
                   ],
                 ),
               ),

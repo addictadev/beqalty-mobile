@@ -102,5 +102,9 @@
   "delivery_fee": "رسوم التوصيل",
   "discount": "الخصم",
   "total": "المجموع",
-  "checkout": "إتمام الشراء"
+  "checkout": "إتمام الشراء",
+  "search_results": "نتائج البحث",
+  "juhayna_milk": "حليب جهينة",
+  "juhayna_coconut_milk": "حليب جوز الهند جهينة",
+  "juhayna_cream_milk": "حليب القشدة جهينة"
 }

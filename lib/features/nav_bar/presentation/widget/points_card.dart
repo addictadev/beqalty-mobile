@@ -17,7 +17,6 @@ class PointsCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(context.responsivePadding),
-      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(
