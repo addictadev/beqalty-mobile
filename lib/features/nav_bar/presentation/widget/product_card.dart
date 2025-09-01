@@ -47,10 +47,10 @@ class ProductCard extends StatelessWidget {
             // Product Image - Left side
             Container(
               width: context.responsiveWidth * 0.2,
-              height: context.responsiveWidth * 0.2,
-              padding: EdgeInsets.all(context.responsivePadding * 0.9),
+              height: context.responsiveWidth * 0.19,
+              padding: EdgeInsets.all(context.responsivePadding * 0.2),
               decoration: BoxDecoration(
-                color: AppColors.borderLight,
+                color: AppColors.borderLight.withValues(alpha: .4),
                 borderRadius: BorderRadius.circular(
                   context.responsiveBorderRadius,
                 ),
@@ -60,8 +60,8 @@ class ProductCard extends StatelessWidget {
                   context.responsiveBorderRadius,
                 ),
                 child: Image.asset(
-                  width: context.responsiveWidth * 0.1,
-                  height: context.responsiveWidth * 0.1,
+                  width: context.responsiveWidth * 0.3,
+                  height: context.responsiveWidth * 0.3,
                   productImage,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {

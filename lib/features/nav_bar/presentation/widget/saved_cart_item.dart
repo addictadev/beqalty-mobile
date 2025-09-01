@@ -36,11 +36,11 @@ class SavedCartItem extends StatelessWidget {
           children: [
             // Shopping Bag Icon
             Container(
-              width: context.responsiveIconSize * 1.8,
-              height: context.responsiveIconSize * 1.8,
+              width: context.responsiveIconSize * 2.5,
+              height: context.responsiveIconSize * 2,
               padding: EdgeInsets.all(context.responsivePadding * 0.8),
               decoration: BoxDecoration(
-                color: AppColors.borderLight,
+                color: AppColors.borderLight.withValues(alpha: .4),
                 borderRadius: BorderRadius.circular(
                   context.responsiveBorderRadius,
                 ),
