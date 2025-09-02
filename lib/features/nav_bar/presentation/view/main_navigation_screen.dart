@@ -12,7 +12,6 @@ import '../../../../core/images_preview/custom_svg_img.dart';
 import 'profile_screen.dart';
 import '../../../cart/presentation/view/cart_screen.dart';
 import '../../../categories/presentation/view/categories_screen.dart';
-import '../../../orders/presentation/view/orders_screen.dart';
 
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
@@ -31,7 +30,7 @@ class MainNavigationScreenBody extends StatelessWidget {
 
   static const List<Widget> _screens = [
     HomeView(),
-    OrdersScreen(),
+    CartScreen(),
     CategoriesScreen(),
     ProfileScreen(),
   ];
