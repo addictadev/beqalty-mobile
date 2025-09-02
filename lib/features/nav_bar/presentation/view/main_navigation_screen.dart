@@ -1,3 +1,4 @@
+import 'package:baqalty/core/widgets/exit_popup.dart';
 import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/nav_bar/business/models/nav_item_model.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart'
@@ -40,10 +41,23 @@ class MainNavigationScreenBody extends StatelessWidget {
     return BlocBuilder<NavBarCubit, NavBarState>(
       builder: (context, state) {
         if (state is NavBarLoaded) {
-          return Scaffold(
-            backgroundColor: AppColors.scaffoldBackground,
-            body: _screens[state.currentIndex],
-            bottomNavigationBar: _buildBottomNavigationBar(context, state),
+          return PopScope(
+            canPop: false,
+            onPopInvoked: (didPop) async {
+              if (didPop) return;
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder: (_) => const ExitPopUp(),
+              );
+              if (shouldPop == true && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: Scaffold(
+              backgroundColor: AppColors.scaffoldBackground,
+              body: _screens[state.currentIndex],
+              bottomNavigationBar: _buildBottomNavigationBar(context, state),
+            ),
           );
         }
 

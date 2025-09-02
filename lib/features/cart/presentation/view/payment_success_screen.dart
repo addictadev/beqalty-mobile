@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
@@ -257,8 +258,7 @@ class _PaymentSuccessScreenBodyState extends State<PaymentSuccessScreenBody> {
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
               onTap: () {
-                HapticFeedback.mediumImpact();
-                // TODO: Navigate to order tracking
+                // NavigationManager.navigateTo(TrackingScreen());
               },
               child: Center(
                 child: Text(

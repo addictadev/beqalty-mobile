@@ -141,14 +141,12 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
   Widget _buildAppIcon(BuildContext context, double iconSize) {
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        shape: BoxShape.circle,
-      ),
+
       child: CustomImageAsset(
-        width: iconSize,
-        height: iconSize,
+        width: iconSize * 2,
+        height: iconSize * 2,
         assetName: AppAssets.appIcon,
+        fit: BoxFit.cover,
       ),
     );
   }

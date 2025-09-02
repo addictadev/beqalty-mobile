@@ -337,4 +337,61 @@ class TextStyles {
     fontWeight: AppFont.bold,
     fontFamily: AppFont.fontFamily,
   );
+
+  // Tracking screen specific text styles
+  static TextStyle trackingTitle = TextStyle(
+    fontSize: FontSizes.s24,
+    fontWeight: AppFont.bold,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF374151), // trackingDarkGray
+  );
+
+  static TextStyle trackingTime = TextStyle(
+    fontSize: FontSizes.s16,
+    fontWeight: AppFont.medium,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF374151), // trackingDarkGray
+  );
+
+  static TextStyle trackingTimeRemaining = TextStyle(
+    fontSize: FontSizes.s20,
+    fontWeight: AppFont.bold,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF1E3A8A), // trackingDarkBlue
+  );
+
+  static TextStyle trackingAddress = TextStyle(
+    fontSize: FontSizes.s14,
+    fontWeight: AppFont.regular,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF9CA3AF), // trackingMediumGray
+  );
+
+  static TextStyle trackingAddressBold = TextStyle(
+    fontSize: FontSizes.s14,
+    fontWeight: AppFont.bold,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF9CA3AF), // trackingMediumGray
+  );
+
+  static TextStyle trackingCardTitle = TextStyle(
+    fontSize: FontSizes.s16,
+    fontWeight: AppFont.bold,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF374151), // trackingDarkGray
+  );
+
+  static TextStyle trackingCardDescription = TextStyle(
+    fontSize: FontSizes.s14,
+    fontWeight: AppFont.regular,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF9CA3AF), // trackingMediumGray
+  );
+
+  static TextStyle trackingDriverName = TextStyle(
+    fontSize: FontSizes.s16,
+    fontWeight: AppFont.bold,
+    fontFamily: AppFont.fontFamily,
+    color: const Color(0xFF374151), // trackingDarkGray
+  );
 }
