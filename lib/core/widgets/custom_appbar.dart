@@ -64,6 +64,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       title: _buildTitle(theme, defaultTitleColor),
       leading: _buildActions(context, defaultIconColor),
+      
     );
   }
 
@@ -121,7 +122,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildBackButton(BuildContext context, Color defaultIconColor) {
-    return CustomBackButton(icon: Icons.chevron_left, size: 30);
+    return CustomBackButton(icon: Icons.chevron_left, size: 9.w);
   }
 
   @override

@@ -1,3 +1,6 @@
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/utils/styles/font_utils.dart';
+import 'package:baqalty/core/widgets/custom_appbar.dart' show CustomAppBar;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -45,88 +48,107 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: Column(
           children: [
             // App Bar (Fixed)
-            _buildAppBar(context),
-            
+   CustomAppBar(
+                title: "product_details".tr(),
+                onBackPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),            
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Product Image Section with Action Buttons
                     Container(
                       width: context.responsiveWidth,
-                      height: 30.h,
                       padding: EdgeInsets.all(3.w),
                       margin: EdgeInsets.all(3.w),
                       decoration: BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
                       ),
-                      child: Stack(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Product Image
-                          _buildProductImage(context),
-                          
-                          // Action Buttons (Share and Favorite)
-                          Positioned(
-                            top: context.responsiveMargin,
-                            right: context.responsivePadding,
-                            child: Row(
+                          // Product Image Container with fixed height
+                          SizedBox(
+                            height: 30.h,
+                            child: Stack(
                               children: [
-                                // Share Button
-                                Container(
-                                  width: context.responsiveIconSize * 1.8,
-                                  height: context.responsiveIconSize * 1.8,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white.withValues(alpha: 0.9),
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.shadowLight,
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                // Product Image
+                                _buildProductImage(context),
+                                
+                                // Action Buttons (Share and Favorite)
+                                Positioned(
+                                  top: context.responsiveMargin,
+                                  right: context.responsivePadding,
+                                  child: Row(
+                                    children: [
+                                      // Share Button
+                                      Container(
+                                        padding: EdgeInsets.all(context.responsivePadding*.6),
+                                        width: context.responsiveIconSize * 1.8,
+                                        height: context.responsiveIconSize * 1.8,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white.withValues(alpha: 0.9),
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.shadowLight,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: 
+                                        
+                                        CustomSvgImage(
+                                     width: 12,
+                                          assetName: AppAssets.share,
+                                        ),
+                                      ),
+                                      
+                                      SizedBox(width: context.responsiveMargin),
+                                      // Favorite Button
+                                      Container(
+                                        padding: EdgeInsets.all(context.responsivePadding*.6),
+                                        width: context.responsiveIconSize * 1.8,
+                                        height: context.responsiveIconSize * 1.8,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.error.withOpacity(0.1),
+                                          shape: BoxShape.circle,
+                                          boxShadow: [],
+                                        ),
+                                        child: CustomSvgImage(
+                                     width: 12,
+                                          assetName: AppAssets.heart,
+                                        ),
                                       ),
                                     ],
-                                  ),
-                                  child: Icon(
-                                    Iconsax.send_1,
-                                    color: AppColors.textPrimary,
-                                    size: context.responsiveIconSize,
-                                  ),
-                                ),
-                                
-                                SizedBox(width: context.responsiveMargin),
-                                
-                                // Favorite Button
-                                Container(
-                                  width: context.responsiveIconSize * 1.8,
-                                  height: context.responsiveIconSize * 1.8,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.error.withOpacity(0.1),
-                                    shape: BoxShape.circle,
-                                    boxShadow: [],
-                                  ),
-                                  child: Icon(
-                                    Icons.favorite,
-                                    color: AppColors.error,
-                                    size: context.responsiveIconSize,
                                   ),
                                 ),
                               ],
                             ),
                           ),
+                          
+                          // Pagination Dots
+                          _buildPaginationDots(context),
                         ],
                       ),
                     ),
                     
-                    // Pagination Dots
-                    _buildPaginationDots(context),
-                    
-                    SizedBox(height: context.responsiveMargin),
-                    
+                    _buildProductInfo(context),
+            
+            SizedBox(height: context.responsiveMargin * 2),
                     // Bottom Section with Details (Scrollable)
                     _buildBottomSection(context),
+               SizedBox(height: context.responsiveMargin * 2),         // More Like This Section
+            _buildMoreLikeThisSection(context),
+            
+            SizedBox(height: context.responsiveMargin * 2),
                     
                     // Extra space for bottom padding
                     SizedBox(height: context.responsiveMargin * 4),
@@ -237,12 +259,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Padding(
         padding: EdgeInsets.all(context.responsivePadding),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Product Title and Description
-            _buildProductInfo(context),
-            
-            SizedBox(height: context.responsiveMargin * 2),
+        
             
             // Quantity Selector
             _buildQuantitySelector(context),
@@ -259,10 +280,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             
             SizedBox(height: context.responsiveMargin * 2),
             
-            // More Like This Section
-            _buildMoreLikeThisSection(context),
             
-            SizedBox(height: context.responsiveMargin * 2),
           ],
         ),
       ),
@@ -270,13 +288,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildProductInfo(BuildContext context) {
-    return Column(
+    return 
+    Padding(
+      padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Product Title
         Text(
           "crunchy_chicken_nuggets".tr(),
-          style: TextStyles.textViewBold24.copyWith(
+          style: TextStyles.textViewBold18.copyWith(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
           ),
@@ -290,14 +312,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           style: TextStyles.textViewRegular14.copyWith(
             color: AppColors.textSecondary,
             height: 1.5,
+            fontSize:15.sp,
           ),
         ),
       ],
-    );
+    ));
   }
 
   Widget _buildQuantitySelector(BuildContext context) {
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "quantity".tr(),
@@ -307,7 +332,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
         
-        const Spacer(),
+        SizedBox(height: context.responsiveMargin * 1.5),
         
         // Quantity Controls
         Row(
@@ -322,11 +347,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 }
               },
               child: Container(
-                width: context.responsiveIconSize * 2.5,
-                height: context.responsiveIconSize * 2.5,
+                width: context.responsiveIconSize * 1.2,
+                height: context.responsiveIconSize * 1.2,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius * .8),
                   border: Border.all(
                     color: AppColors.textPrimary,
                     width: 1.5,
@@ -360,11 +385,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 });
               },
               child: Container(
-                width: context.responsiveIconSize * 2.5,
-                height: context.responsiveIconSize * 2.5,
+                width: context.responsiveIconSize * 1.2,
+                height: context.responsiveIconSize * 1.2,
                 decoration: BoxDecoration(
                   color: AppColors.textPrimary,
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius * .8),
                 ),
                 child: Icon(
                   Icons.add,
@@ -381,6 +406,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget _buildSizeOptions(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -396,7 +422,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         Row(
           children: sizeOptions.map((size) {
             final isSelected = selectedSize == size;
-            return Expanded(
+            return SizedBox(
+              width: context.responsiveWidth * 0.25,
+              height: 4.h,
               child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -436,6 +464,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget _buildFlavorOptions(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -451,7 +480,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         Row(
           children: flavorOptions.map((flavor) {
             final isSelected = selectedFlavor == flavor;
-            return Expanded(
+            return SizedBox(
+              width: context.responsiveWidth * 0.3,
+              height: 4.h,
               child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -459,10 +490,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   });
                 },
                 child: Container(
+                  width: context.responsiveWidth * 0.3,
                   margin: EdgeInsets.only(right: flavorOptions.last == flavor ? 0 : context.responsiveMargin),
                   padding: EdgeInsets.symmetric(
                     vertical: context.responsiveMargin,
-                    horizontal: context.responsivePadding,
+                    horizontal: context.responsivePadding*.5,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.textPrimary : AppColors.white,
@@ -529,7 +561,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildMoreLikeThisSection(BuildContext context) {
-    return Column(
+    return 
+    Padding(
+    padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -631,6 +667,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
       ],
-    );
+    ));
   }
 }
