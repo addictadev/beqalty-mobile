@@ -3,6 +3,7 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart';
 import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
+import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -109,7 +110,12 @@ class HomeView extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 2.h),
-                    SavedCartsSection(onViewAllTap: () {}, onCartTap: () {}),
+                    SavedCartsSection(
+                      onViewAllTap: () {
+                        NavigationManager.navigateTo(SavedCartsScreen());
+                      },
+                      onCartTap: () {},
+                    ),
 
                     SizedBox(height: 2.h),
                   ],
