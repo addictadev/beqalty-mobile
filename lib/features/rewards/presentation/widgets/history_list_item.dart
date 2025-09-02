@@ -39,14 +39,11 @@ class HistoryListItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Icon
             Container(
               width: context.responsiveIconSize * 2.5,
               height: context.responsiveIconSize * 2.5,
               decoration: BoxDecoration(
-                color: _getIconBackgroundColor(
-                  history.iconPath,
-                ).withValues(alpha: 0.1),
+                color: AppColors.overlayGray,
                 borderRadius: BorderRadius.circular(
                   context.responsiveBorderRadius,
                 ),
@@ -60,7 +57,6 @@ class HistoryListItem extends StatelessWidget {
 
             SizedBox(width: context.responsiveMargin * 1.5),
 
-            // Transaction details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +81,6 @@ class HistoryListItem extends StatelessWidget {
 
             SizedBox(width: context.responsiveMargin),
 
-            // Points change
             Text(
               '$pointsPrefix${history.points} ${'points'.tr()}',
               style: TextStyles.textViewMedium16.copyWith(
@@ -100,7 +95,6 @@ class HistoryListItem extends StatelessWidget {
   }
 
   IconData _getIconForHistory(String iconPath) {
-    // Map icon paths to actual icons
     switch (iconPath.toLowerCase()) {
       case 'gift':
       case 'earned':
@@ -125,7 +119,6 @@ class HistoryListItem extends StatelessWidget {
   }
 
   Color _getIconBackgroundColor(String iconPath) {
-    // Map icon paths to colors
     switch (iconPath.toLowerCase()) {
       case 'gift':
       case 'earned':
@@ -150,7 +143,6 @@ class HistoryListItem extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    // Format date as DD/MM/YYYY
     return '${date.day}/${date.month}/${date.year}';
   }
 }

@@ -38,7 +38,7 @@ class OfferListItem extends StatelessWidget {
             width: context.responsiveIconSize * 2.5,
             height: context.responsiveIconSize * 2.5,
             decoration: BoxDecoration(
-              color: AppColors.warning.withValues(alpha: 0.1),
+              color: AppColors.overlayGray,
               borderRadius: BorderRadius.circular(
                 context.responsiveBorderRadius,
               ),
@@ -88,7 +88,7 @@ class OfferListItem extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(
-                  context.responsiveBorderRadius,
+                  context.responsiveBorderRadius * 2,
                 ),
               ),
               child: Text(

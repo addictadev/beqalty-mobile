@@ -1,3 +1,4 @@
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
@@ -134,17 +135,13 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               productPrice: product['price'],
               productImage: product['image'],
               onTap: () {
-                // Navigate to product details
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailsScreen(
-                      productName: product['name'],
-                      productImage: product['image'],
-                      productPrice: product['price'],
-                      productCategory: product['category'],
-                    ),
-                  ),
-                );
+                NavigationManager.navigateTo(ProductDetailsScreen(
+                  productName: product['name'],
+                  productImage: product['image'],
+                  productPrice: product['price'],
+                  productCategory: product['category'],
+                ));
+              
               },
             ),
           );
