@@ -125,6 +125,10 @@
   "checkout": "إتمام الشراء",
   "search_results": "نتائج البحث",
   "juhayna_milk": "حليب جهينة",
+  "exit_app_title": "خروج من التطبيق",
+  "exit_app_message": "هل أنت متأكد من أنك تريد الخروج من التطبيق؟",
+  "cancel": "إلغاء",
+  "exit": "خروج",
   "juhayna_coconut_milk": "حليب جوز الهند جهينة",
   "juhayna_cream_milk": "حليب القشدة جهينة",
   "quantity": "الكمية",
@@ -157,5 +161,13 @@
   "payment_success_description": "تم إيداعك لبقالتى بنجاح",
   "total_payment": "إجمالي الدفع",
   "track_your_order": "تتبع طلبك",
-  "keep_shopping": "استمر في التسوق"
+  "keep_shopping": "استمر في التسوق",
+  "my_rewards_points": "نقاط المكافآت",
+  "earned_points": "النقاط المكتسبة",
+  "get_offers": "احصل على العروض",
+  "points_history": "سجل النقاط",
+  "get_your_offers": "احصل على عروضك",
+  "get": "احصل",
+  "redeeming": "استبدال",
+  "viewing": "عرض"
 }

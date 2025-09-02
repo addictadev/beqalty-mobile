@@ -3,6 +3,7 @@ import 'package:baqalty/features/orders/presentation/view/orders_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/my_account_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/settings_screen.dart';
+import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -163,6 +164,13 @@ class ProfileScreen extends StatelessWidget {
                             title: "my_wallet".tr(),
                             onTap: () {
                               debugPrint('My Wallet tapped');
+                            },
+                          ),
+                          ProfileMenuItem(
+                            iconPath: AppAssets.profileHeart,
+                            title: "my_rewards_points".tr(),
+                            onTap: () {
+                              NavigationManager.navigateTo(RewardsScreen());
                             },
                           ),
                           ProfileMenuItem(

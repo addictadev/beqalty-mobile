@@ -1,8 +1,8 @@
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:baqalty/features/saved_carts/business/models/saved_cart_model.dart';
@@ -36,7 +36,6 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
   }
 
   void _loadSavedCarts() {
-    // Simulate loading saved carts
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _savedCarts = _getMockSavedCarts();
@@ -76,10 +75,10 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
           children: [
             // App Bar
             _buildAppBar(context),
-            
+
             // Search Bar
             _buildSearchBar(context),
-            
+
             // Saved Carts List
             Expanded(
               child: _isLoading
@@ -100,10 +99,26 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
       ),
       child: Row(
         children: [
-          CustomBackButton(
-            onPressed: () => Navigator.of(context).pop(),
+          Container(
+            width: context.responsiveIconSize * 1.5,
+            height: context.responsiveIconSize * 1.5,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: () {
+                NavigationManager.pop();
+              },
+              icon: Icon(
+                Icons.chevron_left,
+                color: AppColors.textPrimary,
+                size: context.responsiveIconSize,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
           ),
-          
           Expanded(
             child: Center(
               child: Text(
@@ -114,7 +129,7 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
               ),
             ),
           ),
-          
+
           // Placeholder for balance
           const SizedBox(width: 40),
         ],
@@ -138,9 +153,7 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          CircularProgressIndicator(color: AppColors.primary),
           SizedBox(height: context.responsiveMargin * 2),
           Text(
             "loading_saved_carts".tr(),
@@ -186,9 +199,9 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
             size: context.responsiveIconSize * 4,
             color: AppColors.textSecondary,
           ),
-          
+
           SizedBox(height: context.responsiveMargin * 2),
-          
+
           Text(
             "no_saved_carts_found".tr(),
             style: TextStyles.textViewBold18.copyWith(
@@ -196,9 +209,9 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           SizedBox(height: context.responsiveMargin),
-          
+
           Text(
             "start_shopping_message".tr(),
             style: TextStyles.textViewRegular14.copyWith(

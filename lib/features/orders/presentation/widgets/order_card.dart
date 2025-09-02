@@ -26,7 +26,9 @@ class OrderCard extends StatelessWidget {
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,
@@ -39,78 +41,79 @@ class OrderCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // Item Count
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.responsivePadding * 0.8,
-                      vertical: context.responsiveMargin * 0.5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.borderLight,
-                      borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
-                    ),
-                    child: Text(
-                      "${order.itemCount} ${order.itemCount == 1 ? 'item' : 'items'}",
-                      style: TextStyles.textViewMedium12.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // Item Count
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsivePadding * 0.8,
+                  vertical: context.responsiveMargin * 0.5,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.borderLight,
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius * 2,
                   ),
-
-                  SizedBox(width: context.responsiveMargin),
-
-                  // Status Badge
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.responsivePadding * 0.8,
-                      vertical: context.responsiveMargin * 0.5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: order.statusColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
-                    ),
-                    child: Text(
-                      order.statusText.tr(),
-                      style: TextStyles.textViewMedium12.copyWith(
-                        color: order.statusColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                ),
+                child: Text(
+                  "${order.itemCount} ${order.itemCount == 1 ? 'item' : 'items'}",
+                  style: TextStyles.textViewMedium12.copyWith(
+                    color: AppColors.textSecondary,
                   ),
-                ],
+                ),
               ),
-         
+
+              SizedBox(width: context.responsiveMargin),
+
+              // Status Badge
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsivePadding * 0.8,
+                  vertical: context.responsiveMargin * 0.5,
+                ),
+                decoration: BoxDecoration(
+                  color: order.statusColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius * 2,
+                  ),
+                ),
+                child: Text(
+                  order.statusText.tr(),
+                  style: TextStyles.textViewMedium12.copyWith(
+                    color: order.statusColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
           Row(
             children: [
               // Order Icon
-      
-
 
               // Order Details
               Expanded(
                 child: Column(
-
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-        Container(
-                width: context.responsiveIconSize * 2,
-                height: context.responsiveIconSize * 2,
-                padding: EdgeInsets.all(context.responsivePadding * 0.8),
-                decoration: BoxDecoration(
-                  color: AppColors.borderLight.withValues(alpha: .4),
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius,
-                  ),
-                ),
-                child: CustomSvgImage(
-                  assetName: AppAssets.shoppingBag,
-                  color: AppColors.black,
-                ),
-              ),
+                    Container(
+                      width: context.responsiveIconSize * 2,
+                      height: context.responsiveIconSize * 2,
+                      padding: EdgeInsets.all(context.responsivePadding * 0.8),
+                      decoration: BoxDecoration(
+                        color: AppColors.borderLight.withValues(alpha: .4),
+                        borderRadius: BorderRadius.circular(
+                          context.responsiveBorderRadius,
+                        ),
+                      ),
+                      child: CustomSvgImage(
+                        assetName: AppAssets.shoppingBag,
+                        color: AppColors.black,
+                      ),
+                    ),
 
                     // Order ID
                     Text(
@@ -128,20 +131,17 @@ class OrderCard extends StatelessWidget {
                 ),
               ),
 
-                       _buildActionButton(context),
-
-         
+              _buildActionButton(context),
             ],
           ),
-
-    
         ],
       ),
     );
   }
 
   Widget _buildTimeInfo(BuildContext context) {
-    if (order.status == OrderStatus.outForDelivery && order.estimatedTime != null) {
+    if (order.status == OrderStatus.outForDelivery &&
+        order.estimatedTime != null) {
       return Row(
         children: [
           Text(
@@ -181,7 +181,9 @@ class OrderCard extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: AppColors.textPrimary,
-            borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+            borderRadius: BorderRadius.circular(
+              context.responsiveBorderRadius * 2,
+            ),
           ),
           child: Text(
             "track_order".tr(),
@@ -202,7 +204,9 @@ class OrderCard extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: AppColors.textPrimary,
-            borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+            borderRadius: BorderRadius.circular(
+              context.responsiveBorderRadius * 2,
+            ),
           ),
           child: Text(
             "order_again".tr(),

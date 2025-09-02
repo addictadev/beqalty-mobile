@@ -26,7 +26,9 @@ class SavedCartCard extends StatelessWidget {
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,
@@ -102,7 +104,9 @@ class SavedCartCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+                        borderRadius: BorderRadius.circular(
+                          context.responsiveBorderRadius * 2,
+                        ),
                       ),
                       child: Text(
                         "cart_details".tr(),
@@ -126,7 +130,9 @@ class SavedCartCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.textPrimary,
-                        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+                        borderRadius: BorderRadius.circular(
+                          context.responsiveBorderRadius * 2,
+                        ),
                       ),
                       child: Text(
                         "order_again".tr(),

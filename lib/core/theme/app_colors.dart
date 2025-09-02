@@ -107,4 +107,27 @@ class AppColors {
   static const Color todoHeaderBackground = Color(
     0xFF2D3043,
   ); // Dark purple header
+
+  // Tracking screen specific colors
+  static const Color trackingDarkBlue = Color(
+    0xFF1E3A8A,
+  ); // Dark blue for icons and active states
+  static const Color trackingLightGray = Color(
+    0xFFF3F4F6,
+  ); // Light gray for map background
+  static const Color trackingMediumGray = Color(
+    0xFF9CA3AF,
+  ); // Medium gray for secondary text
+  static const Color trackingDarkGray = Color(
+    0xFF374151,
+  ); // Dark gray for main text
+  static const Color trackingProgressActive = Color(
+    0xFF1E3A8A,
+  ); // Dark blue for active progress segments
+  static const Color trackingProgressInactive = Color(
+    0xFFE5E7EB,
+  ); // Light gray for inactive progress segments
+  static const Color trackingCardShadow = Color(
+    0x1A000000,
+  ); // Subtle shadow for cards
 }

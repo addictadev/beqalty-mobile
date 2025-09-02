@@ -34,13 +34,13 @@ class SavedCartModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        itemCount,
-        lastModified,
-        totalAmount,
-        items,
-      ];
+    id,
+    name,
+    itemCount,
+    lastModified,
+    totalAmount,
+    items,
+  ];
 }
 
 class SavedCartItemModel extends Equatable {
