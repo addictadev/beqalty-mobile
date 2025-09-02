@@ -1,3 +1,4 @@
+import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
@@ -89,7 +90,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         child: Column(
           children: [
             // App Bar
-            _buildAppBar(context),
+            CustomAppBar(title: "my_orders".tr()),
             
             // Search Bar
             _buildSearchBar(context),
@@ -106,32 +107,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.responsivePadding,
-        vertical: context.responsiveMargin,
-      ),
-      child: Row(
-        children: [
-     
-          
-          Expanded(
-            child: Center(
-              child: Text(
-                "my_orders".tr(),
-                style: TextStyles.textViewBold18.copyWith(
-                  color: AppColors.black,
-                ),
-              ),
-            ),
-          ),
-          
-     
-        ],
-      ),
-    );
-  }
 
   Widget _buildSearchBar(BuildContext context) {
     return 
