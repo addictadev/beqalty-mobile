@@ -4,6 +4,7 @@ import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart';
 import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
+import 'package:baqalty/features/categories/presentation/view/subcategory_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -70,7 +71,9 @@ class HomeView extends StatelessWidget {
                       onViewAllTap: () {
                         context.read<NavBarCubit>().changeTab(2);
                       },
-                      onCategoryTap: () {},
+                      onCategoryTap: (categoryName) {
+                        NavigationManager.navigateTo(SubcategoryScreen(categoryName: categoryName));
+                      },
                     ),
 
                     SizedBox(height: 2.h),
@@ -114,7 +117,9 @@ class HomeView extends StatelessWidget {
                       onViewAllTap: () {
                         NavigationManager.navigateTo(SavedCartsScreen());
                       },
-                      onCartTap: () {},
+                      onCartTap: (cartTitle) {
+                        NavigationManager.navigateTo(SavedCartsScreen());
+                      },
                     ),
 
                     SizedBox(height: 2.h),

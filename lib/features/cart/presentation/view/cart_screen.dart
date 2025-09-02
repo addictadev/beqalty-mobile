@@ -36,10 +36,12 @@ class CartScreenBody extends StatelessWidget {
       body: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
           return AuthBackgroundWidget(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: context.responsiveMargin * 6),
+            child: 
+            
+            Column(
+              children: [
+                
+                SizedBox(height: context.responsiveMargin * 6),
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: context.responsivePadding,
@@ -55,18 +57,18 @@ class CartScreenBody extends StatelessWidget {
                             color: AppColors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: IconButton(
-                            onPressed: () {
-                              context.read<NavBarCubit>().changeTab(0);
-                            },
-                            icon: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.textPrimary,
-                              size: context.responsiveIconSize,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
+                          // child: IconButton(
+                          //   onPressed: () {
+                          //     context.read<NavBarCubit>().changeTab(0);
+                          //   },
+                          //   icon: Icon(
+                          //     Icons.chevron_left,
+                          //     color: AppColors.textPrimary,
+                          //     size: context.responsiveIconSize,
+                          //   ),
+                          //   padding: EdgeInsets.zero,
+                          //   constraints: const BoxConstraints(),
+                          // ),
                         ),
 
                         // Title
@@ -106,7 +108,11 @@ class CartScreenBody extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: context.responsiveMargin * 2),
+
+           Expanded(child:  SingleChildScrollView(
+              child: Column(
+                children: [
+                               SizedBox(height: context.responsiveMargin * 2),
 
                   // Share Cart Section
                   _buildShareCartSection(context),
@@ -121,8 +127,8 @@ class CartScreenBody extends StatelessWidget {
                   SizedBox(height: context.responsiveMargin * 4),
                 ],
               ),
-            ),
-          );
+             )  ),
+          ]));
         },
       ),
     );

@@ -1,14 +1,17 @@
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'subcategory_screen.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
@@ -21,7 +24,11 @@ class CategoriesScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: context.responsiveMargin * 6),
+              SizedBox(height: context.responsiveMargin * 2),
+              Text("categories".tr(), style: TextStyles.textViewBold18.copyWith(
+                                color: AppColors.textPrimary,
+                              ),),
+              SizedBox(height: context.responsiveMargin ),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: context.responsivePadding,
@@ -171,7 +178,9 @@ class CategoriesScreen extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           onTap: () {
-            debugPrint('Category tapped: $name');
+       
+              NavigationManager.navigateTo(SubcategoryScreen(categoryName: name));
+           
           },
           child: Padding(
             padding: EdgeInsets.all(context.responsivePadding),
