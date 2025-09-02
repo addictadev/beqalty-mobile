@@ -25,13 +25,16 @@ class CustomBackButton extends StatelessWidget {
 
           boxShadow: [],
         ),
-        child: 
-        Padding(padding: EdgeInsets.symmetric(horizontal: context.responsivePadding*.6,
-        vertical: context.responsivePadding*.4),
-        child: Center(
-          child: Icon(ic, color: Colors.black, size: 5.w),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.responsivePadding * .6,
+            vertical: context.responsivePadding * .4,
+          ),
+          child: Center(
+            child: Icon(ic, color: Colors.black, size: 5.w),
+          ),
         ),
-      )),
+      ),
     );
   }
 }

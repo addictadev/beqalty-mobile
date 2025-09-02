@@ -27,15 +27,14 @@ class ShopByCategorySection extends StatelessWidget {
         border: Border.all(color: AppColors.borderLight, width: 1),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-SizedBox(height: 2.h),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          SizedBox(height: 2.h),
 
-            _buildCategoryGrid(),
-          ],
-        ),
-      
+          _buildCategoryGrid(),
+        ],
+      ),
     );
   }
 

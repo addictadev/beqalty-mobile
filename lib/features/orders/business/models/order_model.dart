@@ -91,15 +91,15 @@ class OrderModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        orderNumber,
-        orderDate,
-        itemCount,
-        status,
-        estimatedTime,
-        totalAmount,
-        items,
-      ];
+    id,
+    orderNumber,
+    orderDate,
+    itemCount,
+    status,
+    estimatedTime,
+    totalAmount,
+    items,
+  ];
 }
 
 class OrderItemModel extends Equatable {

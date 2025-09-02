@@ -64,7 +64,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       title: _buildTitle(theme, defaultTitleColor),
       leading: _buildActions(context, defaultIconColor),
-      
     );
   }
 

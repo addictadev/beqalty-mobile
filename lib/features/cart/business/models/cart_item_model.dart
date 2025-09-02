@@ -36,5 +36,12 @@ class CartItemModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, productName, category, productImage, price, quantity];
+  List<Object?> get props => [
+    id,
+    productName,
+    category,
+    productImage,
+    price,
+    quantity,
+  ];
 }

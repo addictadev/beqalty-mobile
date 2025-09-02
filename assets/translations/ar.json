@@ -160,5 +160,13 @@
   "payment_success_description": "تم إيداعك لبقالتى بنجاح",
   "total_payment": "إجمالي الدفع",
   "track_your_order": "تتبع طلبك",
-  "keep_shopping": "استمر في التسوق"
+  "keep_shopping": "استمر في التسوق",
+  "my_rewards_points": "نقاط المكافآت",
+  "earned_points": "النقاط المكتسبة",
+  "get_offers": "احصل على العروض",
+  "points_history": "سجل النقاط",
+  "get_your_offers": "احصل على عروضك",
+  "get": "احصل",
+  "redeeming": "استبدال",
+  "viewing": "عرض"
 }

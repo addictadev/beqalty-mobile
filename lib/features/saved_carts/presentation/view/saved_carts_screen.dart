@@ -88,10 +88,10 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
           children: [
             // App Bar
             _buildAppBar(context),
-            
+
             // Search Bar
             _buildSearchBar(context),
-            
+
             // Saved Carts List
             Expanded(
               child: _isLoading
@@ -112,10 +112,8 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
       ),
       child: Row(
         children: [
-          CustomBackButton(
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          
+          CustomBackButton(onPressed: () => Navigator.of(context).pop()),
+
           Expanded(
             child: Center(
               child: Text(
@@ -126,7 +124,7 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
               ),
             ),
           ),
-          
+
           // Placeholder for balance
           const SizedBox(width: 40),
         ],
@@ -150,9 +148,7 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          CircularProgressIndicator(color: AppColors.primary),
           SizedBox(height: context.responsiveMargin * 2),
           Text(
             "loading_saved_carts".tr(),
@@ -198,9 +194,9 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
             size: context.responsiveIconSize * 4,
             color: AppColors.textSecondary,
           ),
-          
+
           SizedBox(height: context.responsiveMargin * 2),
-          
+
           Text(
             "no_saved_carts_found".tr(),
             style: TextStyles.textViewBold18.copyWith(
@@ -208,9 +204,9 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           SizedBox(height: context.responsiveMargin),
-          
+
           Text(
             "start_shopping_message".tr(),
             style: TextStyles.textViewRegular14.copyWith(

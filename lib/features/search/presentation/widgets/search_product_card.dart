@@ -29,11 +29,10 @@ class SearchProductCard extends StatelessWidget {
         padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
-          border: Border.all(
-            color: AppColors.borderLight,
-            width: 1,
+          borderRadius: BorderRadius.circular(
+            context.responsiveBorderRadius * 1.5,
           ),
+          border: Border.all(color: AppColors.borderLight, width: 1),
           boxShadow: [
             BoxShadow(
               color: AppColors.shadowLight,
@@ -50,10 +49,14 @@ class SearchProductCard extends StatelessWidget {
               height: context.responsiveWidth * 0.25,
               decoration: BoxDecoration(
                 color: AppColors.borderLight.withValues(alpha: .4),
-                borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                borderRadius: BorderRadius.circular(
+                  context.responsiveBorderRadius,
+                ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                borderRadius: BorderRadius.circular(
+                  context.responsiveBorderRadius,
+                ),
                 child: Image.asset(
                   productImage,
                   fit: BoxFit.cover,
@@ -70,9 +73,9 @@ class SearchProductCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             SizedBox(width: context.responsiveMargin * 1.5),
-            
+
             // Product Information
             Expanded(
               child: Column(
@@ -88,9 +91,9 @@ class SearchProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   SizedBox(height: context.responsiveMargin * 0.5),
-                  
+
                   // Product Category
                   Text(
                     productCategory,
@@ -98,9 +101,9 @@ class SearchProductCard extends StatelessWidget {
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  
+
                   SizedBox(height: context.responsiveMargin),
-                  
+
                   // Price
                   Text(
                     "${productPrice.toStringAsFixed(2)} ${"egp".tr()}",

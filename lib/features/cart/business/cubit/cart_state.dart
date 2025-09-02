@@ -29,7 +29,14 @@ class CartLoaded extends CartState {
   });
 
   @override
-  List<Object> get props => [cartItems, subTotal, deliveryFee, discount, total, isCartSaved];
+  List<Object> get props => [
+    cartItems,
+    subTotal,
+    deliveryFee,
+    discount,
+    total,
+    isCartSaved,
+  ];
 }
 
 class CartError extends CartState {

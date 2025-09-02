@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
-import 'package:baqalty/core/images_preview/app_assets.dart';
+
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:baqalty/features/orders/business/models/order_model.dart';
 import 'package:baqalty/features/orders/presentation/widgets/order_card.dart';
@@ -48,19 +47,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
     });
   }
 
-  void _onSearchChanged(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        _filteredOrders = _orders;
-      } else {
-        _filteredOrders = _orders.where((order) {
-          return order.orderNumber.toLowerCase().contains(query.toLowerCase()) ||
-              order.statusText.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-      }
-    });
-  }
-
   void _onTrackOrder(OrderModel order) {
     // TODO: Implement order tracking
     ScaffoldMessenger.of(context).showSnackBar(
@@ -91,10 +77,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
           children: [
             // App Bar
             CustomAppBar(title: "my_orders".tr()),
-            
+
             // Search Bar
             _buildSearchBar(context),
-            
+
             // Orders List
             Expanded(
               child: _isLoading
@@ -107,10 +93,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-
   Widget _buildSearchBar(BuildContext context) {
-    return 
-    Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
       child: CustomTextFormField(
         controller: _searchController,
@@ -118,7 +102,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
         prefixIcon: Icon(Iconsax.search_normal_1),
       ),
     );
-   
   }
 
   Widget _buildLoadingState() {
@@ -126,9 +109,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          CircularProgressIndicator(color: AppColors.primary),
           SizedBox(height: context.responsiveMargin * 2),
           Text(
             "loading_orders".tr(),
@@ -174,9 +155,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
             size: context.responsiveIconSize * 4,
             color: AppColors.textSecondary,
           ),
-          
+
           SizedBox(height: context.responsiveMargin * 2),
-          
+
           Text(
             "no_orders_found".tr(),
             style: TextStyles.textViewBold18.copyWith(
@@ -184,9 +165,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           SizedBox(height: context.responsiveMargin),
-          
+
           Text(
             "start_shopping_message".tr(),
             style: TextStyles.textViewRegular14.copyWith(
@@ -214,7 +195,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
       OrderModel(
         id: '2',
         orderNumber: '#BAQ10246',
-        orderDate: DateTime.now().subtract(const Duration(days: 1, hours: 18, minutes: 20)),
+        orderDate: DateTime.now().subtract(
+          const Duration(days: 1, hours: 18, minutes: 20),
+        ),
         itemCount: 3,
         status: OrderStatus.delivered,
         totalAmount: 89.50,
@@ -223,7 +206,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
       OrderModel(
         id: '3',
         orderNumber: '#BAQ10245',
-        orderDate: DateTime.now().subtract(const Duration(days: 1, hours: 18, minutes: 20)),
+        orderDate: DateTime.now().subtract(
+          const Duration(days: 1, hours: 18, minutes: 20),
+        ),
         itemCount: 3,
         status: OrderStatus.delivered,
         totalAmount: 67.25,
@@ -232,7 +217,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
       OrderModel(
         id: '4',
         orderNumber: '#BAQ10244',
-        orderDate: DateTime.now().subtract(const Duration(days: 1, hours: 18, minutes: 20)),
+        orderDate: DateTime.now().subtract(
+          const Duration(days: 1, hours: 18, minutes: 20),
+        ),
         itemCount: 3,
         status: OrderStatus.delivered,
         totalAmount: 45.80,

@@ -75,9 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       PrimaryButton(
                         text: "login".tr(),
                         onPressed: () {
-                          NavigationManager.navigateTo(
-                            MainNavigationScreen(),
-                          );
+                          NavigationManager.navigateTo(MainNavigationScreen());
                         },
                       ),
 
