@@ -1,3 +1,4 @@
+import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -15,8 +16,8 @@ class CustomBackButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed ?? () => Navigator.of(context).pop(),
       child: Container(
-        width: 5.w,
-        height: 5.w,
+        // width: 5.w,
+        // height: 5.w,
         margin: EdgeInsets.only(left: 3.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -24,10 +25,13 @@ class CustomBackButton extends StatelessWidget {
 
           boxShadow: [],
         ),
+        child: 
+        Padding(padding: EdgeInsets.symmetric(horizontal: context.responsivePadding*.6,
+        vertical: context.responsivePadding*.4),
         child: Center(
-          child: Icon(ic, color: Colors.black, size: 7.w),
+          child: Icon(ic, color: Colors.black, size: 5.w),
         ),
-      ),
+      )),
     );
   }
 }

@@ -16,6 +16,8 @@ class AppAssets {
 
   // Profile icons
   static const String profilePerson = "$_iconsPath/Icon.svg";
+  static const String heart = "$_iconsPath/ffav.svg";
+  static const String share = "$_iconsPath/send.svg";
   static const String profileWallet = "$_iconsPath/wallett.svg";
   static const String profileOrders = "$_iconsPath/orders.svg";
   static const String profileSavedCarts = "$_iconsPath/savedcarts.svg";
