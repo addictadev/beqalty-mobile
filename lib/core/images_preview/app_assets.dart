@@ -54,6 +54,7 @@ class AppAssets {
     static const String cashIcon = "$_iconsPath/cash_on_delivery.svg";
     static const String mastercardIcon = "$_iconsPath/mastercard_icon.svg";
     static const String paypalIcon = "$_iconsPath/paypal_icon.svg";
+    static const String sucessIcon = "$_iconsPath/sucess_icon.svg";
 
 
 }
