@@ -46,18 +46,6 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
     });
   }
 
-  void _onSearchChanged(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        _filteredCarts = _savedCarts;
-      } else {
-        _filteredCarts = _savedCarts.where((cart) {
-          return cart.name.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-      }
-    });
-  }
-
   void _onCartDetails(SavedCartModel savedCart) {
     // TODO: Implement cart details view
     ScaffoldMessenger.of(context).showSnackBar(
