@@ -49,5 +49,11 @@ class AppAssets {
     static const String juhaynaCreamMilk = "$_imagesPath/juhayna_cream_milk.png";
     static const String chocolateMilk = "$_imagesPath/chocolate_milk.png";
     static const String alMaraiMilk = "$_imagesPath/al_marai_milk.png";
+    static const String cardIcon = "$_iconsPath/card.svg";
+    static const String walletIcon = "$_iconsPath/wallet.svg";
+    static const String cashIcon = "$_iconsPath/cash_on_delivery.svg";
+    static const String mastercardIcon = "$_iconsPath/mastercard_icon.svg";
+    static const String paypalIcon = "$_iconsPath/paypal_icon.svg";
+
 
 }

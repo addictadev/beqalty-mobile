@@ -1,5 +1,6 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:baqalty/features/cart/business/cubit/cart_cubit.dart';
 import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:flutter/material.dart';
@@ -34,90 +35,92 @@ class CartScreenBody extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackground,
       body: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: context.responsiveMargin * 6),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.responsivePadding,
-                    vertical: context.responsiveMargin,
-                  ),
-                  child: Row(
-                    children: [
-                      // Back Button
-                      Container(
-                        width: context.responsiveIconSize * 1.5,
-                        height: context.responsiveIconSize * 1.5,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            context.read<NavBarCubit>().changeTab(0);
-                          },
-                          icon: Icon(
-                            Icons.chevron_left,
-                            color: AppColors.textPrimary,
-                            size: context.responsiveIconSize,
-                          ),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ),
-
-                      // Title
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            "my_cart".tr(),
-                            style: TextStyles.textViewBold18.copyWith(
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Bookmark with Plus Icon
-                      GestureDetector(
-                        onTap: () {
-                          context.read<CartCubit>().toggleCartSave();
-                        },
-                        child: Container(
+          return AuthBackgroundWidget(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: context.responsiveMargin * 6),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.responsivePadding,
+                      vertical: context.responsiveMargin,
+                    ),
+                    child: Row(
+                      children: [
+                        // Back Button
+                        Container(
                           width: context.responsiveIconSize * 1.5,
                           height: context.responsiveIconSize * 1.5,
-                          padding: EdgeInsets.all(
-                            context.responsivePadding * 0.5,
-                          ),
                           decoration: BoxDecoration(
                             color: AppColors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: CustomSvgImage(
-                            assetName: (state as CartLoaded).isCartSaved
-                                ? AppAssets.savedIcon
-                                : AppAssets.addSaveIcon,
+                          child: IconButton(
+                            onPressed: () {
+                              context.read<NavBarCubit>().changeTab(0);
+                            },
+                            icon: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.textPrimary,
+                              size: context.responsiveIconSize,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
                           ),
                         ),
-                      ),
-                    ],
+
+                        // Title
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              "my_cart".tr(),
+                              style: TextStyles.textViewBold18.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Bookmark with Plus Icon
+                        GestureDetector(
+                          onTap: () {
+                            context.read<CartCubit>().toggleCartSave();
+                          },
+                          child: Container(
+                            width: context.responsiveIconSize * 1.5,
+                            height: context.responsiveIconSize * 1.5,
+                            padding: EdgeInsets.all(
+                              context.responsivePadding * 0.5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: CustomSvgImage(
+                              assetName: (state as CartLoaded).isCartSaved
+                                  ? AppAssets.savedIcon
+                                  : AppAssets.addSaveIcon,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: context.responsiveMargin * 2),
+                  SizedBox(height: context.responsiveMargin * 2),
 
-                // Share Cart Section
-                _buildShareCartSection(context),
+                  // Share Cart Section
+                  _buildShareCartSection(context),
 
-                // Cart Items Section
-                _buildCartItemsSection(context, state),
+                  // Cart Items Section
+                  _buildCartItemsSection(context, state),
 
-                // Order Summary
-                _buildOrderSummary(context, state),
+                  // Order Summary
+                  _buildOrderSummary(context, state),
 
-                // Bottom spacing for safe area
-                SizedBox(height: context.responsiveMargin * 4),
-              ],
+                  // Bottom spacing for safe area
+                  SizedBox(height: context.responsiveMargin * 4),
+                ],
+              ),
             ),
           );
         },

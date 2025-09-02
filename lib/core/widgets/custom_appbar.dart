@@ -49,8 +49,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultBackgroundColor =
-        backgroundColor ?? Colors.transparent;
+    final defaultBackgroundColor = backgroundColor ?? Colors.transparent;
     final defaultIconColor = iconColor ?? AppColors.textPrimary;
     final defaultTitleColor = titleColor ?? AppColors.textPrimary;
 
@@ -62,6 +61,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: titleSpacing,
       toolbarHeight: height,
       automaticallyImplyLeading: false,
+      scrolledUnderElevation: 0,
       title: _buildTitle(theme, defaultTitleColor),
       leading: _buildActions(context, defaultIconColor),
     );

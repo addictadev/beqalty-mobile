@@ -1,8 +1,10 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'package:baqalty/features/search/index.dart';
@@ -62,7 +64,9 @@ class HomeView extends StatelessWidget {
                     SizedBox(height: 1.h),
 
                     ShopByCategorySection(
-                      onViewAllTap: () {},
+                      onViewAllTap: () {
+                        context.read<NavBarCubit>().changeTab(2);
+                      },
                       onCategoryTap: () {},
                     ),
 

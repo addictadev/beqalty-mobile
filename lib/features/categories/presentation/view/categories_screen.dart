@@ -1,4 +1,5 @@
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
+import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -16,29 +17,31 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: context.responsiveMargin * 6),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.responsivePadding,
-              ),
-              child: CustomTextFormField(
-                hint: "search_transactions".tr(),
-                prefixIcon: Icon(
-                  Iconsax.search_normal,
-                  color: AppColors.textSecondary,
+      body: AuthBackgroundWidget(
+        child: SafeArea(
+          child: Column(
+            children: [
+              SizedBox(height: context.responsiveMargin * 6),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsivePadding,
                 ),
-                onChanged: (value) {
-                  debugPrint(value);
-                },
+                child: CustomTextFormField(
+                  hint: "search_transactions".tr(),
+                  prefixIcon: Icon(
+                    Iconsax.search_normal,
+                    color: AppColors.textSecondary,
+                  ),
+                  onChanged: (value) {
+                    debugPrint(value);
+                  },
+                ),
               ),
-            ),
-            SizedBox(height: context.responsiveMargin * 2),
+              SizedBox(height: context.responsiveMargin * 2),
 
-            Expanded(child: _buildCategoriesGrid(context)),
-          ],
+              Expanded(child: _buildCategoriesGrid(context)),
+            ],
+          ),
         ),
       ),
     );

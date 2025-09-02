@@ -1,5 +1,7 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:baqalty/features/cart/presentation/view/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -73,7 +75,7 @@ class OrderSummary extends StatelessWidget {
             child: PrimaryButton(
               text: "checkout".tr(),
               onPressed: () {
-                debugPrint('Checkout pressed');
+                NavigationManager.navigateTo(CheckoutScreen());
               },
               color: AppColors.white,
               textStyle: TextStyles.textViewBold16.copyWith(
