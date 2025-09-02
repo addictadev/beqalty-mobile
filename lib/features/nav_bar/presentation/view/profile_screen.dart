@@ -1,5 +1,6 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/features/orders/presentation/view/orders_screen.dart';
+import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/my_account_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +176,7 @@ class ProfileScreen extends StatelessWidget {
                             iconPath: AppAssets.profileSavedCarts,
                             title: "saved_carts".tr(),
                             onTap: () {
-                              debugPrint('Saved Carts tapped');
+                              NavigationManager.navigateTo(SavedCartsScreen());
                             },
                           ),
                           ProfileMenuItem(
