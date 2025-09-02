@@ -1,34 +1,32 @@
-import 'package:baqalty/core/widgets/custom_appbar.dart';
-import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
-import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
-import 'package:baqalty/features/orders/business/models/order_model.dart';
-import 'package:baqalty/features/orders/presentation/widgets/order_card.dart';
+import 'package:baqalty/features/saved_carts/business/models/saved_cart_model.dart';
+import 'package:baqalty/features/saved_carts/presentation/widgets/saved_cart_card.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 
-class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
+class SavedCartsScreen extends StatefulWidget {
+  const SavedCartsScreen({super.key});
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
+  State<SavedCartsScreen> createState() => _SavedCartsScreenState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
+class _SavedCartsScreenState extends State<SavedCartsScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<OrderModel> _orders = [];
-  List<OrderModel> _filteredOrders = [];
+  List<SavedCartModel> _savedCarts = [];
+  List<SavedCartModel> _filteredCarts = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadOrders();
+    _loadSavedCarts();
   }
 
   @override
@@ -37,12 +35,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
     super.dispose();
   }
 
-  void _loadOrders() {
-    // Simulate loading orders
+  void _loadSavedCarts() {
+    // Simulate loading saved carts
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        _orders = _getMockOrders();
-        _filteredOrders = _orders;
+        _savedCarts = _getMockSavedCarts();
+        _filteredCarts = _savedCarts;
         _isLoading = false;
       });
     });
@@ -51,31 +49,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
   void _onSearchChanged(String query) {
     setState(() {
       if (query.isEmpty) {
-        _filteredOrders = _orders;
+        _filteredCarts = _savedCarts;
       } else {
-        _filteredOrders = _orders.where((order) {
-          return order.orderNumber.toLowerCase().contains(query.toLowerCase()) ||
-              order.statusText.toLowerCase().contains(query.toLowerCase());
+        _filteredCarts = _savedCarts.where((cart) {
+          return cart.name.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
     });
   }
 
-  void _onTrackOrder(OrderModel order) {
-    // TODO: Implement order tracking
+  void _onCartDetails(SavedCartModel savedCart) {
+    // TODO: Implement cart details view
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Tracking order ${order.orderNumber}'),
+        content: Text('Viewing details for ${savedCart.name}'),
         backgroundColor: AppColors.primary,
       ),
     );
   }
 
-  void _onOrderAgain(OrderModel order) {
+  void _onOrderAgain(SavedCartModel savedCart) {
     // TODO: Implement reorder functionality
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Reordering from ${order.orderNumber}'),
+        content: Text('Reordering from ${savedCart.name}'),
         backgroundColor: AppColors.success,
       ),
     );
@@ -90,16 +87,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
         child: Column(
           children: [
             // App Bar
-            CustomAppBar(title: "my_orders".tr()),
+            _buildAppBar(context),
             
             // Search Bar
             _buildSearchBar(context),
             
-            // Orders List
+            // Saved Carts List
             Expanded(
               child: _isLoading
                   ? _buildLoadingState()
-                  : _buildOrdersList(context),
+                  : _buildSavedCartsList(context),
             ),
           ],
         ),
@@ -107,18 +104,45 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
+  Widget _buildAppBar(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.responsivePadding,
+        vertical: context.responsiveMargin,
+      ),
+      child: Row(
+        children: [
+          CustomBackButton(
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          
+          Expanded(
+            child: Center(
+              child: Text(
+                "saved_carts".tr(),
+                style: TextStyles.textViewBold18.copyWith(
+                  color: AppColors.black,
+                ),
+              ),
+            ),
+          ),
+          
+          // Placeholder for balance
+          const SizedBox(width: 40),
+        ],
+      ),
+    );
+  }
 
   Widget _buildSearchBar(BuildContext context) {
-    return 
-    Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
       child: CustomTextFormField(
         controller: _searchController,
-        hint: "search_orders".tr(),
+        hint: "search_saved_carts".tr(),
         prefixIcon: Icon(Iconsax.search_normal_1),
       ),
     );
-   
   }
 
   Widget _buildLoadingState() {
@@ -131,7 +155,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ),
           SizedBox(height: context.responsiveMargin * 2),
           Text(
-            "loading_orders".tr(),
+            "loading_saved_carts".tr(),
             style: TextStyles.textViewMedium16.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -141,8 +165,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget _buildOrdersList(BuildContext context) {
-    if (_filteredOrders.isEmpty) {
+  Widget _buildSavedCartsList(BuildContext context) {
+    if (_filteredCarts.isEmpty) {
       return _buildEmptyState(context);
     }
 
@@ -152,13 +176,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
         vertical: context.responsiveMargin,
       ),
       physics: const BouncingScrollPhysics(),
-      itemCount: _filteredOrders.length,
+      itemCount: _filteredCarts.length,
       itemBuilder: (context, index) {
-        final order = _filteredOrders[index];
-        return OrderCard(
-          order: order,
-          onTrackOrder: () => _onTrackOrder(order),
-          onOrderAgain: () => _onOrderAgain(order),
+        final savedCart = _filteredCarts[index];
+        return SavedCartCard(
+          savedCart: savedCart,
+          onCartDetails: () => _onCartDetails(savedCart),
+          onOrderAgain: () => _onOrderAgain(savedCart),
         );
       },
     );
@@ -170,7 +194,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Iconsax.box_1,
+            Iconsax.shopping_bag,
             size: context.responsiveIconSize * 4,
             color: AppColors.textSecondary,
           ),
@@ -178,7 +202,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           SizedBox(height: context.responsiveMargin * 2),
           
           Text(
-            "no_orders_found".tr(),
+            "no_saved_carts_found".tr(),
             style: TextStyles.textViewBold18.copyWith(
               color: AppColors.textPrimary,
             ),
@@ -199,52 +223,38 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  List<OrderModel> _getMockOrders() {
+  List<SavedCartModel> _getMockSavedCarts() {
     return [
-      OrderModel(
+      SavedCartModel(
         id: '1',
-        orderNumber: '#BAQ10247',
-        orderDate: DateTime.now().subtract(const Duration(hours: 2)),
+        name: 'Breakfast Cart',
         itemCount: 12,
-        status: OrderStatus.outForDelivery,
-        estimatedTime: '20 min',
-        totalAmount: 253.0,
-        items: [],
-      ),
-      OrderModel(
-        id: '2',
-        orderNumber: '#BAQ10246',
-        orderDate: DateTime.now().subtract(const Duration(days: 1, hours: 18, minutes: 20)),
-        itemCount: 3,
-        status: OrderStatus.delivered,
+        lastModified: DateTime.now().subtract(const Duration(hours: 2)),
         totalAmount: 89.50,
         items: [],
       ),
-      OrderModel(
-        id: '3',
-        orderNumber: '#BAQ10245',
-        orderDate: DateTime.now().subtract(const Duration(days: 1, hours: 18, minutes: 20)),
-        itemCount: 3,
-        status: OrderStatus.delivered,
+      SavedCartModel(
+        id: '2',
+        name: 'Snacks Cart',
+        itemCount: 10,
+        lastModified: DateTime.now().subtract(const Duration(days: 1)),
         totalAmount: 67.25,
         items: [],
       ),
-      OrderModel(
-        id: '4',
-        orderNumber: '#BAQ10244',
-        orderDate: DateTime.now().subtract(const Duration(days: 1, hours: 18, minutes: 20)),
-        itemCount: 3,
-        status: OrderStatus.delivered,
+      SavedCartModel(
+        id: '3',
+        name: 'Snacks Cart',
+        itemCount: 10,
+        lastModified: DateTime.now().subtract(const Duration(days: 2)),
         totalAmount: 45.80,
         items: [],
       ),
-      OrderModel(
-        id: '5',
-        orderNumber: '#BAQ10243',
-        orderDate: DateTime.now().subtract(const Duration(days: 2, hours: 6)),
-        itemCount: 3,
-        status: OrderStatus.failed,
-        totalAmount: 32.15,
+      SavedCartModel(
+        id: '4',
+        name: 'Dinner Cart',
+        itemCount: 15,
+        lastModified: DateTime.now().subtract(const Duration(days: 3)),
+        totalAmount: 120.15,
         items: [],
       ),
     ];
