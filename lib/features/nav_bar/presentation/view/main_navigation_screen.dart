@@ -1,3 +1,4 @@
+import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
 import 'package:baqalty/core/widgets/exit_popup.dart';
 import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/nav_bar/business/models/nav_item_model.dart';
@@ -73,7 +74,11 @@ class MainNavigationScreenBody extends StatelessWidget {
   Widget _buildBottomNavigationBar(BuildContext context, NavBarLoaded state) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.scaffoldBackground,
+        color: AppColors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(context.responsiveBorderRadius * 2),
+          topRight: Radius.circular(context.responsiveBorderRadius * 2),
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,
@@ -83,50 +88,17 @@ class MainNavigationScreenBody extends StatelessWidget {
         ],
       ),
       child: SafeArea(
-        child: Stack(
-          children: [
-            // Curved background with gradient
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: context.responsiveMargin * 3,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColors.scaffoldBackground,
-                      AppColors.scaffoldBackground.withValues(alpha: 0.8),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      context.responsiveBorderRadius * 2,
-                    ),
-                    topRight: Radius.circular(
-                      context.responsiveBorderRadius * 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Navigation items
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.responsivePadding,
-                vertical: context.responsiveMargin,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: state.navItems.map((navItem) {
-                  return _buildNavItem(context, navItem);
-                }).toList(),
-              ),
-            ),
-          ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.responsivePadding,
+            vertical: context.responsiveMargin * 1.5,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: state.navItems.map((navItem) {
+              return _buildNavItem(context, navItem);
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -142,46 +114,28 @@ class MainNavigationScreenBody extends StatelessWidget {
           horizontal: context.responsiveMargin * 1.5,
           vertical: context.responsiveMargin * 0.5,
         ),
-        decoration: BoxDecoration(
-          color: navItem.isActive
-              ? AppColors.primary.withValues(alpha: 0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Active indicator dot
-            if (navItem.isActive)
-              Container(
-                width: 4,
-                height: 4,
-                margin: EdgeInsets.only(bottom: context.responsiveMargin * 0.3),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-              ),
             CustomSvgImage(
               assetName: navItem.isActive ? navItem.activeIcon : navItem.icon,
               color: navItem.isActive
-                  ? AppColors.primary
+                  ? AppColors.black
                   : AppColors.textSecondary,
-              width: context.responsiveIconSize,
+              width: context.responsiveIconSize * 1.2,
+              height: context.responsiveIconSize * 1.2,
             ),
 
-            SizedBox(height: context.responsiveMargin * 0.3),
+            SizedBox(height: context.responsiveMargin * 0.5),
             Text(
               navItem.label.tr(),
-              style:
-                  (navItem.isActive
-                          ? TextStyles.textViewMedium12
-                          : TextStyles.textViewRegular12)
-                      .copyWith(
-                        color: navItem.isActive
-                            ? AppColors.primary
-                            : AppColors.textSecondary,
-                      ),
+              style: TextStyles.textViewMedium12.copyWith(
+                color: navItem.isActive
+                    ? AppColors.black
+                    : AppColors.textSecondary,
+                fontSize: FontSizes.s12,
+                fontWeight: navItem.isActive ? FontWeight.w600 : FontWeight.w500,
+              ),
             ),
           ],
         ),
