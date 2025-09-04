@@ -7,7 +7,7 @@ import 'saved_cart_item.dart';
 
 class SavedCartsSection extends StatelessWidget {
   final VoidCallback? onViewAllTap;
-  final VoidCallback? onCartTap;
+  final Function(String)? onCartTap;
 
   const SavedCartsSection({super.key, this.onViewAllTap, this.onCartTap});
 
@@ -54,7 +54,7 @@ class SavedCartsSection extends StatelessWidget {
                   child: SavedCartItem(
                     title: "breakfast_list",
                     onTap: () {
-                      onCartTap?.call();
+                      onCartTap?.call("breakfast_list");
                     },
                   ),
                 ),
@@ -63,7 +63,7 @@ class SavedCartsSection extends StatelessWidget {
                   child: SavedCartItem(
                     title: "weekend",
                     onTap: () {
-                      onCartTap?.call();
+                      onCartTap?.call("weekend");
                     },
                   ),
                 ),
