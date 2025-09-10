@@ -1,3 +1,5 @@
+import 'package:baqalty/core/navigation_services/navigation_manager.dart' show NavigationManager;
+import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -29,7 +31,11 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return 
+    InkWell(
+      onTap: ()=>NavigationManager.navigateTo(ProductDetailsScreen(productName: productName, productImage: productImage, productPrice: price, productCategory: category)),
+      child: 
+    Container(
       margin: EdgeInsets.only(bottom: context.responsiveMargin),
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
@@ -181,6 +187,6 @@ class CartItem extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

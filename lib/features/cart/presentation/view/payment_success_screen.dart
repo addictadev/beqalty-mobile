@@ -2,6 +2,8 @@ import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
+import 'package:baqalty/features/orders/business/models/order_model.dart';
+import 'package:baqalty/features/orders/presentation/view/track_order_screen.dart' show TrackOrderScreen;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -138,7 +140,19 @@ class _PaymentSuccessScreenBodyState extends State<PaymentSuccessScreenBody> {
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(28),
-                            onTap: () {},
+                            onTap: () {
+                              NavigationManager.navigateTo(
+                                TrackOrderScreen(order: OrderModel(
+                                  id: "1",
+                                  orderNumber: "1234567890",
+                                  orderDate: DateTime.now(),
+                                  itemCount: 1,
+                                  status: OrderStatus.pending,
+                                  totalAmount: 100,
+                                  items: [],
+                                )),
+                              );
+                            },
                             child: Center(
                               child: Text(
                                 "track_your_order".tr(),

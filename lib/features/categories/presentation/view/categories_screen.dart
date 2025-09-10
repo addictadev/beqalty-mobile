@@ -13,8 +13,71 @@ import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'subcategory_screen.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
+
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late List<AnimationController> _itemAnimationControllers;
+  late List<Animation<double>> _itemAnimations;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    // Create staggered animations for each category item
+    _itemAnimationControllers = List.generate(
+      12, // Number of categories
+      (index) => AnimationController(
+        duration: const Duration(milliseconds: 600),
+        vsync: this,
+      ),
+    );
+
+    _itemAnimations = _itemAnimationControllers.map((controller) {
+      return Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.elasticOut,
+      ));
+    }).toList();
+
+    // Start animations with stagger
+    _startAnimations();
+  }
+
+  void _startAnimations() {
+    _animationController.forward();
+    
+    // Stagger the item animations
+    for (int i = 0; i < _itemAnimationControllers.length; i++) {
+      Future.delayed(Duration(milliseconds: 100 * i), () {
+        if (mounted) {
+          _itemAnimationControllers[i].forward();
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    for (var controller in _itemAnimationControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +97,7 @@ class CategoriesScreen extends StatelessWidget {
                   horizontal: context.responsivePadding,
                 ),
                 child: CustomTextFormField(
-                  hint: "search_transactions".tr(),
+                  hint: "search".tr(),
                   prefixIcon: Icon(
                     Iconsax.search_normal,
                     color: AppColors.textSecondary,
@@ -142,12 +205,26 @@ class CategoriesScreen extends StatelessWidget {
         itemCount: categories.length,
         itemBuilder: (context, index) {
           final category = categories[index];
-          return _buildCategoryCard(
-            context,
-            name: category.name,
-            icon: category.icon,
-            iconBackgroundColor: category.iconBackgroundColor,
-            iconColor: category.iconColor,
+          return AnimatedBuilder(
+            animation: _itemAnimations[index],
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _itemAnimations[index].value,
+                child: Transform.translate(
+                  offset: Offset(0, 50 * (1 - _itemAnimations[index].value)),
+                  child: Opacity(
+                    opacity: _itemAnimations[index].value.clamp(0.0, 1.0),
+                    child: _buildCategoryCard(
+                      context,
+                      name: category.name,
+                      icon: category.icon,
+                      iconBackgroundColor: category.iconBackgroundColor,
+                      iconColor: category.iconColor,
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -178,9 +255,7 @@ class CategoriesScreen extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           onTap: () {
-       
-              NavigationManager.navigateTo(SubcategoryScreen(categoryName: name));
-           
+            NavigationManager.navigateTo(SubcategoryScreen(categoryName: name));
           },
           child: Padding(
             padding: EdgeInsets.all(context.responsivePadding),

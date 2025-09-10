@@ -24,12 +24,64 @@ class SubcategoryScreen extends StatefulWidget {
   State<SubcategoryScreen> createState() => _SubcategoryScreenState();
 }
 
-class _SubcategoryScreenState extends State<SubcategoryScreen> {
+class _SubcategoryScreenState extends State<SubcategoryScreen>
+    with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
+  late AnimationController _animationController;
+  late List<AnimationController> _itemAnimationControllers;
+  late List<Animation<double>> _itemAnimations;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    // Create staggered animations for each subcategory item
+    _itemAnimationControllers = List.generate(
+      8, // Number of subcategories
+      (index) => AnimationController(
+        duration: const Duration(milliseconds: 600),
+        vsync: this,
+      ),
+    );
+
+    _itemAnimations = _itemAnimationControllers.map((controller) {
+      return Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.elasticOut,
+      ));
+    }).toList();
+
+    // Start animations with stagger
+    _startAnimations();
+  }
+
+  void _startAnimations() {
+    _animationController.forward();
+    
+    // Stagger the item animations
+    for (int i = 0; i < _itemAnimationControllers.length; i++) {
+      Future.delayed(Duration(milliseconds: 80 * i), () {
+        if (mounted) {
+          _itemAnimationControllers[i].forward();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _animationController.dispose();
+    for (var controller in _itemAnimationControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -101,7 +153,21 @@ CustomAppBar(
         itemCount: subcategories.length,
         itemBuilder: (context, index) {
           final subcategory = subcategories[index];
-          return _buildSubcategoryCard(context, subcategory);
+          return AnimatedBuilder(
+            animation: _itemAnimations[index],
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _itemAnimations[index].value,
+                child: Transform.translate(
+                  offset: Offset(0, 40 * (1 - _itemAnimations[index].value)),
+                  child: Opacity(
+                    opacity: _itemAnimations[index].value.clamp(0.0, 1.0),
+                    child: _buildSubcategoryCard(context, subcategory),
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
     );
@@ -124,7 +190,17 @@ CustomAppBar(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-          onTap: () => _onSubcategoryTap(context, subcategory),
+          onTap: () {
+            // Add tap animation
+            final subcategories = _getSubcategoriesForCategory(widget.categoryName);
+            final index = subcategories.indexOf(subcategory);
+            if (index >= 0 && index < _itemAnimationControllers.length) {
+              _itemAnimationControllers[index].reverse().then((_) {
+                _itemAnimationControllers[index].forward();
+              });
+            }
+            _onSubcategoryTap(context, subcategory);
+          },
           child: Padding(
             padding: EdgeInsets.all(context.responsivePadding),
             child: Column(

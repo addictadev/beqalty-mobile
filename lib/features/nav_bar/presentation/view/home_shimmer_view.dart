@@ -1,119 +1,61 @@
-import 'package:baqalty/core/navigation_services/navigation_manager.dart';
-import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
-import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart';
-import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
-import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
-import 'package:baqalty/features/categories/presentation/view/subcategory_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:sizer/sizer.dart';
-import '../widget/home_header.dart';
-import '../widget/promotional_slider.dart';
-import '../widget/shop_by_category_section.dart';
-import '../widget/points_card.dart';
-import '../widget/special_offers_section.dart';
-import '../widget/saved_carts_section.dart';
-import 'home_shimmer_view.dart';
 import 'package:baqalty/core/widgets/shimmer_widget.dart';
+import 'package:sizer/sizer.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _simulateLoading();
-  }
-
-  void _simulateLoading() {
-    // Simulate API call or data loading
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
-  }
-
-  void _refreshData() {
-    setState(() {
-      _isLoading = true;
-    });
-    _simulateLoading();
-  }
+class HomeShimmerView extends StatelessWidget {
+  const HomeShimmerView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final promotionalCards = [
-      PromotionalCardData(
-        title: "free_delivery_title".tr(),
-        buttonText: "place_order".tr(),
-      ),
-      PromotionalCardData(
-        title: "50% Off on First Order!",
-        buttonText: "Shop Now",
-      ),
-      PromotionalCardData(
-        title: "Special Weekend Deals!",
-        buttonText: "Explore",
-      ),
-    ];
-
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: Column(
         children: [
-          HomeHeader(
-            onSearchTap: () {
-              context.read<NavBarCubit>().changeTab(2);
-            },
-            onNotificationTap: () {},
-          ),
-
+          SizedBox(height: 6.h),
+          // Header Shimmer
+          _buildHeaderShimmer(context),
+          
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  _refreshData();
-                  // Wait for loading to complete
-                  await Future.delayed(const Duration(seconds: 2));
-                },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
                   children: [
+                    SizedBox(height: 3.h),
+                    
+                    // Promotional Slider Shimmer
+                    _buildPromotionalSliderShimmer(context),
+                    
+                    SizedBox(height: 3.h),
+                    
+                    // Categories Section Shimmer
+                    _buildCategoriesShimmer(context),
+                    
+                    SizedBox(height: 1.h),
+                    
+                    // Points Card Shimmer
+                    _buildPointsCardShimmer(context),
+                    
                     SizedBox(height: 2.h),
-
-                    // Show shimmer for slider and content
-                    if (_isLoading) 
-                      _buildSliderAndContentShimmer(context)
-                    else
-                      Column(
-                        children: [
-                          PromotionalSlider(
-                            cards: promotionalCards,
-                            height: context.responsiveContainerHeight * 0.6,
-                            onCardTap: () {},
-                          ),
-                          SizedBox(height: 1.h),
-                          _buildContent(context),
-                        ],
-                      ),
+                    
+                    // Special Offers Title Shimmer
+                    _buildSpecialOffersTitleShimmer(context),
+                    
+                    SizedBox(height: 2.h),
+                    
+                    // Special Offers Section Shimmer
+                    _buildSpecialOffersShimmer(context),
+                    
+                    SizedBox(height: 2.h),
+                    
+                    // Saved Carts Section Shimmer
+                    _buildSavedCartsShimmer(context),
+                    
+                    SizedBox(height: 2.h),
                   ],
-                ),
                 ),
               ),
             ),
@@ -123,101 +65,66 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    return Column(
-      children: [
-        ShopByCategorySection(
-          onViewAllTap: () {
-            context.read<NavBarCubit>().changeTab(3);
-          },
-          onCategoryTap: (categoryName) {
-            NavigationManager.navigateTo(SubcategoryScreen(categoryName: categoryName));
-          },
-        ),
-
-        SizedBox(height: 2.h),
-
-        PointsCard(
-          points: 1250,
-          onRedeemTap: () {
-            NavigationManager.navigateTo(RewardsScreen());
-          },
-        ),
-        SizedBox(height: 2.h),
-
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "special_offer".tr(),
-            style: TextStyles.textViewBold16.copyWith(
-              color: AppColors.textPrimary,
+  Widget _buildHeaderShimmer(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(context.responsivePadding),
+      child: Row(
+        children: [
+          // Profile Avatar
+          ShimmerWidget(
+            isLoading: true,
+            child: ShimmerCircle(size: 12.w),
+          ),
+          
+          SizedBox(width: context.responsiveMargin),
+          
+          // Welcome Text
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShimmerWidget(
+                  isLoading: true,
+                  child: ShimmerText(
+                    width: 40.w,
+                    height: 2.h,
+                    margin: EdgeInsets.only(bottom: 0.5.h),
+                  ),
+                ),
+                ShimmerWidget(
+                  isLoading: true,
+                  child: ShimmerText(
+                    width: 25.w,
+                    height: 1.5.h,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-
-        SizedBox(height: 2.h),
-
-        SpecialOffersSection(
-          onViewAllTap: () {},
-          onProductTap: () {
-            NavigationManager.navigateTo(
-              ProductDetailsScreen(
-                productName: 'product_name',
-                productImage: 'product_image',
-                productPrice: 100,
-                productCategory: 'product_category',
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 2.h),
-        SavedCartsSection(
-          onViewAllTap: () {
-            NavigationManager.navigateTo(SavedCartsScreen());
-          },
-          onCartTap: (cartTitle) {
-            NavigationManager.navigateTo(SavedCartsScreen());
-          },
-        ),
-
-        SizedBox(height: 2.h),
-      ],
-    );
-  }
-
-  Widget _buildSliderAndContentShimmer(BuildContext context) {
-    return Column(
-      children: [
-        // Promotional Slider Shimmer
-        _buildPromotionalSliderShimmer(context),
-        
-        SizedBox(height: 3.h),
-        
-        // Categories Section Shimmer
-        _buildCategoriesShimmer(context),
-        
-        SizedBox(height: 3.h),
-        
-        // Points Card Shimmer
-        _buildPointsCardShimmer(context),
-        
-        SizedBox(height: 2.h),
-        
-        // Special Offers Title Shimmer
-        _buildSpecialOffersTitleShimmer(context),
-        
-        SizedBox(height: 2.h),
-        
-        // Special Offers Section Shimmer
-        _buildSpecialOffersShimmer(context),
-        
-        SizedBox(height: 2.h),
-        
-        // Saved Carts Section Shimmer
-        _buildSavedCartsShimmer(context),
-        
-        SizedBox(height: 2.h),
-      ],
+          
+          // Search Icon
+          ShimmerWidget(
+            isLoading: true,
+            child: ShimmerBox(
+              width: 10.w,
+              height: 10.w,
+              borderRadius: 8.w,
+            ),
+          ),
+          
+          SizedBox(width: context.responsiveMargin),
+          
+          // Notification Icon
+          ShimmerWidget(
+            isLoading: true,
+            child: ShimmerBox(
+              width: 10.w,
+              height: 10.w,
+              borderRadius: 8.w,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -225,8 +132,8 @@ class _HomeViewState extends State<HomeView> {
     return ShimmerWidget(
       isLoading: true,
       child: ShimmerBox(
-        width: double.infinity,
-        height: context.responsiveContainerHeight * 0.6,
+        width: double.infinity*0.9,
+        height: context.responsiveContainerHeight * 0.85,
         borderRadius: context.responsiveBorderRadius * 2,
       ),
     );
@@ -257,20 +164,19 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
         
-    
+        SizedBox(height: 2.h),
         
         // Categories Grid
         GridView.builder(
           shrinkWrap: true,
-          padding: EdgeInsets.only(top: 3.h),
           physics: const NeverScrollableScrollPhysics(),
-         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
-      ),
-          itemCount: 6,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: context.responsiveMargin,
+            mainAxisSpacing: context.responsiveMargin,
+            childAspectRatio: 0.8,
+          ),
+          itemCount: 8,
           itemBuilder: (context, index) {
             return ShimmerWidget(
               isLoading: true,

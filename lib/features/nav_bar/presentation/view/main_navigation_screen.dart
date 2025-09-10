@@ -13,6 +13,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../../../core/images_preview/custom_svg_img.dart';
 import 'profile_screen.dart';
 import '../../../cart/presentation/view/cart_screen.dart';
+import '../../../search/presentation/view/search_results_screen.dart';
 import '../../../categories/presentation/view/categories_screen.dart';
 
 class MainNavigationScreen extends StatelessWidget {
@@ -33,6 +34,7 @@ class MainNavigationScreenBody extends StatelessWidget {
   static const List<Widget> _screens = [
     HomeView(),
     CartScreen(),
+    SearchResultsScreen(),
     CategoriesScreen(),
     ProfileScreen(),
   ];
@@ -90,11 +92,11 @@ class MainNavigationScreenBody extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: context.responsivePadding,
+            horizontal: context.responsivePadding*2 ,
             vertical: context.responsiveMargin * 1.5,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: state.navItems.map((navItem) {
               return _buildNavItem(context, navItem);
             }).toList(),
@@ -112,7 +114,7 @@ class MainNavigationScreenBody extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: context.responsiveMargin * 1.5,
-          vertical: context.responsiveMargin * 0.5,
+          vertical: context.responsiveMargin * 0.1,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -122,11 +124,11 @@ class MainNavigationScreenBody extends StatelessWidget {
               color: navItem.isActive
                   ? AppColors.black
                   : AppColors.textSecondary,
-              width: context.responsiveIconSize * 1.2,
-              height: context.responsiveIconSize * 1.2,
+              width: context.responsiveIconSize * 1.1,
+              height: context.responsiveIconSize * 1.1,
             ),
 
-            SizedBox(height: context.responsiveMargin * 0.5),
+            SizedBox(height: context.responsiveMargin * 0.4),
             Text(
               navItem.label.tr(),
               style: TextStyles.textViewMedium12.copyWith(

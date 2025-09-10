@@ -28,13 +28,20 @@ class NavBarCubit extends Cubit<NavBarState> {
       ),
       NavItemModel(
         index: 2,
+        icon: AppAssets.searchIcon,
+        activeIcon: AppAssets.searchIcon,
+        label: 'search',
+        isActive: false,
+      ),
+      NavItemModel(
+        index: 3,
         icon: AppAssets.categoryIcon,
         activeIcon: AppAssets.categoryIcon,
         label: 'categories',
         isActive: false,
       ),
       NavItemModel(
-        index: 3,
+        index: 4,
         icon: AppAssets.profileIcon,
         activeIcon: AppAssets.profileIcon,
         label: 'profile',

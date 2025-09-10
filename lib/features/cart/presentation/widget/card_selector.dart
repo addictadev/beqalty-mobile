@@ -4,6 +4,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:sizer/sizer.dart';
 
 class CardSelector extends StatelessWidget {
   final String selectedCard;
@@ -77,6 +78,8 @@ class CardSelector extends StatelessWidget {
         child: Row(
           children: [
             Container(
+              width: 12.w,
+              height: 10.w,
               padding: EdgeInsets.all(context.responsivePadding * 0.5),
               decoration: BoxDecoration(
                 color: AppColors.overlayGray,

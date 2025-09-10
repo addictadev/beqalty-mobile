@@ -3,6 +3,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:sizer/sizer.dart';
 
 class CustomConfirmationDialog extends StatelessWidget {
   final String title;
@@ -42,22 +43,10 @@ class CustomConfirmationDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Title
-            Text(
-              title,
-              style: TextStyles.textViewMedium18.copyWith(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            
-            SizedBox(height: context.responsiveMargin * 2),
-            
-            // Main Card
-            Container(
+         
+                        Container(
               width: double.infinity,
-              padding: EdgeInsets.all(context.responsivePadding * 2),
+              padding: EdgeInsets.symmetric(horizontal: context.responsivePadding * 2, vertical: context.responsiveMargin * 5),
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
@@ -76,24 +65,25 @@ class CustomConfirmationDialog extends StatelessWidget {
                     width: context.responsiveIconSize * 3,
                     height: context.responsiveIconSize * 3,
                     decoration: BoxDecoration(
-                      color: iconBackgroundColor ?? AppColors.borderLight,
+                      color: iconBackgroundColor ?? AppColors.borderLight.withOpacity(.5),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       icon,
-                      size: context.responsiveIconSize * 1.5,
+                      size: context.responsiveIconSize * 1.8,
                       color: iconColor ?? AppColors.error,
                     ),
                   ),
                   
-                  SizedBox(height: context.responsiveMargin * 2),
+                  SizedBox(height: context.responsiveMargin * 3),
                   
                   // Confirmation Message
                   Text(
                     message,
-                    style: TextStyles.textViewMedium16.copyWith(
+                    style: TextStyles.textViewMedium18.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
+                      
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -102,7 +92,7 @@ class CustomConfirmationDialog extends StatelessWidget {
                   
                   // Primary Button
                   SizedBox(
-                    width: double.infinity,
+                    width: 45.w,
                     height: context.responsiveButtonHeight*.5,
                     child: ElevatedButton(
                       onPressed: onPrimaryPressed,
@@ -110,7 +100,7 @@ class CustomConfirmationDialog extends StatelessWidget {
                         backgroundColor: primaryButtonColor ?? AppColors.error,
                         foregroundColor: AppColors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                          borderRadius: BorderRadius.circular(context.responsiveBorderRadius*5),
                         ),
                         elevation: 0,
                       ),

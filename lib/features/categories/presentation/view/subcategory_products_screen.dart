@@ -26,12 +26,64 @@ class SubcategoryProductsScreen extends StatefulWidget {
   State<SubcategoryProductsScreen> createState() => _SubcategoryProductsScreenState();
 }
 
-class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen> {
+class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
+    with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
+  late AnimationController _animationController;
+  late List<AnimationController> _itemAnimationControllers;
+  late List<Animation<double>> _itemAnimations;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    // Create staggered animations for each product item
+    _itemAnimationControllers = List.generate(
+      10, // Maximum number of products
+      (index) => AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: this,
+      ),
+    );
+
+    _itemAnimations = _itemAnimationControllers.map((controller) {
+      return Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeOutBack,
+      ));
+    }).toList();
+
+    // Start animations with stagger
+    _startAnimations();
+  }
+
+  void _startAnimations() {
+    _animationController.forward();
+    
+    // Stagger the item animations
+    for (int i = 0; i < _itemAnimationControllers.length; i++) {
+      Future.delayed(Duration(milliseconds: 60 * i), () {
+        if (mounted) {
+          _itemAnimationControllers[i].forward();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _animationController.dispose();
+    for (var controller in _itemAnimationControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -91,41 +143,59 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen> {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return Padding(
-            padding: EdgeInsets.only(bottom: context.responsiveMargin),
-            child: SavedItemCard(
-              productName: product['name'],
-              productCategory: product['category'],
-              productPrice: product['price'],
-              productImage: product['image'],
-              showFavoriteButton: false,
-              showAddToCartButton: false,
-              onTap: () {
-                NavigationManager.navigateTo(ProductDetailsScreen(
-                  productName: product['name'],
-                  productImage: product['image'],
-                  productPrice: product['price'],
-                  productCategory: product['category'],
-                ));
-              },
-              onFavorite: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${product['name']} added to favorites'),
-                    backgroundColor: AppColors.success,
+          return AnimatedBuilder(
+            animation: _itemAnimations[index],
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, 30 * (1 - _itemAnimations[index].value)),
+                child: Opacity(
+                  opacity: _itemAnimations[index].value.clamp(0.0, 1.0),
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: context.responsiveMargin),
+                    child: SavedItemCard(
+                      productName: product['name'],
+                      productCategory: product['category'],
+                      productPrice: product['price'],
+                      productImage: product['image'],
+                      showFavoriteButton: false,
+                      showAddToCartButton: false,
+                      onTap: () {
+                        // Add tap animation
+                        if (index < _itemAnimationControllers.length) {
+                          _itemAnimationControllers[index].reverse().then((_) {
+                            _itemAnimationControllers[index].forward();
+                          });
+                        }
+                        
+                        NavigationManager.navigateTo(ProductDetailsScreen(
+                          productName: product['name'],
+                          productImage: product['image'],
+                          productPrice: product['price'],
+                          productCategory: product['category'],
+                        ));
+                      },
+                      onFavorite: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product['name']} added to favorites'),
+                            backgroundColor: AppColors.success,
+                          ),
+                        );
+                      },
+                      onAddToCart: () {
+                        // TODO: Implement add to cart functionality
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product['name']} added to cart'),
+                            backgroundColor: AppColors.primary,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
-              onAddToCart: () {
-                // TODO: Implement add to cart functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${product['name']} added to cart'),
-                    backgroundColor: AppColors.primary,
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         },
       ),

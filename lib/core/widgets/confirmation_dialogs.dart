@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/widgets/custom_confirmation_dialog.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class ConfirmationDialogs {
@@ -14,7 +15,7 @@ class ConfirmationDialogs {
           title: "delete_account".tr(),
           message: "delete_account_confirmation".tr(),
           primaryButtonText: "delete_account".tr(),
-          icon: Icons.person_remove,
+          icon: Iconsax.user_remove,
           iconColor: AppColors.error,
           primaryButtonColor: AppColors.error,
           onPrimaryPressed: () {
@@ -40,7 +41,7 @@ class ConfirmationDialogs {
           title: "log_out".tr(),
           message: "logout_confirmation".tr(),
           primaryButtonText: "log_out".tr(),
-          icon: Icons.logout,
+          icon: Iconsax.logout_1,
           iconColor: AppColors.error,
           primaryButtonColor: AppColors.error,
           onPrimaryPressed: () {
