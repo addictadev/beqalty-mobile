@@ -3,6 +3,7 @@ import 'package:baqalty/features/orders/presentation/view/orders_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/my_account_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/settings_screen.dart';
+import 'package:baqalty/features/profile/presentation/view/help_center_screen.dart';
 import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_items_screen.dart';
 import 'package:baqalty/features/wallet/presentation/view/my_wallet_screen.dart';
@@ -13,6 +14,7 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../profile_widgets/profile_menu_item.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -207,14 +209,15 @@ class ProfileScreen extends StatelessWidget {
                             iconPath: AppAssets.profileHelp,
                             title: "help_center".tr(),
                             onTap: () {
-                              debugPrint('Help Center tapped');
+                              NavigationManager.navigateTo(HelpCenterScreen());
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profilePhone,
                             title: "contact".tr(),
                             onTap: () {
-                              debugPrint('Contact tapped');
+                              //url launch
+                              launchUrl(Uri.parse('tel:01010300353'));
                             },
                           ),
                         ],

@@ -16,7 +16,7 @@ class OfferListItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: context.responsivePadding,
-        vertical: context.responsiveMargin * 0.5,
+        vertical: context.responsiveMargin * 0.3,
       ),
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
@@ -24,11 +24,11 @@ class OfferListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         border: Border.all(color: AppColors.borderLight, width: 1),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
+          // BoxShadow(
+          //   color: AppColors.shadowLight.withOpacity(.1),
+          //   blurRadius: 4,
+          //   offset: const Offset(0, 2),
+          // ),
         ],
       ),
       child: Row(

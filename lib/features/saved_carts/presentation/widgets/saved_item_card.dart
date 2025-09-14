@@ -5,6 +5,7 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:baqalty/features/saved_carts/business/models/saved_item_model.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sizer/sizer.dart';
 
 class SavedItemCard extends StatelessWidget {
   final SavedItemModel savedItem;
@@ -26,15 +27,15 @@ class SavedItemCard extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+          // BoxShadow(
+          //   color: AppColors.shadowLight,
+          //   blurRadius: 8,
+          //   offset: const Offset(0, 2),
+          // ),
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        // color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
@@ -72,13 +73,7 @@ class SavedItemCard extends StatelessWidget {
           color: AppColors.borderLight,
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
+    
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.2),
@@ -146,7 +141,7 @@ class SavedItemCard extends StatelessWidget {
           savedItem.formattedPrice,
           style: TextStyles.textViewSemiBold16.copyWith(
             color: AppColors.primary,
-            fontSize: 18,
+            fontSize: 16.sp,
           ),
         ),
       ],
@@ -157,8 +152,8 @@ class SavedItemCard extends StatelessWidget {
     return GestureDetector(
       onTap: onRemove,
       child: Container(
-        width: context.responsiveIconSize * 3,
-        height: context.responsiveIconSize * 3,
+        width: context.responsiveIconSize * 2,
+        height: context.responsiveIconSize * 2,
         decoration: BoxDecoration(
           color: AppColors.error.withValues(alpha: 0.1),
           shape: BoxShape.circle,
@@ -170,7 +165,7 @@ class SavedItemCard extends StatelessWidget {
         child: Icon(
           Iconsax.heart,
           color: AppColors.error,
-          size: context.responsiveIconSize * 1.3,
+          size: context.responsiveIconSize * 1.0,
         ),
       ),
     );

@@ -8,6 +8,8 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:baqalty/features/orders/business/models/order_model.dart';
 import 'package:baqalty/features/orders/presentation/widgets/order_card.dart';
+import 'package:baqalty/features/orders/presentation/view/track_order_screen.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -48,13 +50,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   void _onTrackOrder(OrderModel order) {
-    // TODO: Implement order tracking
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Tracking order ${order.orderNumber}'),
-        backgroundColor: AppColors.primary,
-      ),
-    );
+    NavigationManager.navigateTo(TrackOrderScreen(order: order));
   }
 
   void _onOrderAgain(OrderModel order) {

@@ -1,3 +1,7 @@
+import 'package:baqalty/core/images_preview/app_assets.dart' show AppAssets;
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/widgets/custom_appbar.dart';
+import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart' show ProductDetailsScreen;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -5,7 +9,7 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/saved_carts/business/models/saved_item_model.dart';
-import 'package:baqalty/features/saved_carts/presentation/widgets/saved_item_card.dart';
+import 'package:baqalty/core/widgets/saved_item_card.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -59,13 +63,13 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
   }
 
   void _onItemTap(SavedItemModel savedItem) {
-    // TODO: Navigate to product details
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Viewing details for ${savedItem.name}'),
-        backgroundColor: AppColors.primary,
-      ),
-    );
+     NavigationManager.navigateTo(ProductDetailsScreen(
+                productName: savedItem.name,
+                productImage: savedItem.image,
+                productPrice: savedItem.price,
+                productCategory: savedItem.category,
+              ));  
+    
   }
 
   void _onRemoveFromSaved(SavedItemModel savedItem) {
@@ -97,25 +101,18 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: Stack(
-          children: [
+        child:
             // Background Pattern
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.scaffoldBackground,
-                ),
-                child: CustomPaint(
-                  painter: _BackgroundPatternPainter(),
-                ),
-              ),
-            ),
+       
             
             // Main Content
             Column(
               children: [
                 // App Bar
-                _buildAppBar(context),
+                CustomAppBar(
+                  title: "saved_items".tr(),
+                
+                ),
                 
                 // Search Bar
                 _buildSearchBar(context),
@@ -127,49 +124,9 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
                       : _buildSavedItemsList(context),
                 ),
               ],
-            ),
-          ],
+            
+          
         ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.responsivePadding,
-        vertical: context.responsiveMargin,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CustomBackButton(
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          
-          Expanded(
-            child: Center(
-              child: Text(
-                "saved_items".tr(),
-                style: TextStyles.textViewBold18.copyWith(
-                  color: AppColors.black,
-                ),
-              ),
-            ),
-          ),
-          
-          // Placeholder for balance
-          const SizedBox(width: 40),
-        ],
       ),
     );
   }
@@ -233,9 +190,15 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
       itemBuilder: (context, index) {
         final savedItem = _filteredItems[index];
         return SavedItemCard(
-          savedItem: savedItem,
+          productName: savedItem.name,
+          productCategory: savedItem.category,
+          productPrice: savedItem.price,
+          productImage: savedItem.image,
+          showFavoriteButton: true,
+          showAddToCartButton: false,
+          isFavorite: true,
           onTap: () => _onItemTap(savedItem),
-          onRemove: () => _onRemoveFromSaved(savedItem),
+          onFavorite: () => _onRemoveFromSaved(savedItem),
         );
       },
     );
@@ -298,7 +261,7 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
         id: '3',
         name: 'Juhayna Cream Milk',
         category: 'Milk Category',
-        image: 'assets/images/juhayna_cream_milk.png',
+        image: AppAssets.alMaraiMilk,
         price: 64.25,
         savedAt: DateTime.now().subtract(const Duration(days: 2)),
       ),

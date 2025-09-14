@@ -106,9 +106,12 @@ class _RewardsScreenState extends State<RewardsScreen> {
   }
 
   Widget _buildRewardsHeader() {
-    return SizedBox(
+    return Container(
       width: double.infinity,
-      height: 35.h,
+      constraints: BoxConstraints(
+        minHeight: 35.h,
+        maxHeight: 40.h,
+      ),
       child: Stack(
         children: [
           Container(
@@ -159,6 +162,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
               padding: EdgeInsets.all(context.responsivePadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: context.responsiveIconSize * 1.5,
@@ -183,9 +187,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
                   SizedBox(height: context.responsiveMargin * 2),
 
-                  Expanded(
+                  Flexible(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Center(
                           child: ShaderMask(

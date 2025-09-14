@@ -6,6 +6,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:baqalty/core/widgets/bordered_button.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import '../../../../core/images_preview/custom_svg_img.dart';
@@ -19,14 +20,38 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final OnboardingPage _page = OnboardingPage(
-    title: "earn_rewards_title".tr(),
-    description: "earn_rewards_description".tr(),
-  );
+  late PageController _pageController;
+  int _currentPage = 0;
+
+  final List<OnboardingPage> _pages = [
+    OnboardingPage(
+      title: "earn_rewards_title".tr(),
+      description: "earn_rewards_description".tr(),
+    ),
+    OnboardingPage(
+      title: "smart_shopping_title".tr(),
+      description: "smart_shopping_description".tr(),
+    ),
+    OnboardingPage(
+      title: "fast_delivery_title".tr(),
+      description: "fast_delivery_description".tr(),
+    ),
+    OnboardingPage(
+      title: "fresh_quality_title".tr(),
+      description: "fresh_quality_description".tr(),
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _onGetStartedPressed() {
@@ -36,8 +61,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primary.withOpacity(.9),
       body: Container(
-        decoration: BoxDecoration(color: AppColors.primary),
+        decoration: BoxDecoration(
+          
+          image: DecorationImage(image: AssetImage(AppAssets.onboardingPattern),fit: BoxFit.cover)),
         child: Stack(
           children: [
             // Background image layer
@@ -52,7 +80,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             SafeArea(
               child: Column(
                 children: [
-                  Expanded(child: _buildOnboardingPage(_page)),
+                  Expanded(child: _buildOnboardingPages()),
 
                   _buildBottomSection(),
                 ],
@@ -64,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildOnboardingPage(OnboardingPage page) {
+  Widget _buildOnboardingPages() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
       child: Column(
@@ -73,9 +101,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
           Expanded(flex: 3, child: _buildCharacterIllustration()),
 
-          Expanded(flex: 2, child: _buildInformationCard(page)),
+          Expanded(flex: 2, child: _buildPageView()),
+
+
         ],
       ),
+    );
+  }
+
+  Widget _buildPageView() {
+    return PageView.builder(
+      controller: _pageController,
+      onPageChanged: (index) {
+        setState(() {
+          _currentPage = index;
+        });
+      },
+      itemCount: _pages.length,
+      itemBuilder: (context, index) {
+        return _buildInformationCard(_pages[index]);
+      },
     );
   }
 
@@ -89,10 +134,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
+  Widget _buildPageIndicators() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        _pages.length,
+        (index) => Container(
+          margin: EdgeInsets.symmetric(horizontal: 4),
+          width: _currentPage == index ? 24 : 8,
+          height: 8,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: _currentPage == index
+                ? AppColors.white
+                : AppColors.white.withValues(alpha: 0.3),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildInformationCard(OnboardingPage page) {
     return GlassMorphismCard(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
-      padding: EdgeInsets.all(6.w),
+      padding: EdgeInsets.all(4.w),
+      
       blur: 15,
       backgroundColor: Colors.white.withValues(alpha: 0.08),
       borderColor: Colors.white.withValues(alpha: 0.15),
@@ -120,6 +186,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             textAlign: TextAlign.center,
           ),
+          SizedBox(height: 3.h),
+                    _buildPageIndicators(),
+
         ],
       ),
     );
@@ -132,24 +201,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           SizedBox(height: 4.h),
 
-          PrimaryButton(
-            text: "get_started".tr(),
-            onPressed: _onGetStartedPressed,
-            color: AppColors.white,
-            textStyle: TextStyle(
-              fontSize: FontSizes.s16,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
-            ),
-            borderRadius: 30,
-            height: 56,
-          ),
+          // Navigation buttons
+     PrimaryButton(
+                  text:  "get_started".tr() 
+                      ,
+                  onPressed: 
+                       _onGetStartedPressed 
+                      ,
+                      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+                  color: AppColors.white,
+                  textStyle: TextStyle(
+                    fontSize: FontSizes.s16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                  ),
+                  borderRadius: 30,
+                  height: 56,
+                ),
 
           SizedBox(height: 3.h),
         ],
       ),
     );
   }
+
+
 }
 
 class OnboardingPage {

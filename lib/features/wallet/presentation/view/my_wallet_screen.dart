@@ -4,8 +4,10 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/features/wallet/business/models/wallet_transaction_model.dart';
+import 'package:baqalty/features/wallet/presentation/view/set_amount_screen.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sizer/sizer.dart';
@@ -39,12 +41,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
   }
 
   void _onDepositPressed() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Deposit functionality coming soon'),
-        backgroundColor: AppColors.primary,
-      ),
-    );
+    NavigationManager.navigateTo(SetAmountScreen());
   }
 
   void _onSupportPressed() {

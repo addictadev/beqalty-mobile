@@ -1,6 +1,10 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
+import 'package:baqalty/features/profile/presentation/view/change_password_screen.dart';
+import 'package:baqalty/features/profile/presentation/view/notifications_screen.dart';
+import 'package:baqalty/features/profile/presentation/view/privacy_policy_screen.dart';
+import 'package:baqalty/core/widgets/confirmation_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -36,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 title: "reset_password".tr(),
                 onTap: () {
-                  debugPrint('Reset Password tapped');
+                  NavigationManager.navigateTo(ChangePasswordScreen());
                 },
               ),
 
@@ -44,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 title: "notifications".tr(),
                 onTap: () {
-                  debugPrint('Notifications tapped');
+                  NavigationManager.navigateTo(NotificationsScreen());
                 },
               ),
 
@@ -55,65 +59,51 @@ class SettingsScreen extends StatelessWidget {
                   debugPrint('Language tapped');
                 },
               ),
-
+              SizedBox(height: context.responsiveMargin * 2),
               _buildSettingsItem(
                 context,
                 title: "delete_account".tr(),
-                onTap: () {
-                  debugPrint('Delete Account tapped');
+                onTap: () async {
+                  final confirmed = await ConfirmationDialogs.showDeleteAccountDialog(context);
+                  if (confirmed == true) {
+                    // Handle delete account logic here
+                    debugPrint('Delete Account confirmed');
+                    // Navigate to login screen after account deletion
+                    if (context.mounted) {
+                      NavigationManager.navigateToAndFinish(LoginScreen());
+                    }
+                  }
                 },
                 textColor: AppColors.error,
                 showArrow: false,
               ),
-
               SizedBox(height: context.responsiveMargin * 2),
-
               // Security Section
               _buildSectionHeader(context, "security".tr()),
               SizedBox(height: context.responsiveMargin),
-
               _buildSettingsItem(
                 context,
                 title: "privacy_policy".tr(),
                 subtitle: "privacy_policy_sub".tr(),
                 onTap: () {
-                  debugPrint('Privacy Policy tapped');
+                  NavigationManager.navigateTo(PrivacyPolicyScreen());
                 },
               ),
-
               const Spacer(),
-
               // Logout Button
               PrimaryButton(
                 text: "logout".tr(),
-                onPressed: () {
-                  // Show confirmation dialog
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext dialogContext) {
-                      return AlertDialog(
-                        title: Text('logout_confirm_title'.tr()),
-                        content: Text('logout_confirm_body'.tr()),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(dialogContext).pop(),
-                            child: Text('cancel'.tr()),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              NavigationManager.navigateToAndFinish(
-                                LoginScreen(),
-                              );
-                            },
-                            child: Text(
-                              'logout'.tr(),
-                              style: TextStyle(color: AppColors.error),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                onPressed: () async {
+                  // Show custom confirmation dialog
+                  final confirmed = await ConfirmationDialogs.showLogoutDialog(context);
+                  if (confirmed == true) {
+                    // Handle logout logic here
+                    debugPrint('Logout confirmed');
+                    // Navigate to login screen
+                    if (context.mounted) {
+                      NavigationManager.navigateToAndFinish(LoginScreen());
+                    }
+                  }
                 },
                 color: Colors.transparent,
                 textStyle: TextStyles.textViewMedium16.copyWith(

@@ -9,7 +9,7 @@ import 'category_card.dart';
 
 class ShopByCategorySection extends StatelessWidget {
   final VoidCallback? onViewAllTap;
-  final VoidCallback? onCategoryTap;
+  final Function(String)? onCategoryTap;
 
   const ShopByCategorySection({
     super.key,
@@ -122,7 +122,7 @@ class ShopByCategorySection extends StatelessWidget {
           iconBackgroundColor: category.iconBackgroundColor,
           iconColor: category.iconColor,
           onTap: () {
-            onCategoryTap?.call();
+            onCategoryTap?.call(category.title);
           },
         );
       },
