@@ -1,6 +1,6 @@
-import 'package:baqalty/core/navigation_services/navigation_manager.dart' show NavigationManager;
+import 'package:baqalty/core/navigation_services/navigation_manager.dart'
+    show NavigationManager;
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../images_preview/app_assets.dart';
@@ -123,27 +123,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildBackButton(BuildContext context, Color defaultIconColor) {
-    return   Container(
+    return Container(
       margin: EdgeInsets.only(left: 3.w),
-                    width: context.responsiveIconSize * 1.4,
-                    height: context.responsiveIconSize * 1.4,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        NavigationManager.pop();
-                      },
-                      icon: Icon(
-                        Icons.chevron_left,
-                        color: AppColors.textPrimary,
-                        size: context.responsiveIconSize,
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  );
+      width: context.responsiveIconSize * 1.4,
+      height: context.responsiveIconSize * 1.4,
+      decoration: BoxDecoration(color: AppColors.white, shape: BoxShape.circle),
+      child: IconButton(
+        onPressed: () {
+          NavigationManager.pop();
+        },
+        icon: Icon(
+          Icons.chevron_left,
+          color: AppColors.textPrimary,
+          size: context.responsiveIconSize,
+        ),
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(),
+      ),
+    );
   }
 
   @override

@@ -62,11 +62,9 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
         children: [
           // Header Section with Balance
           _buildHeader(context),
-          
+
           // Main Content Area with Transactions
-          Expanded(
-            child: _buildMainContent(context),
-          ),
+          Expanded(child: _buildMainContent(context)),
         ],
       ),
     );
@@ -75,10 +73,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      constraints: BoxConstraints(
-        minHeight: 30.h,
-        maxHeight: 30.h,
-      ),
+      constraints: BoxConstraints(minHeight: 30.h, maxHeight: 30.h),
       child: Stack(
         children: [
           // Background Pattern
@@ -134,7 +129,12 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                         onPressed: () => Navigator.of(context).pop(),
                         icon: Icons.arrow_back_ios,
                       ),
-                      Text("wallet".tr(), style: TextStyles.textViewBold18.copyWith(color: AppColors.white),),
+                      Text(
+                        "wallet".tr(),
+                        style: TextStyles.textViewBold18.copyWith(
+                          color: AppColors.white,
+                        ),
+                      ),
                       // Support Icon
                       GestureDetector(
                         onTap: _onSupportPressed,
@@ -167,8 +167,6 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                     
-
                               // Balance Amount
                               Text(
                                 '${_currentBalance.toStringAsFixed(0)} EGP',
@@ -217,13 +215,16 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                                       width: context.responsiveIconSize * 0.8,
                                       height: context.responsiveIconSize * 0.8,
                                     ),
-                                    SizedBox(width: context.responsiveMargin * 1),
+                                    SizedBox(
+                                      width: context.responsiveMargin * 1,
+                                    ),
                                     Text(
                                       "deposit".tr(),
-                                      style: TextStyles.textViewMedium16.copyWith(
-                                        color: AppColors.textPrimary,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: TextStyles.textViewMedium16
+                                          .copyWith(
+                                            color: AppColors.textPrimary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -263,9 +264,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          CircularProgressIndicator(color: AppColors.primary),
           SizedBox(height: context.responsiveMargin * 2),
           Text(
             "loading_transactions".tr(),
@@ -282,15 +281,24 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
     // Group transactions by date
     final today = DateTime.now();
     final yesterday = today.subtract(const Duration(days: 1));
-    
+
     final todayTransactions = _transactions.where((t) {
-      final transactionDate = DateTime(t.timestamp.year, t.timestamp.month, t.timestamp.day);
+      final transactionDate = DateTime(
+        t.timestamp.year,
+        t.timestamp.month,
+        t.timestamp.day,
+      );
       return transactionDate == DateTime(today.year, today.month, today.day);
     }).toList();
-    
+
     final yesterdayTransactions = _transactions.where((t) {
-      final transactionDate = DateTime(t.timestamp.year, t.timestamp.month, t.timestamp.day);
-      return transactionDate == DateTime(yesterday.year, yesterday.month, yesterday.day);
+      final transactionDate = DateTime(
+        t.timestamp.year,
+        t.timestamp.month,
+        t.timestamp.day,
+      );
+      return transactionDate ==
+          DateTime(yesterday.year, yesterday.month, yesterday.day);
     }).toList();
 
     return ListView(
@@ -299,14 +307,18 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
         // Today Section
         if (todayTransactions.isNotEmpty) ...[
           _buildSectionHeader("today".tr()),
-          ...todayTransactions.map((transaction) => _buildTransactionCard(transaction)),
+          ...todayTransactions.map(
+            (transaction) => _buildTransactionCard(transaction),
+          ),
           SizedBox(height: context.responsiveMargin * 2),
         ],
 
         // Yesterday Section
         if (yesterdayTransactions.isNotEmpty) ...[
           _buildSectionHeader("yesterday".tr()),
-          ...yesterdayTransactions.map((transaction) => _buildTransactionCard(transaction)),
+          ...yesterdayTransactions.map(
+            (transaction) => _buildTransactionCard(transaction),
+          ),
         ],
       ],
     );
@@ -334,7 +346,9 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,
@@ -368,7 +382,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
               ],
             ),
           ),
-          
+
           // Right side - Amount
           Text(
             transaction.formattedAmount,

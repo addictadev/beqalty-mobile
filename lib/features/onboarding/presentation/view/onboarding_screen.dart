@@ -6,7 +6,6 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
-import 'package:baqalty/core/widgets/bordered_button.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import '../../../../core/images_preview/custom_svg_img.dart';
@@ -64,8 +63,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColors.primary.withOpacity(.9),
       body: Container(
         decoration: BoxDecoration(
-          
-          image: DecorationImage(image: AssetImage(AppAssets.onboardingPattern),fit: BoxFit.cover)),
+          image: DecorationImage(
+            image: AssetImage(AppAssets.onboardingPattern),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Stack(
           children: [
             // Background image layer
@@ -102,8 +104,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Expanded(flex: 3, child: _buildCharacterIllustration()),
 
           Expanded(flex: 2, child: _buildPageView()),
-
-
         ],
       ),
     );
@@ -158,7 +158,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return GlassMorphismCard(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
       padding: EdgeInsets.all(4.w),
-      
+
       blur: 15,
       backgroundColor: Colors.white.withValues(alpha: 0.08),
       borderColor: Colors.white.withValues(alpha: 0.15),
@@ -187,8 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 3.h),
-                    _buildPageIndicators(),
-
+          _buildPageIndicators(),
         ],
       ),
     );
@@ -202,30 +201,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           SizedBox(height: 4.h),
 
           // Navigation buttons
-     PrimaryButton(
-                  text:  "get_started".tr() 
-                      ,
-                  onPressed: 
-                       _onGetStartedPressed 
-                      ,
-                      margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
-                  color: AppColors.white,
-                  textStyle: TextStyle(
-                    fontSize: FontSizes.s16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
-                  ),
-                  borderRadius: 30,
-                  height: 56,
-                ),
+          PrimaryButton(
+            text: "get_started".tr(),
+            onPressed: _onGetStartedPressed,
+            margin: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+            color: AppColors.white,
+            textStyle: TextStyle(
+              fontSize: FontSizes.s16,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
+            ),
+            borderRadius: 30,
+            height: 56,
+          ),
 
           SizedBox(height: 3.h),
         ],
       ),
     );
   }
-
-
 }
 
 class OnboardingPage {

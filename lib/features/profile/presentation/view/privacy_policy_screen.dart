@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart';
@@ -136,10 +135,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   }
 
   Widget _buildIntroduction(BuildContext context) {
-    return _buildContentSection(
-      context,
-      content: "privacy_policy_intro".tr(),
-    );
+    return _buildContentSection(context, content: "privacy_policy_intro".tr());
   }
 
   Widget _buildInformationWeCollect(BuildContext context) {
@@ -147,10 +143,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
       context,
       title: "information_we_collect".tr(),
       content: "information_we_collect_intro".tr(),
-      items: [
-        "personal_information_desc".tr(),
-        "financial_data_desc".tr(),
-      ],
+      items: ["personal_information_desc".tr(), "financial_data_desc".tr()],
     );
   }
 
@@ -190,10 +183,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   }
 
   Widget _buildContactUs(BuildContext context) {
-    return _buildContentSection(
-      context,
-      content: "contact_us_desc".tr(),
-    );
+    return _buildContentSection(context, content: "contact_us_desc".tr());
   }
 
   Widget _buildSection(

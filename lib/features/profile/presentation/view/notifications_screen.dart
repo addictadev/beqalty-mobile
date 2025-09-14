@@ -36,7 +36,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Notification Settings
               _buildNotificationSetting(
                 title: "transaction_alert".tr(),
@@ -45,12 +45,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   setState(() {
                     _transactionAlert = value;
                   });
-                  _showNotificationChangeSnackBar("transaction_alert".tr(), value);
+                  _showNotificationChangeSnackBar(
+                    "transaction_alert".tr(),
+                    value,
+                  );
                 },
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 3),
-              
+
               _buildNotificationSetting(
                 title: "insight_alert".tr(),
                 value: _insightAlert,
@@ -61,9 +64,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   _showNotificationChangeSnackBar("insight_alert".tr(), value);
                 },
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 3),
-              
+
               _buildNotificationSetting(
                 title: "sort_transactions_alert".tr(),
                 value: _sortTransactionsAlert,
@@ -71,7 +74,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   setState(() {
                     _sortTransactionsAlert = value;
                   });
-                  _showNotificationChangeSnackBar("sort_transactions_alert".tr(), value);
+                  _showNotificationChangeSnackBar(
+                    "sort_transactions_alert".tr(),
+                    value,
+                  );
                 },
               ),
             ],
@@ -91,10 +97,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         horizontal: context.responsivePadding,
         vertical: context.responsiveMargin * 1.5,
       ),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-       
-      ),
+      decoration: BoxDecoration(color: AppColors.white),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -108,7 +111,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
             ),
           ),
-          
+
           // Toggle Switch
           CustomToggleSwitch(
             value: value,
@@ -124,24 +127,25 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  void _showNotificationChangeSnackBar(String notificationType, bool isEnabled) {
-    final message = isEnabled 
+  void _showNotificationChangeSnackBar(
+    String notificationType,
+    bool isEnabled,
+  ) {
+    final message = isEnabled
         ? '$notificationType enabled'
         : '$notificationType disabled';
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           message,
-          style: TextStyles.textViewMedium14.copyWith(
-            color: AppColors.white,
-          ),
+          style: TextStyles.textViewMedium14.copyWith(color: AppColors.white),
         ),
-        backgroundColor: isEnabled ? AppColors.success : AppColors.textSecondary,
+        backgroundColor: isEnabled
+            ? AppColors.success
+            : AppColors.textSecondary,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         duration: const Duration(seconds: 2),
       ),
     );

@@ -23,7 +23,8 @@ class SubcategoryProductsScreen extends StatefulWidget {
   });
 
   @override
-  State<SubcategoryProductsScreen> createState() => _SubcategoryProductsScreenState();
+  State<SubcategoryProductsScreen> createState() =>
+      _SubcategoryProductsScreenState();
 }
 
 class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
@@ -54,10 +55,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
       return Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOutBack,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
 
     // Start animations with stagger
@@ -66,7 +64,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
 
   void _startAnimations() {
     _animationController.forward();
-    
+
     // Stagger the item animations
     for (int i = 0; i < _itemAnimationControllers.length; i++) {
       Future.delayed(Duration(milliseconds: 60 * i), () {
@@ -110,7 +108,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                 child: CustomTextFormField(
                   controller: _searchController,
                   hint: "search_products".tr(),
-        
+
                   prefixIcon: Icon(
                     Iconsax.search_normal,
                     color: AppColors.textSecondary,
@@ -166,18 +164,22 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                             _itemAnimationControllers[index].forward();
                           });
                         }
-                        
-                        NavigationManager.navigateTo(ProductDetailsScreen(
-                          productName: product['name'],
-                          productImage: product['image'],
-                          productPrice: product['price'],
-                          productCategory: product['category'],
-                        ));
+
+                        NavigationManager.navigateTo(
+                          ProductDetailsScreen(
+                            productName: product['name'],
+                            productImage: product['image'],
+                            productPrice: product['price'],
+                            productCategory: product['category'],
+                          ),
+                        );
                       },
                       onFavorite: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('${product['name']} added to favorites'),
+                            content: Text(
+                              '${product['name']} added to favorites',
+                            ),
                             backgroundColor: AppColors.success,
                           ),
                         );
@@ -225,10 +227,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
           SizedBox(height: context.responsiveMargin),
           Text(
             "try_different_subcategory".tr(),
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -236,7 +235,9 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
     );
   }
 
-  List<Map<String, dynamic>> _getProductsForSubcategory(String subcategoryName) {
+  List<Map<String, dynamic>> _getProductsForSubcategory(
+    String subcategoryName,
+  ) {
     // Mock data - in real app, this would come from API
     switch (subcategoryName.toLowerCase()) {
       case 'healthy':

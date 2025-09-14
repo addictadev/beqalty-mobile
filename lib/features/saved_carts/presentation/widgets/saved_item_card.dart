@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:baqalty/features/saved_carts/business/models/saved_item_model.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sizer/sizer.dart';
@@ -25,7 +24,9 @@ class SavedItemCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: context.responsiveMargin),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.5,
+        ),
         boxShadow: [
           // BoxShadow(
           //   color: AppColors.shadowLight,
@@ -38,21 +39,21 @@ class SavedItemCard extends StatelessWidget {
         // color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.5),
+          borderRadius: BorderRadius.circular(
+            context.responsiveBorderRadius * 1.5,
+          ),
           child: Padding(
             padding: EdgeInsets.all(context.responsivePadding),
             child: Row(
               children: [
                 // Product Image
                 _buildProductImage(context),
-                
+
                 SizedBox(width: context.responsiveMargin),
-                
+
                 // Product Details
-                Expanded(
-                  child: _buildProductDetails(context),
-                ),
-                
+                Expanded(child: _buildProductDetails(context)),
+
                 // Remove Button
                 _buildRemoveButton(context),
               ],
@@ -68,15 +69,15 @@ class SavedItemCard extends StatelessWidget {
       width: context.responsiveIconSize * 4,
       height: context.responsiveIconSize * 4,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.2),
-        border: Border.all(
-          color: AppColors.borderLight,
-          width: 1,
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.2,
         ),
-    
+        border: Border.all(color: AppColors.borderLight, width: 1),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1.2),
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.2,
+        ),
         child: Image.asset(
           savedItem.image,
           fit: BoxFit.cover,
@@ -110,9 +111,9 @@ class SavedItemCard extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        
+
         SizedBox(height: context.responsiveMargin * 0.8),
-        
+
         // Category
         Container(
           padding: EdgeInsets.symmetric(
@@ -121,7 +122,9 @@ class SavedItemCard extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: AppColors.borderLight.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 0.8),
+            borderRadius: BorderRadius.circular(
+              context.responsiveBorderRadius * 0.8,
+            ),
           ),
           child: Text(
             savedItem.category,
@@ -133,9 +136,9 @@ class SavedItemCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        
+
         SizedBox(height: context.responsiveMargin * 0.8),
-        
+
         // Price
         Text(
           savedItem.formattedPrice,

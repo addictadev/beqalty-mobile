@@ -40,12 +40,12 @@ class SavedItemModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        category,
-        image,
-        price,
-        currency,
-        savedAt,
-      ];
+    id,
+    name,
+    category,
+    image,
+    price,
+    currency,
+    savedAt,
+  ];
 }

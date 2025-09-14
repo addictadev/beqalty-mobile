@@ -1,6 +1,7 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
-import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart' show AuthBackgroundWidget;
+import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart'
+    show AuthBackgroundWidget;
 import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart'
     show ProductDetailsScreen;
 import 'package:flutter/material.dart';
@@ -37,54 +38,53 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body: 
-      AuthBackgroundWidget(
-        child: 
-      SafeArea(
-        child: Column(
-          children: [
-            // Search Header
-          SizedBox(height: context.responsiveMargin ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.responsivePadding,
-                      vertical: context.responsiveMargin,
+      body: AuthBackgroundWidget(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Search Header
+              SizedBox(height: context.responsiveMargin),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsivePadding,
+                  vertical: context.responsiveMargin,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "search".tr(),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
-              child: Column(
-                children: [
-                  Text(
-                    "search".tr(),
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  SizedBox(height: context.responsiveMargin),
-                  // Search Field
-                  CustomTextFormField(
-                    controller: _searchController,
-                    hint: "search_products".tr(),
-                    // fillColor: Colors.transparent,
-                    borderColor: AppColors.borderLight,
+                    SizedBox(height: context.responsiveMargin),
+                    // Search Field
+                    CustomTextFormField(
+                      controller: _searchController,
+                      hint: "search_products".tr(),
+                      // fillColor: Colors.transparent,
+                      borderColor: AppColors.borderLight,
 
-                    prefixIcon: Icon(
-                      Iconsax.search_normal,
-                      color: AppColors.textSecondary,
+                      prefixIcon: Icon(
+                        Iconsax.search_normal,
+                        color: AppColors.textSecondary,
+                      ),
+                      onChanged: (value) {
+                        // Handle search
+                      },
                     ),
-                    onChanged: (value) {
-                      // Handle search
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            // Search Results
-            Expanded(child: _buildSearchResults(context)),
-          ],
+              // Search Results
+              Expanded(child: _buildSearchResults(context)),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildSearchResults(BuildContext context) {
@@ -138,40 +138,42 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
           final product = milkProducts[index];
           return Padding(
             padding: EdgeInsets.only(bottom: context.responsiveMargin),
-                      child: SavedItemCard(
-            productName: product['name'],
-            productCategory: product['category'],
-            productPrice: product['price'],
-            productImage: product['image'],
-            showFavoriteButton: true,
-            showAddToCartButton: true,
-            onTap: () {
-              NavigationManager.navigateTo(ProductDetailsScreen(
-                productName: product['name'],
-                productImage: product['image'],
-                productPrice: product['price'],
-                productCategory: product['category'],
-              ));
-            },
-            onFavorite: () {
-              // TODO: Implement favorite functionality
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${product['name']} added to favorites'),
-                  backgroundColor: AppColors.success,
-                ),
-              );
-            },
-            onAddToCart: () {
-              // TODO: Implement add to cart functionality
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${product['name']} added to cart'),
-                  backgroundColor: AppColors.success,
-                ),
-              );
-            },
-          ),
+            child: SavedItemCard(
+              productName: product['name'],
+              productCategory: product['category'],
+              productPrice: product['price'],
+              productImage: product['image'],
+              showFavoriteButton: true,
+              showAddToCartButton: true,
+              onTap: () {
+                NavigationManager.navigateTo(
+                  ProductDetailsScreen(
+                    productName: product['name'],
+                    productImage: product['image'],
+                    productPrice: product['price'],
+                    productCategory: product['category'],
+                  ),
+                );
+              },
+              onFavorite: () {
+                // TODO: Implement favorite functionality
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${product['name']} added to favorites'),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+              },
+              onAddToCart: () {
+                // TODO: Implement add to cart functionality
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${product['name']} added to cart'),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

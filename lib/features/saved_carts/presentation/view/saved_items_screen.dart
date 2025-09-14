@@ -1,12 +1,12 @@
 import 'package:baqalty/core/images_preview/app_assets.dart' show AppAssets;
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
-import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart' show ProductDetailsScreen;
+import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart'
+    show ProductDetailsScreen;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/saved_carts/business/models/saved_item_model.dart';
 import 'package:baqalty/core/widgets/saved_item_card.dart';
@@ -56,20 +56,21 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
       } else {
         _filteredItems = _savedItems.where((item) {
           return item.name.toLowerCase().contains(query.toLowerCase()) ||
-                 item.category.toLowerCase().contains(query.toLowerCase());
+              item.category.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
     });
   }
 
   void _onItemTap(SavedItemModel savedItem) {
-     NavigationManager.navigateTo(ProductDetailsScreen(
-                productName: savedItem.name,
-                productImage: savedItem.image,
-                productPrice: savedItem.price,
-                productCategory: savedItem.category,
-              ));  
-    
+    NavigationManager.navigateTo(
+      ProductDetailsScreen(
+        productName: savedItem.name,
+        productImage: savedItem.image,
+        productPrice: savedItem.price,
+        productCategory: savedItem.category,
+      ),
+    );
   }
 
   void _onRemoveFromSaved(SavedItemModel savedItem) {
@@ -77,7 +78,7 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
       _savedItems.remove(savedItem);
       _filteredItems.remove(savedItem);
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${savedItem.name} removed from saved items'),
@@ -103,20 +104,15 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
       body: SafeArea(
         child:
             // Background Pattern
-       
-            
             // Main Content
             Column(
               children: [
                 // App Bar
-                CustomAppBar(
-                  title: "saved_items".tr(),
-                
-                ),
-                
+                CustomAppBar(title: "saved_items".tr()),
+
                 // Search Bar
                 _buildSearchBar(context),
-                
+
                 // Saved Items List
                 Expanded(
                   child: _isLoading
@@ -124,9 +120,7 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
                       : _buildSavedItemsList(context),
                 ),
               ],
-            
-          
-        ),
+            ),
       ),
     );
   }
@@ -147,7 +141,10 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
         ),
         onChanged: _onSearchChanged,
         borderRadius: 25,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         fillColor: AppColors.white,
         borderColor: AppColors.borderLight,
         focusedBorderColor: AppColors.primary,
@@ -160,9 +157,7 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
+          CircularProgressIndicator(color: AppColors.primary),
           SizedBox(height: context.responsiveMargin * 2),
           Text(
             "Loading saved items...",
@@ -214,9 +209,9 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
             size: context.responsiveIconSize * 4,
             color: AppColors.textSecondary,
           ),
-          
+
           SizedBox(height: context.responsiveMargin * 2),
-          
+
           Text(
             "No saved items found",
             style: TextStyles.textViewBold18.copyWith(
@@ -224,9 +219,9 @@ class _SavedItemsScreenState extends State<SavedItemsScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           SizedBox(height: context.responsiveMargin),
-          
+
           Text(
             "Start shopping and save your favorite items",
             style: TextStyles.textViewRegular14.copyWith(
@@ -296,21 +291,13 @@ class _BackgroundPatternPainter extends CustomPainter {
 
     // Draw subtle grid pattern
     final spacing = 40.0;
-    
+
     for (double i = 0; i < size.width; i += spacing) {
-      canvas.drawLine(
-        Offset(i, 0),
-        Offset(i, size.height),
-        paint,
-      );
+      canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
     }
-    
+
     for (double i = 0; i < size.height; i += spacing) {
-      canvas.drawLine(
-        Offset(0, i),
-        Offset(size.width, i),
-        paint,
-      );
+      canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
     }
   }
 

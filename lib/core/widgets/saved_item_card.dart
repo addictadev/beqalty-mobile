@@ -56,37 +56,32 @@ class SavedItemCard extends StatelessWidget {
           context.responsiveBorderRadius * 1.5,
         ),
         border: Border.all(color: AppColors.borderLight, width: 1),
-        boxShadow: [
-     
-        ],
+        boxShadow: [],
       ),
-      child:  InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(
-            context.responsiveBorderRadius * 1.5,
-          ),
-          child: Padding(
-            padding: padding ?? EdgeInsets.all(3.w),
-            child: Row(
-              children: [
-                // Product Image
-                _buildProductImage(context),
-                
-                SizedBox(width: context.responsiveMargin * 1.5),
-                
-                // Product Information
-                Expanded(
-                  child: _buildProductInfo(context),
-                ),
-                
-                // // Action Buttons
-                // if (showFavoriteButton || showAddToCartButton)
-                //   _buildActionButtons(context),
-              ],
-            ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(
+          context.responsiveBorderRadius * 1.5,
+        ),
+        child: Padding(
+          padding: padding ?? EdgeInsets.all(3.w),
+          child: Row(
+            children: [
+              // Product Image
+              _buildProductImage(context),
+
+              SizedBox(width: context.responsiveMargin * 1.5),
+
+              // Product Information
+              Expanded(child: _buildProductInfo(context)),
+
+              // // Action Buttons
+              // if (showFavoriteButton || showAddToCartButton)
+              //   _buildActionButtons(context),
+            ],
           ),
         ),
-      
+      ),
     );
   }
 
@@ -99,14 +94,10 @@ class SavedItemCard extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: AppColors.borderLight.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(
-          context.responsiveBorderRadius,
-        ),
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(
-          context.responsiveBorderRadius,
-        ),
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         child: Image.asset(
           productImage,
           fit: BoxFit.cover,
@@ -143,23 +134,22 @@ class SavedItemCard extends StatelessWidget {
 
         if (showCategory) ...[
           SizedBox(height: context.responsiveMargin * 0.5),
-          
+
           // Product Category
           Text(
-              productCategory,
-              style: TextStyles.textViewRegular14.copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            productCategory,
+            style: TextStyles.textViewRegular14.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
             ),
-          
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
 
         if (showPrice) ...[
           SizedBox(height: context.responsiveMargin),
-          
+
           // Price
           Text(
             "${productPrice.toStringAsFixed(2)} ${currency ?? "egp".tr()}",
@@ -193,12 +183,12 @@ class SavedItemCard extends StatelessWidget {
         width: context.responsiveIconSize * 2.5,
         height: context.responsiveIconSize * 2.5,
         decoration: BoxDecoration(
-          color: isFavorite 
+          color: isFavorite
               ? AppColors.error.withValues(alpha: 0.1)
               : AppColors.borderLight.withValues(alpha: 0.5),
           shape: BoxShape.circle,
           border: Border.all(
-            color: isFavorite 
+            color: isFavorite
                 ? AppColors.error.withValues(alpha: 0.3)
                 : AppColors.borderLight,
             width: 1,

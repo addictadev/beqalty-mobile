@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
-import 'package:baqalty/core/utils/responsive_utils.dart';
 
 class ShimmerWidget extends StatefulWidget {
   final Widget child;
@@ -32,13 +31,9 @@ class _ShimmerWidgetState extends State<ShimmerWidget>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    _animation = Tween<double>(
-      begin: -1.0,
-      end: 2.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
     if (widget.isLoading) {
       _animationController.repeat();
@@ -128,11 +123,7 @@ class ShimmerCircle extends StatelessWidget {
   final double size;
   final EdgeInsets? margin;
 
-  const ShimmerCircle({
-    super.key,
-    required this.size,
-    this.margin,
-  });
+  const ShimmerCircle({super.key, required this.size, this.margin});
 
   @override
   Widget build(BuildContext context) {

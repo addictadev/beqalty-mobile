@@ -108,10 +108,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
   Widget _buildRewardsHeader() {
     return Container(
       width: double.infinity,
-      constraints: BoxConstraints(
-        minHeight: 35.h,
-        maxHeight: 40.h,
-      ),
+      constraints: BoxConstraints(minHeight: 35.h, maxHeight: 40.h),
       child: Stack(
         children: [
           Container(

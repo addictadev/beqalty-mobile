@@ -17,9 +17,10 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _retypePasswordController = TextEditingController();
+  final TextEditingController _retypePasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   bool _isOldPasswordValid = false;
   bool _isNewPasswordValid = false;
   bool _isRetypePasswordValid = false;
@@ -59,7 +60,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: context.responsiveMargin * 2),
-                        
+
                         // Old Password Field
                         _buildPasswordField(
                           controller: _oldPasswordController,
@@ -70,23 +71,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             });
                           },
                         ),
-                        
+
                         SizedBox(height: context.responsiveMargin * 2),
-                        
+
                         // New Password Field
                         _buildPasswordField(
                           controller: _newPasswordController,
                           label: "new_password".tr(),
                           onChanged: (value) {
                             setState(() {
-                              _isNewPasswordValid = value.isNotEmpty && value.length >= 8;
+                              _isNewPasswordValid =
+                                  value.isNotEmpty && value.length >= 8;
                               _validateRetypePassword();
                             });
                           },
                         ),
-                        
+
                         SizedBox(height: context.responsiveMargin * 2),
-                        
+
                         // Retype New Password Field
                         _buildPasswordField(
                           controller: _retypePasswordController,
@@ -98,13 +100,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             });
                           },
                         ),
-                        
+
                         SizedBox(height: context.responsiveMargin * 4),
                       ],
                     ),
                   ),
                 ),
-                
+
                 // Save Button
                 _buildSaveButton(),
               ],
@@ -135,7 +137,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         if (label == "new_password".tr() && value.length < 8) {
           return "password_min_length".tr();
         }
-        if (label == "retype_new_password".tr() && value != _newPasswordController.text) {
+        if (label == "retype_new_password".tr() &&
+            value != _newPasswordController.text) {
           return "passwords_not_match".tr();
         }
         return null;
@@ -144,8 +147,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildSaveButton() {
-    final isFormValid = _isOldPasswordValid && _isNewPasswordValid && _isRetypePasswordValid;
-    
+    final isFormValid =
+        _isOldPasswordValid && _isNewPasswordValid && _isRetypePasswordValid;
+
     return PrimaryButton(
       text: "save".tr(),
       onPressed: isFormValid ? _handleSavePassword : null,
@@ -161,8 +165,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   void _validateRetypePassword() {
-    _isRetypePasswordValid = _retypePasswordController.text.isNotEmpty &&
-                             _retypePasswordController.text == _newPasswordController.text;
+    _isRetypePasswordValid =
+        _retypePasswordController.text.isNotEmpty &&
+        _retypePasswordController.text == _newPasswordController.text;
   }
 
   void _handleSavePassword() async {
@@ -187,15 +192,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         SnackBar(
           content: Text(
             'Password changed successfully!',
-            style: TextStyles.textViewMedium14.copyWith(
-              color: AppColors.white,
-            ),
+            style: TextStyles.textViewMedium14.copyWith(color: AppColors.white),
           ),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
 

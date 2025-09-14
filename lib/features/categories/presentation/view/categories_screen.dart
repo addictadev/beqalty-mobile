@@ -47,10 +47,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
       return Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.elasticOut,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
     }).toList();
 
     // Start animations with stagger
@@ -59,7 +56,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
 
   void _startAnimations() {
     _animationController.forward();
-    
+
     // Stagger the item animations
     for (int i = 0; i < _itemAnimationControllers.length; i++) {
       Future.delayed(Duration(milliseconds: 100 * i), () {
@@ -88,10 +85,13 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           child: Column(
             children: [
               SizedBox(height: context.responsiveMargin * 2),
-              Text("categories".tr(), style: TextStyles.textViewBold18.copyWith(
-                                color: AppColors.textPrimary,
-                              ),),
-              SizedBox(height: context.responsiveMargin ),
+              Text(
+                "categories".tr(),
+                style: TextStyles.textViewBold18.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: context.responsiveMargin),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: context.responsivePadding,

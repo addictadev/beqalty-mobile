@@ -62,7 +62,12 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    Text('set_amount'.tr(), style: TextStyles.textViewBold18.copyWith(color: AppColors.textPrimary,),),
+                    Text(
+                      'set_amount'.tr(),
+                      style: TextStyles.textViewBold18.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                     // Amount Input Section
                     _buildAmountSection(context),
                     SizedBox(height: 4.h),
@@ -91,7 +96,6 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
         children: [
           // Amount Display
           Row(
-
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Minus Button
@@ -108,10 +112,7 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
                 padding: EdgeInsets.symmetric(vertical: 2.h),
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(
-                      color: AppColors.borderLight,
-                      width: 1,
-                    ),
+                    bottom: BorderSide(color: AppColors.borderLight, width: 1),
                   ),
                 ),
                 child: Text(
@@ -149,13 +150,14 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
         width: context.responsiveIconSize * 1.4,
         height: context.responsiveIconSize * 1.4,
         decoration: BoxDecoration(
-          color:
-          icon == Icons.remove ? Colors.transparent : AppColors.primary,
-border: Border.all(
-  color: icon == Icons.remove ? Colors.grey : AppColors.primary,
-  width: 1,
-),
-borderRadius: BorderRadius.circular(context.responsiveBorderRadius * .9),
+          color: icon == Icons.remove ? Colors.transparent : AppColors.primary,
+          border: Border.all(
+            color: icon == Icons.remove ? Colors.grey : AppColors.primary,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(
+            context.responsiveBorderRadius * .9,
+          ),
         ),
         child: Icon(
           icon,
@@ -346,7 +348,7 @@ borderRadius: BorderRadius.circular(context.responsiveBorderRadius * .9),
         backgroundColor: AppColors.success,
       ),
     );
-    
+
     // Navigate back to wallet screen
     Navigator.of(context).pop();
   }

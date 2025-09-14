@@ -16,10 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 class TrackOrderScreen extends StatefulWidget {
   final OrderModel order;
 
-  const TrackOrderScreen({
-    super.key,
-    required this.order,
-  });
+  const TrackOrderScreen({super.key, required this.order});
 
   @override
   State<TrackOrderScreen> createState() => _TrackOrderScreenState();
@@ -44,16 +41,10 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
             ),
 
             // Map View
-            Expanded(
-              flex: 3,
-              child: _buildMapView(context),
-            ),
+            Expanded(flex: 3, child: _buildMapView(context)),
 
             // Status Panel
-            Expanded(
-              flex: 2,
-              child: _buildStatusPanel(context),
-            ),
+            Expanded(flex: 2, child: _buildStatusPanel(context)),
           ],
         ),
       ),
@@ -65,27 +56,23 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
       margin: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
-        border: Border.all(
-          color: AppColors.borderLight,
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.borderLight, width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
-        child:   Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppAssets.mapImage),
-                  fit: BoxFit.cover,
-                ),
-              ),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppAssets.mapImage),
+              fit: BoxFit.cover,
             ),
+          ),
+        ),
       ),
     );
   }
-
 
   Widget _buildStatusPanel(BuildContext context) {
     return Container(
@@ -178,10 +165,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
-        border: Border.all(
-          color: AppColors.borderLight,
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.borderLight, width: 1),
         boxShadow: [
           BoxShadow(
             color: AppColors.black.withOpacity(0.05),
@@ -197,7 +181,10 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
             width: 12.w,
             height: 12.w,
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 2),
+              border: Border.all(
+                color: AppColors.primary.withOpacity(0.1),
+                width: 2,
+              ),
               shape: BoxShape.circle,
             ),
             child: CustomSvgImage(
@@ -240,25 +227,15 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   Widget _buildDriverInfo(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-
-        boxShadow: [
-     
-        ],
-      ),
+      decoration: BoxDecoration(color: AppColors.white, boxShadow: []),
       child: Row(
         children: [
           // Driver Avatar
           Container(
             width: 14.w,
             height: 14.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: CustomImageAsset(
-              assetName: AppAssets.appIcon,
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            child: CustomImageAsset(assetName: AppAssets.appIcon),
           ),
 
           SizedBox(width: context.responsiveMargin),
@@ -281,15 +258,15 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
               width: 12.w,
               height: 12.w,
               decoration: BoxDecoration(
-                
-                border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 2),
-                borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 1),
+                border: Border.all(
+                  color: AppColors.primary.withOpacity(0.1),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(
+                  context.responsiveBorderRadius * 1,
+                ),
               ),
-              child: Icon(
-                Iconsax.call,
-                color: AppColors.primary,
-                size: 6.w,
-              ),
+              child: Icon(Iconsax.call, color: AppColors.primary, size: 6.w),
             ),
           ),
         ],
@@ -298,8 +275,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   }
 
   void _callDriver() {
-//url launch
-  launchUrl(Uri.parse('tel:01010300353'));
+    //url launch
+    launchUrl(Uri.parse('tel:01010300353'));
   }
 }
 
@@ -312,7 +289,7 @@ class RoutePainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final path = Path();
-    
+
     // Create a curved route from driver location to destination
     path.moveTo(size.width * 0.8, size.height * 0.2);
     path.quadraticBezierTo(

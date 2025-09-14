@@ -39,17 +39,23 @@ class CustomConfirmationDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: context.responsivePadding * 0.2),
+        margin: EdgeInsets.symmetric(
+          horizontal: context.responsivePadding * 0.2,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-         
-                        Container(
+            Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: context.responsivePadding * 2, vertical: context.responsiveMargin * 5),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsivePadding * 2,
+                vertical: context.responsiveMargin * 5,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.white,
-                borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+                borderRadius: BorderRadius.circular(
+                  context.responsiveBorderRadius * 2,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -65,7 +71,9 @@ class CustomConfirmationDialog extends StatelessWidget {
                     width: context.responsiveIconSize * 3,
                     height: context.responsiveIconSize * 3,
                     decoration: BoxDecoration(
-                      color: iconBackgroundColor ?? AppColors.borderLight.withOpacity(.5),
+                      color:
+                          iconBackgroundColor ??
+                          AppColors.borderLight.withOpacity(.5),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -74,33 +82,34 @@ class CustomConfirmationDialog extends StatelessWidget {
                       color: iconColor ?? AppColors.error,
                     ),
                   ),
-                  
+
                   SizedBox(height: context.responsiveMargin * 3),
-                  
+
                   // Confirmation Message
                   Text(
                     message,
                     style: TextStyles.textViewMedium18.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
-                      
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   SizedBox(height: context.responsiveMargin * 3),
-                  
+
                   // Primary Button
                   SizedBox(
                     width: 45.w,
-                    height: context.responsiveButtonHeight*.5,
+                    height: context.responsiveButtonHeight * .5,
                     child: ElevatedButton(
                       onPressed: onPrimaryPressed,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryButtonColor ?? AppColors.error,
                         foregroundColor: AppColors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(context.responsiveBorderRadius*5),
+                          borderRadius: BorderRadius.circular(
+                            context.responsiveBorderRadius * 5,
+                          ),
                         ),
                         elevation: 0,
                       ),
@@ -113,12 +122,13 @@ class CustomConfirmationDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: context.responsiveMargin * 1.5),
-                  
+
                   // Secondary Button
                   TextButton(
-                    onPressed: onSecondaryPressed ?? () => Navigator.of(context).pop(),
+                    onPressed:
+                        onSecondaryPressed ?? () => Navigator.of(context).pop(),
                     child: Text(
                       secondaryButtonText.tr(),
                       style: TextStyles.textViewMedium16.copyWith(

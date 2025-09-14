@@ -21,7 +21,7 @@ class FoodDoodlesBackground extends StatelessWidget {
           height: double.infinity,
           color: AppColors.scaffoldBackground,
         ),
-        
+
         // Food doodles
         Positioned(
           top: 100,
@@ -32,7 +32,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 200,
           left: -20,
@@ -42,7 +42,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 150,
           right: 100,
@@ -52,7 +52,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 300,
           left: 50,
@@ -62,7 +62,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 400,
           right: 50,
@@ -72,7 +72,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 500,
           left: 100,
@@ -82,7 +82,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 600,
           right: 150,
@@ -92,7 +92,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         Positioned(
           top: 700,
           left: 150,
@@ -102,7 +102,7 @@ class FoodDoodlesBackground extends StatelessWidget {
             color: AppColors.foodDoodleColor,
           ),
         ),
-        
+
         // Main content
         child,
       ],
@@ -116,11 +116,7 @@ class FoodDoodlesBackground extends StatelessWidget {
   }) {
     return Opacity(
       opacity: opacity,
-      child: Icon(
-        icon,
-        size: size,
-        color: color,
-      ),
+      child: Icon(icon, size: size, color: color),
     );
   }
 }

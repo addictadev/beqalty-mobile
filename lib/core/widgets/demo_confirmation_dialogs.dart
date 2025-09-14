@@ -23,7 +23,7 @@ class ConfirmationDialogsTestDemo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               Text(
                 'Test Confirmation Dialogs',
                 style: TextStyles.textViewMedium24.copyWith(
@@ -31,18 +31,18 @@ class ConfirmationDialogsTestDemo extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin),
-              
+
               Text(
                 'This demo tests the confirmation dialogs to ensure they work properly.',
                 style: TextStyles.textViewMedium16.copyWith(
                   color: AppColors.textSecondary,
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 3),
-              
+
               // Test basic dialog
               SizedBox(
                 width: double.infinity,
@@ -74,21 +74,24 @@ class ConfirmationDialogsTestDemo extends StatelessWidget {
                   child: const Text('Test Basic Dialog'),
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Test custom confirmation dialog directly
               SizedBox(
                 width: double.infinity,
                 height: context.responsiveButtonHeight,
                 child: ElevatedButton(
                   onPressed: () {
-                    debugPrint('Testing custom confirmation dialog directly...');
+                    debugPrint(
+                      'Testing custom confirmation dialog directly...',
+                    );
                     showDialog(
                       context: context,
                       builder: (context) => CustomConfirmationDialog(
                         title: "Test Custom Dialog",
-                        message: "This is a direct test of CustomConfirmationDialog",
+                        message:
+                            "This is a direct test of CustomConfirmationDialog",
                         primaryButtonText: "Confirm",
                         icon: Icons.info,
                         onPrimaryPressed: () {
@@ -109,9 +112,9 @@ class ConfirmationDialogsTestDemo extends StatelessWidget {
                   child: const Text('Test Custom Dialog Directly'),
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Test logout dialog through helper
               SizedBox(
                 width: double.infinity,
@@ -120,7 +123,8 @@ class ConfirmationDialogsTestDemo extends StatelessWidget {
                   onPressed: () async {
                     debugPrint('Testing logout dialog through helper...');
                     try {
-                      final confirmed = await ConfirmationDialogs.showLogoutDialog(context);
+                      final confirmed =
+                          await ConfirmationDialogs.showLogoutDialog(context);
                       debugPrint('Logout dialog result: $confirmed');
                       if (confirmed == true) {
                         debugPrint('Logout confirmed!');
@@ -138,18 +142,23 @@ class ConfirmationDialogsTestDemo extends StatelessWidget {
                   child: const Text('Test Logout Dialog (Helper)'),
                 ),
               ),
-              
+
               SizedBox(height: context.responsiveMargin * 2),
-              
+
               // Test delete account dialog through helper
               SizedBox(
                 width: double.infinity,
                 height: context.responsiveButtonHeight,
                 child: ElevatedButton(
                   onPressed: () async {
-                    debugPrint('Testing delete account dialog through helper...');
+                    debugPrint(
+                      'Testing delete account dialog through helper...',
+                    );
                     try {
-                      final confirmed = await ConfirmationDialogs.showDeleteAccountDialog(context);
+                      final confirmed =
+                          await ConfirmationDialogs.showDeleteAccountDialog(
+                            context,
+                          );
                       debugPrint('Delete account dialog result: $confirmed');
                       if (confirmed == true) {
                         debugPrint('Delete account confirmed!');

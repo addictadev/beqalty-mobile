@@ -64,7 +64,10 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 title: "delete_account".tr(),
                 onTap: () async {
-                  final confirmed = await ConfirmationDialogs.showDeleteAccountDialog(context);
+                  final confirmed =
+                      await ConfirmationDialogs.showDeleteAccountDialog(
+                        context,
+                      );
                   if (confirmed == true) {
                     // Handle delete account logic here
                     debugPrint('Delete Account confirmed');
@@ -95,7 +98,9 @@ class SettingsScreen extends StatelessWidget {
                 text: "logout".tr(),
                 onPressed: () async {
                   // Show custom confirmation dialog
-                  final confirmed = await ConfirmationDialogs.showLogoutDialog(context);
+                  final confirmed = await ConfirmationDialogs.showLogoutDialog(
+                    context,
+                  );
                   if (confirmed == true) {
                     // Handle logout logic here
                     debugPrint('Logout confirmed');

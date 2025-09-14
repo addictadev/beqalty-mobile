@@ -17,7 +17,6 @@ import '../widget/shop_by_category_section.dart';
 import '../widget/points_card.dart';
 import '../widget/special_offers_section.dart';
 import '../widget/saved_carts_section.dart';
-import 'home_shimmer_view.dart';
 import 'package:baqalty/core/widgets/shimmer_widget.dart';
 
 class HomeView extends StatefulWidget {
@@ -94,26 +93,26 @@ class _HomeViewState extends State<HomeView> {
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
-                  children: [
-                    SizedBox(height: 2.h),
+                    children: [
+                      SizedBox(height: 2.h),
 
-                    // Show shimmer for slider and content
-                    if (_isLoading) 
-                      _buildSliderAndContentShimmer(context)
-                    else
-                      Column(
-                        children: [
-                          PromotionalSlider(
-                            cards: promotionalCards,
-                            height: context.responsiveContainerHeight * 0.6,
-                            onCardTap: () {},
-                          ),
-                          SizedBox(height: 1.h),
-                          _buildContent(context),
-                        ],
-                      ),
-                  ],
-                ),
+                      // Show shimmer for slider and content
+                      if (_isLoading)
+                        _buildSliderAndContentShimmer(context)
+                      else
+                        Column(
+                          children: [
+                            PromotionalSlider(
+                              cards: promotionalCards,
+                              height: context.responsiveContainerHeight * 0.6,
+                              onCardTap: () {},
+                            ),
+                            SizedBox(height: 1.h),
+                            _buildContent(context),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -131,7 +130,9 @@ class _HomeViewState extends State<HomeView> {
             context.read<NavBarCubit>().changeTab(3);
           },
           onCategoryTap: (categoryName) {
-            NavigationManager.navigateTo(SubcategoryScreen(categoryName: categoryName));
+            NavigationManager.navigateTo(
+              SubcategoryScreen(categoryName: 'default_category'),
+            );
           },
         ),
 
@@ -190,32 +191,32 @@ class _HomeViewState extends State<HomeView> {
       children: [
         // Promotional Slider Shimmer
         _buildPromotionalSliderShimmer(context),
-        
+
         SizedBox(height: 3.h),
-        
+
         // Categories Section Shimmer
         _buildCategoriesShimmer(context),
-        
+
         SizedBox(height: 3.h),
-        
+
         // Points Card Shimmer
         _buildPointsCardShimmer(context),
-        
+
         SizedBox(height: 2.h),
-        
+
         // Special Offers Title Shimmer
         _buildSpecialOffersTitleShimmer(context),
-        
+
         SizedBox(height: 2.h),
-        
+
         // Special Offers Section Shimmer
         _buildSpecialOffersShimmer(context),
-        
+
         SizedBox(height: 2.h),
-        
+
         // Saved Carts Section Shimmer
         _buildSavedCartsShimmer(context),
-        
+
         SizedBox(height: 2.h),
       ],
     );
@@ -242,34 +243,26 @@ class _HomeViewState extends State<HomeView> {
           children: [
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 30.w,
-                height: 2.h,
-              ),
+              child: ShimmerText(width: 30.w, height: 2.h),
             ),
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 15.w,
-                height: 1.5.h,
-              ),
+              child: ShimmerText(width: 15.w, height: 1.5.h),
             ),
           ],
         ),
-        
-    
-        
+
         // Categories Grid
         GridView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.only(top: 3.h),
           physics: const NeverScrollableScrollPhysics(),
-         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
-      ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.2,
+          ),
           itemCount: 6,
           itemBuilder: (context, index) {
             return ShimmerWidget(
@@ -277,17 +270,16 @@ class _HomeViewState extends State<HomeView> {
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.shadowLight,
-                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius,
+                  ),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ShimmerCircle(size: 8.w),
                     SizedBox(height: 1.h),
-                    ShimmerText(
-                      width: 20.w,
-                      height: 1.h,
-                    ),
+                    ShimmerText(width: 20.w, height: 1.h),
                   ],
                 ),
               ),
@@ -306,7 +298,9 @@ class _HomeViewState extends State<HomeView> {
         height: 12.h,
         decoration: BoxDecoration(
           color: AppColors.shadowLight,
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+          borderRadius: BorderRadius.circular(
+            context.responsiveBorderRadius * 2,
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.all(context.responsivePadding),
@@ -324,18 +318,11 @@ class _HomeViewState extends State<HomeView> {
                       height: 1.5.h,
                       margin: EdgeInsets.only(bottom: 0.5.h),
                     ),
-                    ShimmerText(
-                      width: 15.w,
-                      height: 1.h,
-                    ),
+                    ShimmerText(width: 15.w, height: 1.h),
                   ],
                 ),
               ),
-              ShimmerBox(
-                width: 20.w,
-                height: 4.h,
-                borderRadius: 2.h,
-              ),
+              ShimmerBox(width: 20.w, height: 4.h, borderRadius: 2.h),
             ],
           ),
         ),
@@ -348,10 +335,7 @@ class _HomeViewState extends State<HomeView> {
       alignment: Alignment.centerLeft,
       child: ShimmerWidget(
         isLoading: true,
-        child: ShimmerText(
-          width: 25.w,
-          height: 2.h,
-        ),
+        child: ShimmerText(width: 25.w, height: 2.h),
       ),
     );
   }
@@ -371,7 +355,9 @@ class _HomeViewState extends State<HomeView> {
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.shadowLight,
-                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,10 +383,7 @@ class _HomeViewState extends State<HomeView> {
                             height: 1.h,
                             margin: EdgeInsets.only(bottom: 0.5.h),
                           ),
-                          ShimmerText(
-                            width: 20.w,
-                            height: 1.5.h,
-                          ),
+                          ShimmerText(width: 20.w, height: 1.5.h),
                         ],
                       ),
                     ),
@@ -424,23 +407,17 @@ class _HomeViewState extends State<HomeView> {
           children: [
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 30.w,
-                height: 2.h,
-              ),
+              child: ShimmerText(width: 30.w, height: 2.h),
             ),
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 15.w,
-                height: 1.5.h,
-              ),
+              child: ShimmerText(width: 15.w, height: 1.5.h),
             ),
           ],
         ),
-        
+
         SizedBox(height: 2.h),
-        
+
         // Saved Carts List
         SizedBox(
           height: 12.h,
@@ -456,7 +433,9 @@ class _HomeViewState extends State<HomeView> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.shadowLight,
-                      borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                      borderRadius: BorderRadius.circular(
+                        context.responsiveBorderRadius,
+                      ),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(context.responsivePadding),
@@ -478,10 +457,7 @@ class _HomeViewState extends State<HomeView> {
                                   height: 1.5.h,
                                   margin: EdgeInsets.only(bottom: 0.5.h),
                                 ),
-                                ShimmerText(
-                                  width: 40.w,
-                                  height: 1.h,
-                                ),
+                                ShimmerText(width: 40.w, height: 1.h),
                               ],
                             ),
                           ),

@@ -1,5 +1,6 @@
 import 'package:baqalty/core/widgets/custom_appbar.dart' show CustomAppBar;
-import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart' show AuthBackgroundWidget;
+import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart'
+    show AuthBackgroundWidget;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -7,7 +8,6 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
-import 'package:baqalty/core/widgets/food_doodles_background.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'subcategory_products_screen.dart';
@@ -15,10 +15,7 @@ import 'subcategory_products_screen.dart';
 class SubcategoryScreen extends StatefulWidget {
   final String categoryName;
 
-  const SubcategoryScreen({
-    super.key,
-    required this.categoryName,
-  });
+  const SubcategoryScreen({super.key, required this.categoryName});
 
   @override
   State<SubcategoryScreen> createState() => _SubcategoryScreenState();
@@ -52,10 +49,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen>
       return Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.elasticOut,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
     }).toList();
 
     // Start animations with stagger
@@ -64,7 +58,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen>
 
   void _startAnimations() {
     _animationController.forward();
-    
+
     // Stagger the item animations
     for (int i = 0; i < _itemAnimationControllers.length; i++) {
       Future.delayed(Duration(milliseconds: 80 * i), () {
@@ -89,32 +83,24 @@ class _SubcategoryScreenState extends State<SubcategoryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body: 
-      
-      AuthBackgroundWidget(
+      body: AuthBackgroundWidget(
         child: SafeArea(
           child: Column(
             children: [
-CustomAppBar(
-                title: widget.categoryName.tr(),
-             
-              ),  
-                            SizedBox(height: context.responsiveMargin),
-            
+              CustomAppBar(title: widget.categoryName.tr()),
+              SizedBox(height: context.responsiveMargin),
+
               // Search Bar
               _buildSearchBar(context),
-              
+
               // Subcategories Grid
-              Expanded(
-                child: _buildSubcategoriesGrid(context),
-              ),
+              Expanded(child: _buildSubcategoriesGrid(context)),
             ],
           ),
         ),
       ),
     );
   }
-
 
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
@@ -173,7 +159,10 @@ CustomAppBar(
     );
   }
 
-  Widget _buildSubcategoryCard(BuildContext context, SubcategoryData subcategory) {
+  Widget _buildSubcategoryCard(
+    BuildContext context,
+    SubcategoryData subcategory,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -192,7 +181,9 @@ CustomAppBar(
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           onTap: () {
             // Add tap animation
-            final subcategories = _getSubcategoriesForCategory(widget.categoryName);
+            final subcategories = _getSubcategoriesForCategory(
+              widget.categoryName,
+            );
             final index = subcategories.indexOf(subcategory);
             if (index >= 0 && index < _itemAnimationControllers.length) {
               _itemAnimationControllers[index].reverse().then((_) {
@@ -232,7 +223,6 @@ CustomAppBar(
                     textAlign: TextAlign.center,
                   ),
                 ),
-            
               ],
             ),
           ),
@@ -275,59 +265,56 @@ CustomAppBar(
   List<SubcategoryData> _getSubcategoriesForCategory(String categoryName) {
     // Mock data - in real app, this would come from API
     return [
-       
-          SubcategoryData(
-            name: "healthy",
-            icon: Icons.eco,
-            iconBackgroundColor: const Color(0xFFE8F5E8),
-            iconColor: const Color(0xFF4CAF50),
-          ),
-          SubcategoryData(
-            name: "savory",
-            icon: Icons.fastfood,
-            iconBackgroundColor: const Color(0xFFF3E5F5),
-            iconColor: const Color(0xFF9C27B0),
-          ),
-          SubcategoryData(
-            name: "sweet",
-            icon: Icons.cake,
-            iconBackgroundColor: const Color(0xFFFFF8E1),
-            iconColor: const Color(0xFFFFB300),
-          ),
-          SubcategoryData(
-            name: "popcorn",
-            icon: Icons.local_movies,
-            iconBackgroundColor: const Color(0xFFFFEBEE),
-            iconColor: const Color(0xFFF44336),
-          ),
-          SubcategoryData(
-            name: "frozen",
-            icon: Icons.ac_unit,
-            iconBackgroundColor: const Color(0xFFE3F2FD),
-            iconColor: const Color(0xFF2196F3),
-          ),
-          SubcategoryData(
-            name: "ice_cream",
-            icon: Icons.icecream,
-            iconBackgroundColor: const Color(0xFFFFEBEE),
-            iconColor: const Color(0xFFE91E63),
-          ),
-          SubcategoryData(
-            name: "creamy",
-            icon: Icons.auto_awesome,
-            iconBackgroundColor: const Color(0xFFFFF3E0),
-            iconColor: const Color(0xFFFF9800),
-          ),
-          SubcategoryData(
-            name: "chilled",
-            icon: Icons.wb_sunny,
-            iconBackgroundColor: const Color(0xFFFFFDE7),
-            iconColor: const Color(0xFFFFC107),
-          ),
-        ];
- 
-    }
-  
+      SubcategoryData(
+        name: "healthy",
+        icon: Icons.eco,
+        iconBackgroundColor: const Color(0xFFE8F5E8),
+        iconColor: const Color(0xFF4CAF50),
+      ),
+      SubcategoryData(
+        name: "savory",
+        icon: Icons.fastfood,
+        iconBackgroundColor: const Color(0xFFF3E5F5),
+        iconColor: const Color(0xFF9C27B0),
+      ),
+      SubcategoryData(
+        name: "sweet",
+        icon: Icons.cake,
+        iconBackgroundColor: const Color(0xFFFFF8E1),
+        iconColor: const Color(0xFFFFB300),
+      ),
+      SubcategoryData(
+        name: "popcorn",
+        icon: Icons.local_movies,
+        iconBackgroundColor: const Color(0xFFFFEBEE),
+        iconColor: const Color(0xFFF44336),
+      ),
+      SubcategoryData(
+        name: "frozen",
+        icon: Icons.ac_unit,
+        iconBackgroundColor: const Color(0xFFE3F2FD),
+        iconColor: const Color(0xFF2196F3),
+      ),
+      SubcategoryData(
+        name: "ice_cream",
+        icon: Icons.icecream,
+        iconBackgroundColor: const Color(0xFFFFEBEE),
+        iconColor: const Color(0xFFE91E63),
+      ),
+      SubcategoryData(
+        name: "creamy",
+        icon: Icons.auto_awesome,
+        iconBackgroundColor: const Color(0xFFFFF3E0),
+        iconColor: const Color(0xFFFF9800),
+      ),
+      SubcategoryData(
+        name: "chilled",
+        icon: Icons.wb_sunny,
+        iconBackgroundColor: const Color(0xFFFFFDE7),
+        iconColor: const Color(0xFFFFC107),
+      ),
+    ];
+  }
 
   void _onSubcategoryTap(BuildContext context, SubcategoryData subcategory) {
     NavigationManager.navigateTo(

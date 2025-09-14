@@ -29,7 +29,6 @@ class HistoryListItem extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           border: Border.all(color: AppColors.borderLight, width: 1),
-      
         ),
         child: Row(
           children: [

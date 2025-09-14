@@ -33,7 +33,7 @@ class CustomToggleSwitch extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(height / 2),
-          color: value 
+          color: value
               ? (activeColor ?? AppColors.primary)
               : (inactiveColor ?? AppColors.borderLight),
         ),

@@ -16,7 +16,7 @@ class HomeShimmerView extends StatelessWidget {
           SizedBox(height: 6.h),
           // Header Shimmer
           _buildHeaderShimmer(context),
-          
+
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -25,35 +25,35 @@ class HomeShimmerView extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 3.h),
-                    
+
                     // Promotional Slider Shimmer
                     _buildPromotionalSliderShimmer(context),
-                    
+
                     SizedBox(height: 3.h),
-                    
+
                     // Categories Section Shimmer
                     _buildCategoriesShimmer(context),
-                    
+
                     SizedBox(height: 1.h),
-                    
+
                     // Points Card Shimmer
                     _buildPointsCardShimmer(context),
-                    
+
                     SizedBox(height: 2.h),
-                    
+
                     // Special Offers Title Shimmer
                     _buildSpecialOffersTitleShimmer(context),
-                    
+
                     SizedBox(height: 2.h),
-                    
+
                     // Special Offers Section Shimmer
                     _buildSpecialOffersShimmer(context),
-                    
+
                     SizedBox(height: 2.h),
-                    
+
                     // Saved Carts Section Shimmer
                     _buildSavedCartsShimmer(context),
-                    
+
                     SizedBox(height: 2.h),
                   ],
                 ),
@@ -71,13 +71,10 @@ class HomeShimmerView extends StatelessWidget {
       child: Row(
         children: [
           // Profile Avatar
-          ShimmerWidget(
-            isLoading: true,
-            child: ShimmerCircle(size: 12.w),
-          ),
-          
+          ShimmerWidget(isLoading: true, child: ShimmerCircle(size: 12.w)),
+
           SizedBox(width: context.responsiveMargin),
-          
+
           // Welcome Text
           Expanded(
             child: Column(
@@ -93,35 +90,24 @@ class HomeShimmerView extends StatelessWidget {
                 ),
                 ShimmerWidget(
                   isLoading: true,
-                  child: ShimmerText(
-                    width: 25.w,
-                    height: 1.5.h,
-                  ),
+                  child: ShimmerText(width: 25.w, height: 1.5.h),
                 ),
               ],
             ),
           ),
-          
+
           // Search Icon
           ShimmerWidget(
             isLoading: true,
-            child: ShimmerBox(
-              width: 10.w,
-              height: 10.w,
-              borderRadius: 8.w,
-            ),
+            child: ShimmerBox(width: 10.w, height: 10.w, borderRadius: 8.w),
           ),
-          
+
           SizedBox(width: context.responsiveMargin),
-          
+
           // Notification Icon
           ShimmerWidget(
             isLoading: true,
-            child: ShimmerBox(
-              width: 10.w,
-              height: 10.w,
-              borderRadius: 8.w,
-            ),
+            child: ShimmerBox(width: 10.w, height: 10.w, borderRadius: 8.w),
           ),
         ],
       ),
@@ -132,7 +118,7 @@ class HomeShimmerView extends StatelessWidget {
     return ShimmerWidget(
       isLoading: true,
       child: ShimmerBox(
-        width: double.infinity*0.9,
+        width: double.infinity * 0.9,
         height: context.responsiveContainerHeight * 0.85,
         borderRadius: context.responsiveBorderRadius * 2,
       ),
@@ -149,23 +135,17 @@ class HomeShimmerView extends StatelessWidget {
           children: [
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 30.w,
-                height: 2.h,
-              ),
+              child: ShimmerText(width: 30.w, height: 2.h),
             ),
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 15.w,
-                height: 1.5.h,
-              ),
+              child: ShimmerText(width: 15.w, height: 1.5.h),
             ),
           ],
         ),
-        
+
         SizedBox(height: 2.h),
-        
+
         // Categories Grid
         GridView.builder(
           shrinkWrap: true,
@@ -183,17 +163,16 @@ class HomeShimmerView extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.shadowLight,
-                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius,
+                  ),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ShimmerCircle(size: 8.w),
                     SizedBox(height: 1.h),
-                    ShimmerText(
-                      width: 20.w,
-                      height: 1.h,
-                    ),
+                    ShimmerText(width: 20.w, height: 1.h),
                   ],
                 ),
               ),
@@ -212,7 +191,9 @@ class HomeShimmerView extends StatelessWidget {
         height: 12.h,
         decoration: BoxDecoration(
           color: AppColors.shadowLight,
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+          borderRadius: BorderRadius.circular(
+            context.responsiveBorderRadius * 2,
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.all(context.responsivePadding),
@@ -230,18 +211,11 @@ class HomeShimmerView extends StatelessWidget {
                       height: 1.5.h,
                       margin: EdgeInsets.only(bottom: 0.5.h),
                     ),
-                    ShimmerText(
-                      width: 15.w,
-                      height: 1.h,
-                    ),
+                    ShimmerText(width: 15.w, height: 1.h),
                   ],
                 ),
               ),
-              ShimmerBox(
-                width: 20.w,
-                height: 4.h,
-                borderRadius: 2.h,
-              ),
+              ShimmerBox(width: 20.w, height: 4.h, borderRadius: 2.h),
             ],
           ),
         ),
@@ -254,10 +228,7 @@ class HomeShimmerView extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: ShimmerWidget(
         isLoading: true,
-        child: ShimmerText(
-          width: 25.w,
-          height: 2.h,
-        ),
+        child: ShimmerText(width: 25.w, height: 2.h),
       ),
     );
   }
@@ -277,7 +248,9 @@ class HomeShimmerView extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.shadowLight,
-                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,10 +276,7 @@ class HomeShimmerView extends StatelessWidget {
                             height: 1.h,
                             margin: EdgeInsets.only(bottom: 0.5.h),
                           ),
-                          ShimmerText(
-                            width: 20.w,
-                            height: 1.5.h,
-                          ),
+                          ShimmerText(width: 20.w, height: 1.5.h),
                         ],
                       ),
                     ),
@@ -330,23 +300,17 @@ class HomeShimmerView extends StatelessWidget {
           children: [
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 30.w,
-                height: 2.h,
-              ),
+              child: ShimmerText(width: 30.w, height: 2.h),
             ),
             ShimmerWidget(
               isLoading: true,
-              child: ShimmerText(
-                width: 15.w,
-                height: 1.5.h,
-              ),
+              child: ShimmerText(width: 15.w, height: 1.5.h),
             ),
           ],
         ),
-        
+
         SizedBox(height: 2.h),
-        
+
         // Saved Carts List
         SizedBox(
           height: 12.h,
@@ -362,7 +326,9 @@ class HomeShimmerView extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.shadowLight,
-                      borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                      borderRadius: BorderRadius.circular(
+                        context.responsiveBorderRadius,
+                      ),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(context.responsivePadding),
@@ -384,10 +350,7 @@ class HomeShimmerView extends StatelessWidget {
                                   height: 1.5.h,
                                   margin: EdgeInsets.only(bottom: 0.5.h),
                                 ),
-                                ShimmerText(
-                                  width: 40.w,
-                                  height: 1.h,
-                                ),
+                                ShimmerText(width: 40.w, height: 1.h),
                               ],
                             ),
                           ),

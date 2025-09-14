@@ -78,9 +78,15 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
       _isSearching = _searchController.text.isNotEmpty;
       if (_isSearching) {
         _filteredItems = _faqItems
-            .where((item) =>
-                item.question.toLowerCase().contains(_searchController.text.toLowerCase()) ||
-                item.answer.toLowerCase().contains(_searchController.text.toLowerCase()))
+            .where(
+              (item) =>
+                  item.question.toLowerCase().contains(
+                    _searchController.text.toLowerCase(),
+                  ) ||
+                  item.answer.toLowerCase().contains(
+                    _searchController.text.toLowerCase(),
+                  ),
+            )
             .toList();
       } else {
         _filteredItems = List.from(_faqItems);
@@ -94,7 +100,6 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,11 +108,9 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         children: [
           // Dark Purple Header
           _buildHeader(context),
-          
+
           // White Content Area
-          Expanded(
-            child: _buildContentArea(context),
-          ),
+          Expanded(child: _buildContentArea(context)),
         ],
       ),
     );
@@ -125,10 +128,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary,
-            AppColors.primary.withValues(alpha: 0.8),
-          ],
+          colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.8)],
         ),
       ),
       child: Column(
@@ -195,8 +195,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
 
           // Search Bar
           _buildSearchBar(context),
-                    SizedBox(height: 1.h),
-
+          SizedBox(height: 1.h),
         ],
       ),
     );
@@ -214,7 +213,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: _isSearchFocused 
+            color: _isSearchFocused
                 ? AppColors.primary.withValues(alpha: 0.2)
                 : AppColors.shadowLight,
             blurRadius: _isSearchFocused ? 12 : 8,
@@ -273,9 +272,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
           _buildTopicsHeader(context),
 
           // FAQ List
-          Expanded(
-            child: _buildFAQList(context),
-          ),
+          Expanded(child: _buildFAQList(context)),
         ],
       ),
     );
@@ -343,11 +340,11 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
 
   Widget _buildFAQCard(BuildContext context, FAQItem item, int index) {
     return Container(
-      margin: EdgeInsets.only(bottom: context.responsiveMargin*2),
+      margin: EdgeInsets.only(bottom: context.responsiveMargin * 2),
       decoration: BoxDecoration(
         color: AppColors.scaffoldBackground,
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-   
+
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,
@@ -357,13 +354,14 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ],
       ),
       child: Column(
-        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-SizedBox(height: context.responsivePadding),
+          SizedBox(height: context.responsivePadding),
           // Question Header
           Container(
-            padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.responsivePadding,
+            ),
             child: Text(
               item.question,
               style: TextStyles.textViewBold16.copyWith(
@@ -373,7 +371,6 @@ SizedBox(height: context.responsivePadding),
             ),
           ),
 
-    
           Padding(
             padding: EdgeInsets.all(context.responsivePadding),
             child: Column(
@@ -390,7 +387,10 @@ SizedBox(height: context.responsivePadding),
                 GestureDetector(
                   onTap: () => _viewTopic(item),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.w),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 3.w,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.bgProfile,
                       borderRadius: BorderRadius.circular(20),
@@ -411,7 +411,6 @@ SizedBox(height: context.responsivePadding),
       ),
     );
   }
-
 
   void _viewTopic(FAQItem item) {
     // TODO: Implement view topic functionality

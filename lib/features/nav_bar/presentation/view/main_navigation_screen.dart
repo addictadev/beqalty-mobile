@@ -92,7 +92,7 @@ class MainNavigationScreenBody extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: context.responsivePadding*2 ,
+            horizontal: context.responsivePadding * 2,
             vertical: context.responsiveMargin * 1.5,
           ),
           child: Row(
@@ -136,7 +136,9 @@ class MainNavigationScreenBody extends StatelessWidget {
                     ? AppColors.black
                     : AppColors.textSecondary,
                 fontSize: FontSizes.s12,
-                fontWeight: navItem.isActive ? FontWeight.w600 : FontWeight.w500,
+                fontWeight: navItem.isActive
+                    ? FontWeight.w600
+                    : FontWeight.w500,
               ),
             ),
           ],
