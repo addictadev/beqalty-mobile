@@ -302,5 +302,8 @@
   "delivered_your_order": "Delivered your order",
   "delivery_message": "We will deliver your goods to you in the shortest possible time.",
   "driver_name": "Abdallah Ibrahim",
-  "call_driver": "Call Driver"
+  "call_driver": "Call Driver",
+  "select_language": "Select Language",
+  "english": "English",
+  "arabic": "Arabic"
 }
