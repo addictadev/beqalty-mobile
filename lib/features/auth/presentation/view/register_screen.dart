@@ -1,5 +1,6 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import '../widgets/auth_background_widget.dart';
@@ -106,17 +106,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Expanded(
           child: RichText(
             text: TextSpan(
-              style: GoogleFonts.robotoFlex(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
                 height: 1.2,
                 fontStyle: FontStyle.italic,
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
               ),
               children: [
-                TextSpan(text: "hello_register".tr()),
+                TextSpan(
+                  text: "hello_register".tr(),
+                  style: TextStyle(
+                    fontFamily: FontFamilyUtils.getCurrentFontFamily(),
+                  ),
+                ),
                 const TextSpan(text: "\n"),
-                TextSpan(text: "to_get_started".tr()),
+                TextSpan(
+                  text: "to_get_started".tr(),
+                  style: TextStyle(
+                    fontFamily: FontFamilyUtils.getCurrentFontFamily(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -191,16 +202,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
           ),
           children: [
-            TextSpan(text: "already_have_account".tr()),
+            TextSpan(
+              text: "already_have_account".tr(),
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
+              ),
+            ),
             TextSpan(
               text: "login_now".tr(),
-              style: GoogleFonts.robotoFlex(
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,

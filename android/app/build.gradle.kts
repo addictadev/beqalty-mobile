@@ -9,7 +9,11 @@ android {
     namespace = "com.app.baqalty"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-
+    packaging {
+    jniLibs {
+    useLegacyPackaging = false
+    }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

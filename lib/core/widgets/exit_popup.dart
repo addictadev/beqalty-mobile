@@ -2,11 +2,13 @@
 
 import 'dart:io';
 import 'package:baqalty/core/images_preview/app_assets.dart';
-import 'package:baqalty/core/images_preview/custom_asset_img.dart';
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:sizer/sizer.dart';
 
 class ExitPopUp extends StatefulWidget {
   const ExitPopUp({super.key});
@@ -142,11 +144,10 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
 
-      child: CustomImageAsset(
-        width: iconSize * 2,
-        height: iconSize * 2,
-        assetName: AppAssets.appIcon,
-        fit: BoxFit.cover,
+      child: CustomSvgImage(
+        assetName: AppAssets.authLoginBackground,
+        width: 30.w,
+        height: 30.w,
       ),
     );
   }
@@ -185,11 +186,11 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
 
     return Row(
       children: [
+        Expanded(child: _buildExitButton(context, buttonHeight, borderRadius)),
+        SizedBox(width: spacing),
         Expanded(
           child: _buildCancelButton(context, buttonHeight, borderRadius),
         ),
-        SizedBox(width: spacing),
-        Expanded(child: _buildExitButton(context, buttonHeight, borderRadius)),
       ],
     );
   }
@@ -235,7 +236,7 @@ class _ExitPopUpState extends State<ExitPopUp> with TickerProviderStateMixin {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        gradient: AppColors.primaryGradient,
+        color: AppColors.primary,
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withValues(alpha: 0.3),

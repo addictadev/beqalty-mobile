@@ -1,6 +1,7 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
@@ -118,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 1.2,
                         fontStyle: FontStyle.italic,
                       )
-                    : GoogleFonts.robotoFlex(
+                    : TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: AppColors.black,
@@ -149,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: Text(
           "forgot_password".tr(),
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: FontSizes.s14,
             color: AppColors.primary,
             fontWeight: FontWeight.w600,
@@ -163,19 +164,25 @@ class _LoginScreenState extends State<LoginScreen> {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
           ),
           children: [
-            TextSpan(text: "dont_have_account".tr()),
+            TextSpan(
+              text: "dont_have_account".tr(),
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
+              ),
+            ),
             TextSpan(
               text: "register_now".tr(),
-              style: GoogleFonts.robotoFlex(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primary,
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {

@@ -1,4 +1,5 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
@@ -6,7 +7,6 @@ import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import '../widgets/auth_background_widget.dart';
@@ -88,21 +88,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       children: [
         Text(
           "forgot_password_title".tr(),
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
             height: 1.2,
+            fontFamily: FontFamilyUtils.getCurrentFontFamily(),
           ),
         ),
         SizedBox(height: 12),
         Text(
           "forgot_password_description".tr(),
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
             height: 1.5,
+            fontFamily: FontFamilyUtils.getCurrentFontFamily(),
           ),
         ),
       ],
@@ -132,16 +134,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
           ),
           children: [
-            TextSpan(text: "remember_password".tr()),
+            TextSpan(
+              text: "remember_password".tr(),
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
+              ),
+            ),
             TextSpan(
               text: "login".tr(),
-              style: GoogleFonts.robotoFlex(
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primary,

@@ -5,6 +5,7 @@ import 'package:baqalty/features/profile/presentation/view/change_password_scree
 import 'package:baqalty/features/profile/presentation/view/notifications_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/privacy_policy_screen.dart';
 import 'package:baqalty/core/widgets/confirmation_dialogs.dart';
+import 'package:baqalty/features/profile/presentation/widgets/language_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -56,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 title: "language".tr(),
                 onTap: () {
-                  debugPrint('Language tapped');
+            _showLanguageSelectionBottomSheet(context);
                 },
               ),
               SizedBox(height: context.responsiveMargin * 2),
@@ -146,6 +147,16 @@ class SettingsScreen extends StatelessWidget {
           fontSize: FontSizes.s16,
         ),
       ),
+    );
+  }
+    void _showLanguageSelectionBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return const LanguageSelectionBottomSheet();
+      },
     );
   }
 

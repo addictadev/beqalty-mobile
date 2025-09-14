@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'core/di/service_locator.dart';
 import 'core/services/shared_preferences_service.dart';
@@ -45,7 +46,7 @@ Future<void> main() async {
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]);
-      runApp(MyApp());
+    runApp(Phoenix(child: MyApp()));
     },
     (error, stackTrace) {
       log('Caught error: $error');

@@ -1,11 +1,11 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import '../widgets/auth_background_widget.dart';
 import '../widgets/custom_pin_code_text_field.dart';
@@ -87,17 +87,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       children: [
         Text(
           "otp_verification".tr(),
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
             height: 1.2,
+            fontFamily: FontFamilyUtils.getCurrentFontFamily(),
           ),
         ),
         SizedBox(height: 12),
         Text(
           "otp_description".tr(),
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
@@ -132,16 +133,22 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
           ),
           children: [
-            TextSpan(text: "didnt_receive_code".tr()),
+            TextSpan(
+              text: "didnt_receive_code".tr(),
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
+              ),
+            ),
             TextSpan(
               text: "resend".tr(),
-              style: GoogleFonts.robotoFlex(
+              style: TextStyle(
+                fontFamily: FontFamilyUtils.getCurrentFontFamily(),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primary,
@@ -176,21 +183,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       builder: (context) => AlertDialog(
         title: Text(
           "resend_code".tr(),
-          style: GoogleFonts.robotoFlex(
+          style: TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.textPrimary,
           ),
         ),
         content: Text(
           "resend_code_description".tr(),
-          style: GoogleFonts.robotoFlex(color: AppColors.textSecondary),
+          style: TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               "cancel".tr(),
-              style: GoogleFonts.robotoFlex(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -201,7 +208,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             },
             child: Text(
               "resend".tr(),
-              style: GoogleFonts.robotoFlex(
+              style: TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,
               ),
@@ -217,7 +224,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       SnackBar(
         content: Text(
           "verification_code_sent".tr(),
-          style: GoogleFonts.robotoFlex(color: AppColors.white),
+          style: TextStyle(color: AppColors.white),
         ),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
@@ -233,7 +240,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         SnackBar(
           content: Text(
             "otp_verified_success".tr(),
-            style: GoogleFonts.robotoFlex(color: AppColors.white),
+            style: TextStyle(color: AppColors.white),
           ),
           backgroundColor: AppColors.success,
           behavior: SnackBarBehavior.floating,
@@ -250,7 +257,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         SnackBar(
           content: Text(
             "invalid_otp_code".tr(),
-            style: GoogleFonts.robotoFlex(color: AppColors.white),
+            style: TextStyle(color: AppColors.white),
           ),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,

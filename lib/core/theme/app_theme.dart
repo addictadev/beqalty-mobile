@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import '../utils/font_family_utils.dart';
 
 class AppTheme {
-  static String _getFontFamily(String languageCode) {
-    switch (languageCode.toLowerCase()) {
-      case 'en':
-        return GoogleFonts.robotoFlex().fontFamily ?? 'Roboto Flex';
-      case 'ar':
-      default:
-        return GoogleFonts.cairo().fontFamily ?? 'Cairo';
-    }
-  }
-
   // Method to create theme with dynamic font family
   static ThemeData createTheme(String languageCode) {
-    final fontFamily = _getFontFamily(languageCode);
+    final fontFamily = FontFamilyUtils.getFontFamilyForLanguage(languageCode);
 
     return ThemeData(
       useMaterial3: true,
