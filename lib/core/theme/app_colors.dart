@@ -100,11 +100,11 @@ class AppColors {
   static const Color characterApron = Color(0xFFE53935);
   static const Color characterHalo = Color(0xFFFFF8E1);
 
-  // TODO app specific colors
-  static const Color todoBackground = Color(
+  // App specific colors
+  static const Color appBackground = Color(
     0xFFF8F5FF,
   ); // Light purple background
-  static const Color todoHeaderBackground = Color(
+  static const Color appHeaderBackground = Color(
     0xFF2D3043,
   ); // Dark purple header
 

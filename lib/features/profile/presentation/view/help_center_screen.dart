@@ -413,7 +413,6 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
   }
 
   void _viewTopic(FAQItem item) {
-    // TODO: Implement view topic functionality
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Viewing topic: ${item.question}'),

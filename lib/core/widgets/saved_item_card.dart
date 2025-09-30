@@ -3,7 +3,6 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:sizer/sizer.dart';
 
 class SavedItemCard extends StatelessWidget {
@@ -163,66 +162,5 @@ class SavedItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // if (showFavoriteButton) ...[
-        //   _buildFavoriteButton(context),
-        //   if (showAddToCartButton) SizedBox(height: context.responsiveMargin * 0.5),
-        // ],
-        if (showAddToCartButton) _buildAddToCartButton(context),
-      ],
-    );
-  }
 
-  Widget _buildFavoriteButton(BuildContext context) {
-    return GestureDetector(
-      onTap: onFavorite,
-      child: Container(
-        width: context.responsiveIconSize * 2.5,
-        height: context.responsiveIconSize * 2.5,
-        decoration: BoxDecoration(
-          color: isFavorite
-              ? AppColors.error.withValues(alpha: 0.1)
-              : AppColors.borderLight.withValues(alpha: 0.5),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isFavorite
-                ? AppColors.error.withValues(alpha: 0.3)
-                : AppColors.borderLight,
-            width: 1,
-          ),
-        ),
-        child: Icon(
-          isFavorite ? Iconsax.heart : Iconsax.heart,
-          color: isFavorite ? AppColors.error : AppColors.textSecondary,
-          size: context.responsiveIconSize * 1.2,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddToCartButton(BuildContext context) {
-    return GestureDetector(
-      onTap: onAddToCart,
-      child: Container(
-        width: context.responsiveIconSize * 2.5,
-        height: context.responsiveIconSize * 2.5,
-        decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: AppColors.primary.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-        child: Icon(
-          Iconsax.shopping_cart,
-          color: AppColors.primary,
-          size: context.responsiveIconSize * 1.2,
-        ),
-      ),
-    );
-  }
 }

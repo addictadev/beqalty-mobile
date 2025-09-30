@@ -14,43 +14,78 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
+      // Enhanced error handling for better UX
       FlutterError.onError = (FlutterErrorDetails details) {
         FlutterError.dumpErrorToConsole(details);
+        // Log to crash reporting service in production
+        log('Flutter Error: ${details.exception}');
+        log('Stack Trace: ${details.stack}');
       };
 
-      await LocalizeAndTranslate.init(
-        assetLoader: const AssetLoaderRootBundleJson('assets/translations/'),
-        supportedLocales: const [Locale('en'), Locale('ar')],
-        defaultType: LocalizationDefaultType.device,
-      );
-
-      await ServiceLocator.initialize();
-
-      final preferencesService = await SharedPreferencesService.getInstance();
-      final savedLanguage = preferencesService.getLanguage();
-
-      String languageToSet;
-      if (savedLanguage == 'device') {
-        final deviceLocale = ui.PlatformDispatcher.instance.locale;
-        languageToSet = deviceLocale.languageCode;
-
-        if (languageToSet != 'ar' && languageToSet != 'en') {
-          languageToSet = 'en';
-        }
-      } else {
-        languageToSet = savedLanguage;
+      // Initialize localization with error handling
+      try {
+        await LocalizeAndTranslate.init(
+          assetLoader: const AssetLoaderRootBundleJson('assets/translations/'),
+          supportedLocales: const [Locale('en'), Locale('ar')],
+          defaultType: LocalizationDefaultType.device,
+        );
+      } catch (e) {
+        log('Localization initialization failed: $e');
+        // Continue with default language
       }
 
-      await LocalizeAndTranslate.setLanguageCode(languageToSet);
+      // Initialize services with error handling
+      try {
+        await ServiceLocator.initialize();
+      } catch (e) {
+        log('Service locator initialization failed: $e');
+        // Continue without some services
+      }
 
-      await SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-      ]);
-    runApp(Phoenix(child: MyApp()));
+      // Handle language selection with better error handling
+      String languageToSet = 'en'; // Default fallback
+      try {
+        final preferencesService = await SharedPreferencesService.getInstance();
+        final savedLanguage = preferencesService.getLanguage();
+
+        if (savedLanguage == 'device') {
+          final deviceLocale = ui.PlatformDispatcher.instance.locale;
+          languageToSet = deviceLocale.languageCode;
+
+          if (languageToSet != 'ar' && languageToSet != 'en') {
+            languageToSet = 'en';
+          }
+        } else {
+          languageToSet = savedLanguage;
+        }
+      } catch (e) {
+        log('Language preference loading failed: $e');
+        // Use default language
+      }
+
+      try {
+        await LocalizeAndTranslate.setLanguageCode(languageToSet);
+      } catch (e) {
+        log('Language setting failed: $e');
+        // Continue with default language
+      }
+
+      // Set preferred orientations with error handling
+      try {
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+        ]);
+      } catch (e) {
+        log('Orientation setting failed: $e');
+        // Continue without orientation restriction
+      }
+
+      runApp(Phoenix(child: MyApp()));
     },
     (error, stackTrace) {
-      log('Caught error: $error');
+      log('Uncaught error: $error');
       log('Stack trace: $stackTrace');
+      // In production, send to crash reporting service
     },
   );
 }

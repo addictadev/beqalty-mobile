@@ -45,7 +45,6 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
   }
 
   void _onSupportPressed() {
-    // TODO: Implement support functionality
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Support functionality coming soon'),

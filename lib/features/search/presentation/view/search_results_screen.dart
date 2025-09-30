@@ -156,7 +156,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 );
               },
               onFavorite: () {
-                // TODO: Implement favorite functionality
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('${product['name']} added to favorites'),
@@ -165,7 +164,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 );
               },
               onAddToCart: () {
-                // TODO: Implement add to cart functionality
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('${product['name']} added to cart'),

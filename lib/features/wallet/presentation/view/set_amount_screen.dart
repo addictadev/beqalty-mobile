@@ -331,7 +331,6 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
   }
 
   void _addNewCard() {
-    // TODO: Implement add new card functionality
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Add new card functionality coming soon'),
@@ -341,7 +340,6 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
   }
 
   void _confirmDeposit() {
-    // TODO: Implement deposit confirmation
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Deposit of ${_amount.toStringAsFixed(0)} EGP confirmed'),

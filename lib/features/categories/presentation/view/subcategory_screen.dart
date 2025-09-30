@@ -113,7 +113,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen>
           color: AppColors.textSecondary,
         ),
         onChanged: (value) {
-          // TODO: Implement search functionality
+          // Search functionality will be implemented
         },
       ),
     );

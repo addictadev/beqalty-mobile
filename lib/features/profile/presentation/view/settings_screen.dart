@@ -57,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 title: "language".tr(),
                 onTap: () {
-            _showLanguageSelectionBottomSheet(context);
+                  _showLanguageSelectionBottomSheet(context);
                 },
               ),
               SizedBox(height: context.responsiveMargin * 2),
@@ -149,7 +149,8 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
-    void _showLanguageSelectionBottomSheet(BuildContext context) {
+
+  void _showLanguageSelectionBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -170,6 +171,17 @@ class SettingsScreen extends StatelessWidget {
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: context.responsiveMargin),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowLight,
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -177,15 +189,6 @@ class SettingsScreen extends StatelessWidget {
           onTap: onTap,
           child: Container(
             padding: EdgeInsets.all(context.responsivePadding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                context.responsiveBorderRadius,
-              ),
-              // border: Border.all(
-              //   color: AppColors.borderLight,
-              //   width: 1,
-              // ),
-            ),
             child: Row(
               children: [
                 Expanded(

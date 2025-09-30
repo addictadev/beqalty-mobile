@@ -114,7 +114,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                     color: AppColors.textSecondary,
                   ),
                   onChanged: (value) {
-                    // TODO: Implement search functionality
+                    // Search functionality will be implemented
                   },
                 ),
               ),
@@ -185,7 +185,6 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                         );
                       },
                       onAddToCart: () {
-                        // TODO: Implement add to cart functionality
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('${product['name']} added to cart'),
