@@ -42,7 +42,6 @@ class WalletTransactionModel extends Equatable {
 
     if (transactionDate == today) {
       // Format as time for today
-      final hour = timestamp.hour.toString().padLeft(2, '0');
       final minute = timestamp.minute.toString().padLeft(2, '0');
       final period = timestamp.hour < 12 ? 'AM' : 'PM';
       final displayHour = timestamp.hour == 0

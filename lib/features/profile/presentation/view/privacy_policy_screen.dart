@@ -258,7 +258,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
   }
 
   void _downloadPDF() {
-    // TODO: Implement PDF download functionality
     debugPrint('Download PDF tapped');
   }
 }

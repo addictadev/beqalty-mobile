@@ -23,8 +23,6 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isPasswordValid = false;
-  bool _isConfirmPasswordValid = false;
 
   @override
   void dispose() {
@@ -132,13 +130,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         return null;
       },
       onChanged: (value) {
-        setState(() {
-          _isPasswordValid = value.length >= 8;
-          // Also check confirm password when password changes
-          _isConfirmPasswordValid =
-              _confirmPasswordController.text.isNotEmpty &&
-              _confirmPasswordController.text == value;
-        });
+        // Password validation is handled by the validator
       },
     );
   }
@@ -160,10 +152,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         return null;
       },
       onChanged: (value) {
-        setState(() {
-          _isConfirmPasswordValid =
-              value == _passwordController.text && value.isNotEmpty;
-        });
+        // Confirm password validation is handled by the validator
       },
     );
   }

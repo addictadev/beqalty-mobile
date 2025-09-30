@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -175,32 +174,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.responsivePadding,
-        vertical: context.responsiveMargin,
-      ),
-      child: Row(
-        children: [
-          // Back Button
-          CustomBackButton(),
-
-          const Spacer(),
-
-          // Title
-          Text(
-            "product_details".tr(),
-            style: TextStyles.textViewBold18.copyWith(
-              color: AppColors.textPrimary,
-            ),
-          ),
-
-          const Spacer(),
-        ],
-      ),
-    );
-  }
 
   Widget _buildProductImage(BuildContext context) {
     return Center(

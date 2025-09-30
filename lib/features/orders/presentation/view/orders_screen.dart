@@ -54,7 +54,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   void _onOrderAgain(OrderModel order) {
-    // TODO: Implement reorder functionality
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Reordering from ${order.orderNumber}'),

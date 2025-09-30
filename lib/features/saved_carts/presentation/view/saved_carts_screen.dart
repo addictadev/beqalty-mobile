@@ -46,7 +46,6 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
   }
 
   void _onCartDetails(SavedCartModel savedCart) {
-    // TODO: Implement cart details view
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Viewing details for ${savedCart.name}'),
@@ -56,7 +55,6 @@ class _SavedCartsScreenState extends State<SavedCartsScreen> {
   }
 
   void _onOrderAgain(SavedCartModel savedCart) {
-    // TODO: Implement reorder functionality
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Reordering from ${savedCart.name}'),
