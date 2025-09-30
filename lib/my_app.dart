@@ -40,7 +40,10 @@ class _MyAppState extends State<MyApp> {
             navigatorKey: NavigationManager.navigatorKey,
             localizationsDelegates: LocalizeAndTranslate.delegates,
             locale: Locale(LocalizeAndTranslate.getLanguageCode()),
-            supportedLocales: const [Locale('en'), Locale('ar')],
+            supportedLocales: const [
+              Locale('ar'),
+              Locale('en'),
+            ], // Arabic first
             onGenerateRoute: (settings) {
               return PageRouteBuilder(
                 settings: settings,

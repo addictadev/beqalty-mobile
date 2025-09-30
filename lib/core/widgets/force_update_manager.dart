@@ -27,8 +27,8 @@ class ForceUpdateManager {
   final String testStoreVersion;
   final bool isMandatoryUpdate;
 
-  String androidPackageName = 'com.app.raalc';
-  String iosBundleId = 'com.app.raalc';
+  String androidPackageName = "com.app.baqalty";
+  String iosBundleId = "com.app.baqalty";
   String iosAppId = '0000000000';
 
   final Widget Function(
@@ -56,14 +56,22 @@ class ForceUpdateManager {
   }
 
   Future<void> checkForUpdates(BuildContext context) async {
+    log('🔍 Starting update check...');
+    log('📱 Dialog showing: $_isDialogShowing');
+
     // Avoid showing dialog if one is already displayed
     if (_isDialogShowing) {
+      log('⚠️ Dialog already showing, skipping check');
       return;
     }
 
     if (_installedVersion.isEmpty) {
       await _getInstalledVersion();
     }
+
+    log('📱 Current version: $_installedVersion');
+    log('🏪 Store version: $testStoreVersion');
+    log('🧪 Test mode: $isTestMode');
 
     if (Platform.isAndroid && context.mounted) {
       await _checkForUpdateAndroid(context);
@@ -75,10 +83,19 @@ class ForceUpdateManager {
   Future<void> _checkForUpdateAndroid(BuildContext context) async {
     try {
       if (isTestMode) {
-        if (_isUpdateRequired(_installedVersion, testStoreVersion)) {
+        log('🧪 Test mode - checking if update required');
+        final isRequired = _isUpdateRequired(
+          _installedVersion,
+          testStoreVersion,
+        );
+        log('🔍 Update required: $isRequired');
+        if (isRequired) {
           if (context.mounted) {
+            log('📱 Showing update dialog for Android');
             _showUpdateDialog(context);
           }
+        } else {
+          log('✅ No update required for Android');
         }
         return;
       }
@@ -100,10 +117,19 @@ class ForceUpdateManager {
     try {
       // In debug mode with test flag enabled
       if (isTestMode) {
-        if (_isUpdateRequired(_installedVersion, testStoreVersion)) {
+        log('🧪 Test mode - checking if update required for iOS');
+        final isRequired = _isUpdateRequired(
+          _installedVersion,
+          testStoreVersion,
+        );
+        log('🔍 Update required: $isRequired');
+        if (isRequired) {
           if (context.mounted) {
+            log('📱 Showing update dialog for iOS');
             _showUpdateDialog(context);
           }
+        } else {
+          log('✅ No update required for iOS');
         }
         return;
       }
@@ -176,8 +202,12 @@ class ForceUpdateManager {
       return;
     }
 
+    log('📱 About to show update dialog');
+    log('📱 Dialog showing flag: $_isDialogShowing');
+
     // Set flag to prevent multiple dialogs
     _isDialogShowing = true;
+    log('📱 Set dialog showing flag to true');
 
     if (_customUpdateDialog != null) {
       showCupertinoDialog(
@@ -328,5 +358,14 @@ class ForceUpdateManager {
     } catch (e) {
       log('❌ Error launching fallback URL: $e');
     }
+  }
+
+  /// Reset the dialog state to allow showing dialog again
+  void resetDialogState() {
+    log('🔄 Resetting dialog state...');
+    log('📱 Previous dialog showing flag: $_isDialogShowing');
+    _isDialogShowing = false;
+    log('🔄 Dialog state reset - can show dialog again');
+    log('📱 New dialog showing flag: $_isDialogShowing');
   }
 }

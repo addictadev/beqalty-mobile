@@ -293,7 +293,6 @@
   "return_policy": "What is your return policy?",
   "return_policy_answer": "We offer 7-day return policy for most items. Items must be in original condition with receipt. Contact customer support for return requests.",
   "search": "Search",
-  "track_order": "Track Order",
   "minutes_left": "minutes left",
   "delivery_to": "Delivery to Your current address",
   "delivered_your_order": "Delivered your order",
@@ -302,5 +301,42 @@
   "call_driver": "Call Driver",
   "select_language": "Select Language",
   "english": "English",
-  "arabic": "Arabic"
+  "arabic": "Arabic",
+
+
+  "session_expired_title": "Your session has expired. Please login to continue.",
+  "login_button": "Login",
+  "keep_visiting": "Keep visiting",
+  "no_internet_connection": "No Internet Connection",
+  "request_failed": "Request failed",
+  "unexpected_server_response": "Unexpected server response. Please try again later.",
+  "unauthorized_request": "Unauthorized request",
+  "invalid_request_parameters": "Invalid request parameters",
+  "server_error_occurred": "Server error occurred!",
+  "service_unavailable": "Service is currently unavailable. Please try again later.",
+  "requested_resource_not_found": "Requested resource not found",
+  "unknown_error_occurred": "Unknown error occurred",
+  "an_error_occurred": "An error occurred. Please try again.",
+  "request_timeout": "Request timeout. Please check your internet connection and try again.",
+  "something_went_wrong": "Something went wrong. Please try again.",
+  "an_unknown_error_occurred": "An unknown error occurred",
+  "error_handling_error": "An error occurred while handling the error",
+  "bad_request": "Bad request",
+  "forbidden_access": "Access forbidden",
+  "conflict_error": "Conflict occurred",
+  "too_many_requests": "Too many requests. Please try again later.",
+  "gateway_timeout": "Gateway timeout. Please try again later.",
+  "error_parsing_response": "Error parsing server response",
+  "network_switching_error": "Network connection is changing. Please wait a moment and try again.",
+  "network_unstable": "Network connection is unstable",
+  "network_restored": "Network connection restored",
+  "update_available_title": "New Update Available",
+  "update_mandatory_message": "You must update the app to continue. We have added new features and fixed some bugs.",
+  "update_optional_message": "We have added new features and fixed some bugs to improve your experience.",
+  "skip": "Skip",
+  "update_now": "Update Now"
+
+  
+
+  
 }
