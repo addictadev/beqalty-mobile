@@ -19,7 +19,7 @@ class LanguageSelectionBottomSheet extends StatefulWidget {
 
 class _LanguageSelectionBottomSheetState
     extends State<LanguageSelectionBottomSheet> {
-  String _selectedLanguage = 'en';
+  String _selectedLanguage = 'ar'; // Default to Arabic
   bool _isChangingLanguage = false;
 
   @override
@@ -110,26 +110,26 @@ class _LanguageSelectionBottomSheetState
           ),
 
           CustomRadioTile(
-            title: "english".tr(),
-            subtitle: "English",
-            value: _selectedLanguage == 'en',
-            onChanged: _isChangingLanguage
-                ? (value) {}
-                : (value) => _changeLanguage('en'),
-            titleFontFamily: FontFamilyUtils.getFontFamilyForLanguage('en'),
-            subtitleFontFamily: FontFamilyUtils.getFontFamilyForLanguage('en'),
-          ),
-
-          CustomRadioTile(
             title: "arabic".tr(),
             subtitle: "العربية",
             value: _selectedLanguage == 'ar',
             onChanged: _isChangingLanguage
                 ? (value) {}
                 : (value) => _changeLanguage('ar'),
-            showDivider: false,
             titleFontFamily: FontFamilyUtils.getFontFamilyForLanguage('ar'),
             subtitleFontFamily: FontFamilyUtils.getFontFamilyForLanguage('ar'),
+          ),
+
+          CustomRadioTile(
+            title: "english".tr(),
+            subtitle: "English",
+            value: _selectedLanguage == 'en',
+            onChanged: _isChangingLanguage
+                ? (value) {}
+                : (value) => _changeLanguage('en'),
+            showDivider: false,
+            titleFontFamily: FontFamilyUtils.getFontFamilyForLanguage('en'),
+            subtitleFontFamily: FontFamilyUtils.getFontFamilyForLanguage('en'),
           ),
 
           SizedBox(

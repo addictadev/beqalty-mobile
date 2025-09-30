@@ -275,7 +275,6 @@
   "return_policy": "ما هي سياسة الإرجاع؟",
   "return_policy_answer": "نوفر سياسة إرجاع لمدة 7 أيام لمعظم العناصر. يجب أن تكون العناصر في حالتها الأصلية مع الإيصال. اتصل بدعم العملاء لطلبات الإرجاع.",
   "search": "بحث",
-  "track_order": "تتبع الطلب",
   "minutes_left": "دقائق متبقية",
   "delivery_to": "التوصيل إلى عنوانك الحالي",
   "delivered_your_order": "تم توصيل طلبك",
@@ -302,5 +301,44 @@
   "invalid_otp_code": "رمز OTP غير صحيح. يرجى المحاولة مرة أخرى.",
   "select_language": "اختر اللغة",
   "english": "الإنجليزية",
-  "arabic": "العربية"
+  "arabic": "العربية",
+
+
+  "session_expired_title": "انتهت صلاحية جلستك. يرجى تسجيل الدخول للمتابعة.",
+  "login_button": "تسجيل الدخول",
+  "keep_visiting": "استمر في التصفح",
+  "no_internet_connection": "لا يوجد اتصال بالإنترنت",
+  "request_failed": "فشل الطلب",
+  "unexpected_server_response": "استجابة غير متوقعة من الخادم. يرجى المحاولة مرة أخرى لاحقاً.",
+  "unauthorized_request": "طلب غير مصرح",
+  "invalid_request_parameters": "معاملات الطلب غير صحيحة",
+  "server_error_occurred": "حدث خطأ في الخادم!",
+  "service_unavailable": "الخدمة غير متوفرة حالياً. يرجى المحاولة مرة أخرى لاحقاً.",
+  "requested_resource_not_found": "المورد المطلوب غير موجود",
+  "unknown_error_occurred": "حدث خطأ غير معروف",
+  "an_error_occurred": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+  "request_timeout": "انتهت مهلة الطلب. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.",
+  "something_went_wrong": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "an_unknown_error_occurred": "حدث خطأ غير معروف",
+  "error_handling_error": "حدث خطأ أثناء معالجة الخطأ",
+  "bad_request": "طلب سيء",
+  "forbidden_access": "الوصول ممنوع",
+  "conflict_error": "حدث تضارب",
+  "too_many_requests": "طلبات كثيرة جداً. يرجى المحاولة مرة أخرى لاحقاً.",
+  "gateway_timeout": "انتهت مهلة البوابة. يرجى المحاولة مرة أخرى لاحقاً.",
+  "error_parsing_response": "خطأ في تحليل استجابة الخادم",
+  "network_switching_error": "اتصال الشبكة يتغير. يرجى الانتظار لحظة والمحاولة مرة أخرى.",
+  "network_unstable": "اتصال الشبكة غير مستقر",
+  "network_restored": "تم استعادة اتصال الشبكة",
+  "update_available_title": "تحديث جديد متاح",
+  "update_mandatory_message": "يجب تحديث التطبيق للمتابعة. لقد أضفنا ميزات جديدة وأصلحنا بعض الأخطاء.",
+  "update_optional_message": "لقد أضفنا ميزات جديدة وأصلحنا بعض الأخطاء لتحسين تجربتك.",
+  "skip": "تخطى",
+  "update_now": "تحديث الان"
+
+
+  
+
+
+
 }

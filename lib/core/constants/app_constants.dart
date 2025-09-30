@@ -3,9 +3,10 @@ class AppConstants {
   static const String userCategoryCompany = 'company';
   static const String userCategoryIndividual = 'individual';
   static const String isProfileCompletedKey = 'is_profile_completed';
+  static const String isLoggedInKey = 'is_logged_in';
 
   // Default Values
-  static const String defaultLanguage = 'en';
+  static const String defaultLanguage = 'ar';
   static const String defaultThemeMode = 'system';
 
   // Animation Durations

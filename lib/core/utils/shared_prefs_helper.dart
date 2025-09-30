@@ -1,6 +1,7 @@
 import '../di/service_locator.dart';
 import '../services/shared_preferences_service.dart';
 import '../services/secure_storage_service.dart';
+import '../constants/app_constants.dart';
 
 /// Helper class for easy access to shared preferences throughout the app
 class SharedPrefsHelper {
@@ -64,6 +65,22 @@ class SharedPrefsHelper {
   static Future<bool> setIsFirstTime(bool isFirstTime) =>
       _service.setIsFirstTime(isFirstTime);
   static bool getIsFirstTime() => _service.getIsFirstTime();
+
+  // Login State Methods
+  static Future<bool> setLoginState(bool isLoggedIn) =>
+      _service.setBool(AppConstants.isLoggedInKey, isLoggedIn);
+  static bool getLoginState() => _service.getBool(AppConstants.isLoggedInKey);
+
+  /// Check if user is fully logged in (has both login state and valid token)
+  static Future<bool> isUserLoggedIn() async {
+    try {
+      final isLoggedIn = getLoginState();
+      final hasToken = await hasUserToken();
+      return isLoggedIn && hasToken;
+    } catch (e) {
+      return false;
+    }
+  }
 
   // Generic Methods
   static Future<bool> setString(String key, String value) =>
