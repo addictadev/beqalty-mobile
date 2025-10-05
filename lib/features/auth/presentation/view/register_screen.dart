@@ -1,5 +1,6 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/utils/custom_new_toast.dart';
 import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
@@ -39,7 +40,6 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
   @override
   void initState() {
     super.initState();
-    // Initialize the registration flow
     context.read<AuthCubit>().startRegistration();
   }
 
@@ -48,9 +48,7 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegistrationErrorState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          ToastHelper.showErrorToast(state.message);
         }
       },
       builder: (context, state) {
@@ -277,7 +275,6 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
       onPressed: () {
         context.read<AuthCubit>().handleNextStep();
 
-        // Navigate to address registration screen
         Navigator.push(
           context,
           MaterialPageRoute(
