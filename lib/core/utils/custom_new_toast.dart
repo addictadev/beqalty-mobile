@@ -30,8 +30,7 @@ class ToastHelper {
           position: position ?? FlashPosition.top,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          margin:
-              margin ??
+          margin: margin ??
               EdgeInsets.symmetric(
                 horizontal: _getResponsiveHorizontalMargin(),
                 vertical: _getResponsiveVerticalMargin(),
@@ -257,25 +256,37 @@ class ToastHelper {
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.success, Color(0xFF059669)],
+          colors: [
+            AppColors.success,
+            Color(0xFF059669),
+          ],
         );
       case MessageType.error:
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.error, Color(0xFFDC2626)],
+          colors: [
+            AppColors.error,
+            Color(0xFFDC2626),
+          ],
         );
       case MessageType.warning:
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.warning, Color(0xFFD97706)],
+          colors: [
+            AppColors.warning,
+            Color(0xFFD97706),
+          ],
         );
       case MessageType.info:
         return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.info, Color(0xFF2563EB)],
+          colors: [
+            AppColors.info,
+            Color(0xFF2563EB),
+          ],
         );
     }
   }
@@ -416,8 +427,7 @@ class ToastHelper {
           position: position,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          margin:
-              margin ??
+          margin: margin ??
               EdgeInsets.symmetric(
                 horizontal: _getResponsiveHorizontalMargin(),
                 vertical: _getResponsiveVerticalMargin(),

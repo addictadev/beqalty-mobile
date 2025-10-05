@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import '../models/registration_data_model.dart';
-import '../models/user_registration_model.dart';
-import '../models/address_model.dart';
+import '../../data/models/user_registration_model.dart';
+import '../../data/models/address_model.dart';
+import '../../data/models/registration_data_model.dart';
 
 part 'auth_state.dart';
 
@@ -98,9 +98,29 @@ class AuthCubit extends Cubit<AuthState> {
 
   void startRegistration() {
     emit(
-      const RegistrationStepState(
+      RegistrationStepState(
         currentStep: 1,
-        registrationData: RegistrationDataModel(),
+        registrationData: RegistrationDataModel(
+          userData: UserRegistrationModel(
+            name: '',
+            phone: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+          ),
+          addressData: AddressModel(
+            lat: 0.0,
+            lng: 0.0,
+            city: '',
+            street: '',
+            buildingNo: '',
+            floor: '',
+            apartment: '',
+            title: '',
+            marker: '',
+            extraDetails: '',
+          ),
+        ),
       ),
     );
   }
@@ -130,11 +150,9 @@ class AuthCubit extends Cubit<AuthState> {
     if (state is RegistrationStepState) {
       final currentState = state as RegistrationStepState;
 
-      // Use stored coordinates if available, otherwise try to parse from location text
       double lat = _lat;
       double lng = _lng;
 
-      // If coordinates are not set, try to parse from location field
       if (lat == 0.0 && lng == 0.0) {
         final locationParts = _locationController.text.split(',');
         if (locationParts.length == 2) {
@@ -259,7 +277,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void updateLocationCoordinates(double lat, double lng) {
-    // Store the coordinates for later use in address data
     _lat = lat;
     _lng = lng;
   }
@@ -268,7 +285,9 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthInitial());
   }
 
-  // Store coordinates temporarily
   double _lat = 0.0;
   double _lng = 0.0;
+
+
+  
 }

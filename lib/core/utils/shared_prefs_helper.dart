@@ -3,21 +3,12 @@ import '../services/shared_preferences_service.dart';
 import '../services/secure_storage_service.dart';
 import '../constants/app_constants.dart';
 
-/// Helper class for easy access to shared preferences throughout the app
 class SharedPrefsHelper {
   static SharedPreferencesService get _service =>
       ServiceLocator.sharedPreferencesService;
 
-  // User Category Methods
-  static Future<bool> setUserCategory(String category) =>
-      _service.setUserCategory(category);
-  static String? getUserCategory() => _service.getUserCategory();
-  static bool isCompany() => _service.isCompany();
-  static bool isIndividual() => _service.isIndividual();
-  static bool hasUserCategory() => _service.hasUserCategory();
-  static Future<bool> clearUserCategory() => _service.clearUserCategory();
 
-  // User Token Methods (Secure Storage)
+
   static Future<bool> setUserToken(String token) async {
     try {
       await SecureStorageService.storeUserToken(token);
@@ -45,44 +36,108 @@ class SharedPrefsHelper {
     }
   }
 
-  // User Data Methods
   static Future<bool> setUserData(Map<String, dynamic> userData) =>
       _service.setUserData(userData);
   static Map<String, dynamic>? getUserData() => _service.getUserData();
   static Future<bool> clearUserData() => _service.clearUserData();
 
-  // Language Methods
-  static Future<bool> setLanguage(String languageCode) =>
-      _service.setLanguage(languageCode);
-  static String getLanguage() => _service.getLanguage();
 
-  // Theme Methods
-  static Future<bool> setThemeMode(String themeMode) =>
-      _service.setThemeMode(themeMode);
-  static String getThemeMode() => _service.getThemeMode();
 
-  // First Time User Methods
-  static Future<bool> setIsFirstTime(bool isFirstTime) =>
-      _service.setIsFirstTime(isFirstTime);
-  static bool getIsFirstTime() => _service.getIsFirstTime();
 
-  // Login State Methods
-  static Future<bool> setLoginState(bool isLoggedIn) =>
-      _service.setBool(AppConstants.isLoggedInKey, isLoggedIn);
-  static bool getLoginState() => _service.getBool(AppConstants.isLoggedInKey);
 
-  /// Check if user is fully logged in (has both login state and valid token)
-  static Future<bool> isUserLoggedIn() async {
+  static Future<String?> getSecureUserToken() async {
     try {
-      final isLoggedIn = getLoginState();
-      final hasToken = await hasUserToken();
-      return isLoggedIn && hasToken;
+      return await SecureStorageService.getUserToken();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<bool> hasSecureUserToken() async {
+    try {
+      final token = await getSecureUserToken();
+      return token != null && token.isNotEmpty;
     } catch (e) {
       return false;
     }
   }
 
-  // Generic Methods
+  static Future<bool> clearSecureUserToken() async {
+    try {
+      await SecureStorageService.clearAuthData();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> setUserEmail(String email) =>
+      _service.setString('user_email', email);
+  static String? getUserEmail() => _service.getString('user_email');
+
+  static Future<bool> setUserId(int userId) =>
+      _service.setInt('user_id', userId);
+  static int? getUserId() => _service.getInt('user_id');
+
+  static Future<bool> setUserName(String name) =>
+      _service.setString('user_name', name);
+  static String? getUserName() => _service.getString('user_name');
+
+  static Future<bool> setUserPhone(String phone) =>
+      _service.setString('user_phone', phone);
+  static String? getUserPhone() => _service.getString('user_phone');
+
+  static Future<bool> setUserAvatar(String avatar) =>
+      _service.setString('user_avatar', avatar);
+  static String? getUserAvatar() => _service.getString('user_avatar');
+
+  static Future<bool> setEmailVerified(bool isVerified) =>
+      _service.setBool('email_verified', isVerified);
+  static bool isEmailVerified() => _service.getBool('email_verified');
+
+  static Future<bool> clearAuthData() async {
+    try {
+      await clearSecureUserToken();
+      await _service.remove('user_info');
+      await _service.remove('user_email');
+      await _service.remove('user_id');
+      await _service.remove('user_name');
+      await _service.remove('user_phone');
+      await _service.remove('user_avatar');
+      await _service.remove('email_verified');
+      await setLoginState(false);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> setLanguage(String languageCode) =>
+      _service.setLanguage(languageCode);
+  static String getLanguage() => _service.getLanguage();
+
+  static Future<bool> setThemeMode(String themeMode) =>
+      _service.setThemeMode(themeMode);
+  static String getThemeMode() => _service.getThemeMode();
+
+  static Future<bool> setIsFirstTime(bool isFirstTime) =>
+      _service.setIsFirstTime(isFirstTime);
+  static bool getIsFirstTime() => _service.getIsFirstTime();
+
+  static Future<bool> setLoginState(bool isLoggedIn) =>
+      _service.setBool(AppConstants.isLoggedInKey, isLoggedIn);
+  static bool getLoginState() => _service.getBool(AppConstants.isLoggedInKey);
+
+  static Future<bool> isUserLoggedIn() async {
+    try {
+      final isLoggedIn = getLoginState();
+      final hasSecureToken = await hasSecureUserToken();
+      return isLoggedIn && hasSecureToken;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<bool> setString(String key, String value) =>
       _service.setString(key, value);
   static String? getString(String key) => _service.getString(key);
@@ -102,7 +157,6 @@ class SharedPrefsHelper {
       _service.setStringList(key, value);
   static List<String> getStringList(String key) => _service.getStringList(key);
 
-  // Utility Methods
   static bool containsKey(String key) => _service.containsKey(key);
   static Set<String> getKeys() => _service.getKeys();
   static Future<bool> remove(String key) => _service.remove(key);

@@ -7,7 +7,7 @@ class EndPoints {
 
   // API base url
   static const String baseUrl =
-      "https://raalc-back.addictaco.website/api/v1/mobile/";
+      "https://baqalty-back.addictaco.website/api/v1/";
 
   // Auth Endpoints
   static const String register = "auth/register";
