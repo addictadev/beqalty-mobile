@@ -12,8 +12,8 @@ class SplashCubit extends Cubit<SplashState> {
   SplashCubit() : super(SplashInitial());
 
   final ForceUpdateManager _updateManager = ForceUpdateManager(
-    isTestMode: true,
-    testStoreVersion: '2.0.0',
+    // isTestMode: true,
+    // testStoreVersion: '2.0.0',
     customUpdateDialog: (context, onUpdateNow, onSkip) =>
         CustomUpdateDialog(onUpdateNow: onUpdateNow, onSkip: onSkip),
   );
