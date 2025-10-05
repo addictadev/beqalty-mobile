@@ -33,7 +33,6 @@ class _SplashScreenBodyState extends State<SplashScreenBody>
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
 
-  // App state tracking
   bool _hasShownUpdateDialog = false;
 
   @override
@@ -90,20 +89,17 @@ class _SplashScreenBodyState extends State<SplashScreenBody>
   }
 
   void _handleAppResumed() {
-    // If app was in background and we had shown update dialog before,
-    // check for updates again when user returns
     if (_hasShownUpdateDialog && mounted) {
       log('🔄 App resumed - user likely returned from store');
       log('📱 Has shown update dialog: $_hasShownUpdateDialog');
       log('📱 App mounted: $mounted');
 
-      // Wait a moment for the app to fully resume
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) {
           log('🔄 Starting update check after app resume');
-          // Reset the dialog flag to allow showing update dialog again
+
           context.read<SplashCubit>().resetUpdateDialogState();
-          // Check for updates again
+
           context.read<SplashCubit>().checkForUpdates();
         } else {
           log('⚠️ App no longer mounted after delay');
@@ -148,11 +144,9 @@ class _SplashScreenBodyState extends State<SplashScreenBody>
         } else if (state is SplashError) {
           context.read<SplashCubit>().navigateToOnboarding();
         } else if (state is SplashUpdateCheckCompleted) {
-          // Track that we've shown update dialog
           _hasShownUpdateDialog = true;
           log('📱 Update check completed - dialog shown');
         } else if (state is SplashNavigationCompleted) {
-          // Navigation completed, reset the flag
           _hasShownUpdateDialog = false;
           log('📱 Navigation completed - resetting update dialog flag');
         }

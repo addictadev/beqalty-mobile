@@ -59,6 +59,9 @@ dependencies:
   flutter_bloc: ^8.1.4
   equatable: ^2.0.7
   flutter_phoenix: ^1.1.1
+  google_maps_flutter: ^2.9.0
+  geocoding: ^4.0.0
+  geolocator: ^13.0.1
 
 dev_dependencies:
   flutter_test:
