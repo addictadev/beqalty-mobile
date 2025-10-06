@@ -111,6 +111,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   Widget _buildOtpField() {
     return CustomPinCodeTextField(
+      
       context: context,
       controller: _otpController,
       length: 4,

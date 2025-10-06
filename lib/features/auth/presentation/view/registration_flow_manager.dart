@@ -30,7 +30,9 @@ class RegistrationFlowManagerBody extends StatelessWidget {
             case 1:
               return const RegisterScreenBody();
             case 2:
-              return const AddressRegistrationScreen();
+              return AddressRegistrationScreen(
+                authCubit: context.read<AuthCubit>(),
+              );
             default:
               return const RegisterScreenBody();
           }

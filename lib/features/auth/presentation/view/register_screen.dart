@@ -385,9 +385,13 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
     return PrimaryButton(
       text: "next_step".tr(),
       onPressed: () {
-        context.read<AuthCubit>().handleNextStep();
-
-        NavigationManager.navigateTo(AddressRegistrationScreen());
+        final cubit = context.read<AuthCubit>();
+        cubit.handleNextStep();
+        if (cubit.userFormKey.currentState?.validate() ?? false) {
+          NavigationManager.navigateTo(
+            AddressRegistrationScreen(authCubit: cubit),
+          );
+        }
       },
     );
   }

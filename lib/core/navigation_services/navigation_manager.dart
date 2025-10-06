@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palestine_console/palestine_console.dart';
+import '../services/app_control_service.dart';
 
 class NavigationManager {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -36,6 +37,59 @@ class NavigationManager {
 
   static BuildContext getContext() {
     return navigatorKey.currentState!.overlay!.context;
+  }
+
+  /// Moves the app to background instead of closing it
+  /// Preserves app state and allows user to return to the same screen
+  static Future<void> moveToBackground() async {
+    Print.cyan('Moving app to background...');
+    await AppControlService.moveToBackground();
+  }
+
+  /// Completely exits the app (closes it)
+  /// Use this when you want to close the app entirely
+  static Future<void> exitApp() async {
+    Print.cyan('Exiting app completely...');
+    await AppControlService.exitApp();
+  }
+
+  /// Smart exit that moves to background on Android and closes on other platforms
+  static Future<void> smartExit() async {
+    Print.cyan('Smart exit - moving to background or closing app...');
+    await AppControlService.smartExit();
+  }
+
+  /// Shows a dialog to let user choose between background or exit
+  static Future<void> showExitDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Exit App'),
+          content: Text('What would you like to do?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                moveToBackground();
+              },
+              child: Text('Minimize to Background'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                exitApp();
+              },
+              child: Text('Close App'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
