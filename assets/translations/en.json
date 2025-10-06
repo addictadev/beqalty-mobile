@@ -355,6 +355,7 @@
   "back_to_personal_info": "Back to Personal Info",
   "name_required": "Name is required",
   "phone_required": "Phone number is required",
+  "invalid_phone_format": "Please enter a valid Egyptian phone number (e.g., 01234567890)",
   "email_required": "Email is required",
   "invalid_email": "Please enter a valid email address",
   "password_too_short": "Password must be at least 6 characters",
@@ -386,5 +387,9 @@
   "location_permission_permanently_denied": "Location permission is permanently denied. Please enable it in settings.",
   "error_getting_location": "Error getting your current location. Please try again.",
   "ok": "OK",
-  "tap_to_select_location": "Tap to select location"
+  "tap_to_select_location": "Tap to select location",
+  "password_strength": "Password Strength",
+  "weak": "Weak",
+  "medium": "Medium",
+  "strong": "Strong"
 }

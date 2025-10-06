@@ -48,3 +48,7 @@ final class RegistrationErrorState extends AuthState {
   @override
   List<Object> get props => [message];
 }
+
+final class AuthPasswordStrengthUpdated extends AuthState {}
+
+final class AuthLoading extends AuthState {}

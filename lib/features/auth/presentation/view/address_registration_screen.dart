@@ -12,6 +12,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../widgets/auth_background_widget.dart';
 import '../widgets/step_indicator_widget.dart';
 import '../../business/cubit/auth_cubit.dart';
+import '../../data/services/auth_services_impl.dart';
 import 'location_picker_screen.dart';
 
 class AddressRegistrationScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class AddressRegistrationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(),
+      create: (context) => AuthCubit(AuthServicesImpl()),
       child: const AddressRegistrationScreenBody(),
     );
   }
@@ -38,76 +39,66 @@ class _AddressRegistrationScreenBodyState
     extends State<AddressRegistrationScreenBody> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is RegistrationSuccessState) {
-          // Navigate to main screen or show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Registration completed successfully!'),
-              backgroundColor: AppColors.primary,
-            ),
-          );
-        } else if (state is RegistrationErrorState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
-        }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          body: GestureDetector(
-            onHorizontalDragEnd: (details) {
-              NavigationManager.pop();
-            },
-            child: AuthBackgroundWidget(
-              backgroundHeight: 200,
-              overlayOpacity: 0.15,
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.responsivePadding,
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 16),
+    return AbsorbPointer(
+      absorbing: context.watch<AuthCubit>().state is RegistrationLoadingState,
 
-                              _buildBackButton(),
+      child: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Scaffold(
+            body: GestureDetector(
+              onHorizontalDragEnd: (details) {
+                NavigationManager.pop();
+              },
+              child: AuthBackgroundWidget(
+                backgroundHeight: 200,
+                overlayOpacity: 0.15,
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.responsivePadding,
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 16),
 
-                              SizedBox(height: 24),
+                                _buildBackButton(),
 
-                              _buildStepIndicator(),
+                                SizedBox(height: 24),
 
-                              SizedBox(height: 32),
+                                _buildStepIndicator(),
 
-                              _buildWelcomeSection(),
+                                SizedBox(height: 32),
 
-                              SizedBox(height: 32),
+                                _buildWelcomeSection(),
 
-                              _buildFormFields(),
+                                SizedBox(height: 32),
 
-                              SizedBox(height: 32),
+                                _buildFormFields(),
 
-                              _buildActionButtons(),
+                                SizedBox(height: 32),
 
-                              SizedBox(height: 40),
-                            ],
+                                _buildActionButtons(),
+
+                                SizedBox(height: 40),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -369,24 +360,25 @@ class _AddressRegistrationScreenBodyState
   Widget _buildActionButtons() {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        final isLoading = state is RegistrationStepState && state.isLoading;
-
         return Column(
           children: [
             PrimaryButton(
               text: "complete_registration".tr(),
-              onPressed: isLoading
+              onPressed:
+                  context.watch<AuthCubit>().state is RegistrationLoadingState
                   ? null
                   : () {
-                      context.read<AuthCubit>().submitRegistration();
+                      context.read<AuthCubit>().register();
                     },
-              isLoading: isLoading,
+              isLoading:
+                  context.watch<AuthCubit>().state is RegistrationLoadingState,
             ),
 
             SizedBox(height: 16),
 
             TextButton(
-              onPressed: isLoading
+              onPressed:
+                  context.watch<AuthCubit>().state is RegistrationLoadingState
                   ? null
                   : () {
                       NavigationManager.pop();

@@ -1,5 +1,6 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/custom_new_toast.dart';
 import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
@@ -15,6 +16,7 @@ import 'package:sizer/sizer.dart';
 import '../widgets/auth_background_widget.dart';
 import '../widgets/step_indicator_widget.dart';
 import '../../business/cubit/auth_cubit.dart';
+import '../../data/services/auth_services_impl.dart';
 import 'address_registration_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -23,7 +25,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(),
+      create: (context) => AuthCubit(AuthServicesImpl()),
       child: const RegisterScreenBody(),
     );
   }
@@ -41,6 +43,99 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
   void initState() {
     super.initState();
     context.read<AuthCubit>().startRegistration();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setupControllers();
+    });
+  }
+
+  void _setupControllers() {
+    if (!mounted) return;
+
+    final cubit = context.read<AuthCubit>();
+
+    cubit.registerPasswordController.addListener(() {
+      cubit.calculateRegisterPasswordStrength(
+        cubit.registerPasswordController.text,
+      );
+      cubit.validateRegisterPasswordMatching();
+    });
+
+    cubit.registerConfirmPasswordController.addListener(() {
+      cubit.validateRegisterPasswordMatching();
+    });
+  }
+
+  Widget _buildPasswordStrengthIndicator(BuildContext context) {
+    final cubit = context.read<AuthCubit>();
+
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: cubit.registerPasswordController,
+      builder: (context, value, child) {
+        final password = value.text;
+
+        if (password.isEmpty) {
+          return SizedBox.shrink();
+        }
+
+        final strength = _calculatePasswordStrength(password);
+        final color = _getPasswordStrengthColor(strength);
+        final strengthText = _getPasswordStrengthText(strength);
+
+        return Container(
+          margin: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: color.withOpacity(0.3), width: 1),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                color == Colors.green
+                    ? Icons.check_circle
+                    : color == Colors.orange
+                    ? Icons.warning
+                    : Icons.error,
+                color: color,
+                size: 16,
+              ),
+              SizedBox(width: 8),
+              Text(
+                '${'password_strength'.tr()}: $strengthText',
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  int _calculatePasswordStrength(String password) {
+    int strength = 0;
+    if (password.length >= 8) strength++;
+    if (password.contains(RegExp(r'[A-Z]'))) strength++;
+    if (password.contains(RegExp(r'[a-z]'))) strength++;
+    if (password.contains(RegExp(r'[0-9]'))) strength++;
+    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) strength++;
+    return strength;
+  }
+
+  Color _getPasswordStrengthColor(int strength) {
+    if (strength <= 2) return Colors.red;
+    if (strength <= 3) return Colors.orange;
+    return Colors.green;
+  }
+
+  String _getPasswordStrengthText(int strength) {
+    if (strength <= 2) return 'weak'.tr();
+    if (strength <= 3) return 'medium'.tr();
+    return 'strong'.tr();
   }
 
   @override
@@ -203,7 +298,20 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
                   if (value == null || value.isEmpty) {
                     return "phone_required".tr();
                   }
-                  return null;
+
+                  String cleanPhone = value.replaceAll(RegExp(r'[^\d]'), '');
+
+                  if (cleanPhone.length != 11 || !cleanPhone.startsWith('0')) {
+                    return "invalid_phone_format".tr();
+                  }
+
+                  String prefix = cleanPhone.substring(0, 3);
+                  if (prefix.startsWith('01') ||
+                      (prefix.startsWith('0') && !prefix.startsWith('01'))) {
+                    return null;
+                  }
+
+                  return "invalid_phone_format".tr();
                 },
               ),
 
@@ -244,6 +352,10 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
                 },
               ),
 
+              SizedBox(height: 10),
+
+              _buildPasswordStrengthIndicator(context),
+
               SizedBox(height: 20),
 
               CustomTextFormField(
@@ -275,12 +387,7 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
       onPressed: () {
         context.read<AuthCubit>().handleNextStep();
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AddressRegistrationScreen(),
-          ),
-        );
+        NavigationManager.navigateTo(AddressRegistrationScreen());
       },
     );
   }

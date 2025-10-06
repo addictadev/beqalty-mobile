@@ -15,6 +15,7 @@ class AuthServicesImpl implements AuthService {
       final response = await DioHelper.post<RegisterResponseModel>(
         EndPoints.register,
         data: request.toRegistrationJson(),
+        requiresAuth: false,
       );
       return response;
     } catch (e) {

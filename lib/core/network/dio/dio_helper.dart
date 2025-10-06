@@ -42,8 +42,11 @@ class ApiResponse<T> {
     );
   }
 
-  factory ApiResponse.error(String message,
-      {int? statusCode, Map<String, dynamic>? errors}) {
+  factory ApiResponse.error(
+    String message, {
+    int? statusCode,
+    Map<String, dynamic>? errors,
+  }) {
     return ApiResponse(
       status: false,
       message: message,
@@ -82,15 +85,17 @@ class DioHelper {
   static Timer? _networkStabilityTimer;
 
   static Future<void> init() async {
-    _dio = Dio(BaseOptions(
-      baseUrl: EndPoints.baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(seconds: _connectionTimeout),
-      receiveTimeout: const Duration(seconds: _receiveTimeout),
-      validateStatus: (status) {
-        return status != null && status < 500;
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: EndPoints.baseUrl,
+        receiveDataWhenStatusError: true,
+        connectTimeout: const Duration(seconds: _connectionTimeout),
+        receiveTimeout: const Duration(seconds: _receiveTimeout),
+        validateStatus: (status) {
+          return status != null && status < 500;
+        },
+      ),
+    );
 
     _dio!.interceptors.addAll([
       _createAuthInterceptor(),
@@ -121,11 +126,13 @@ class DioHelper {
           Print.red('🔐 401 Unauthorized detected in interceptor');
           _handleUnauthorizedError();
 
-          return handler.resolve(Response(
-            requestOptions: e.requestOptions,
-            statusCode: 401,
-            data: {'status': false, 'message': 'unauthorized_request'.tr()},
-          ));
+          return handler.resolve(
+            Response(
+              requestOptions: e.requestOptions,
+              statusCode: 401,
+              data: {'status': false, 'message': 'unauthorized_request'.tr()},
+            ),
+          );
         }
         return handler.next(e);
       },
@@ -184,16 +191,13 @@ class DioHelper {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.orange,
-                size: 48,
-              ),
+              Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 48),
               const SizedBox(height: 16),
               Text(
                 'session_expired_title'.tr(),
@@ -262,8 +266,8 @@ class DioHelper {
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Accept-Language":
-          ServiceLocator.get<SharedPreferencesService>().getLanguage(),
+      "Accept-Language": ServiceLocator.get<SharedPreferencesService>()
+          .getLanguage(),
     };
 
     if (token != null && token.isNotEmpty) {
@@ -391,7 +395,8 @@ class DioHelper {
       Print.cyan('📍 Endpoint: $path');
 
       if (response.data is Map<String, dynamic> &&
-          response.data['status'] == false) {
+          (response.data['status'] == false ||
+              response.data['success'] == false)) {
         Print.red('❌ Response body indicates error: ${response.data}');
         Print.red('📊 Response status code: ${response.statusCode}');
         return _handleResponseError<T>(response, path);
@@ -462,7 +467,9 @@ class DioHelper {
   }
 
   static ApiResponse<T> _handleResponseError<T>(
-      Response response, String path) {
+    Response response,
+    String path,
+  ) {
     final statusCode = response.statusCode;
     final responseData = response.data;
 
@@ -478,13 +485,50 @@ class DioHelper {
 
     if (responseData is Map<String, dynamic>) {
       message = responseData['message'];
-      errors = responseData['errors'] as Map<String, dynamic>?;
+
+      // Handle errors - can be either array or map
+      final errorsData = responseData['errors'];
+      if (errorsData != null) {
+        Print.cyan(
+          '🔍 Processing errors data: $errorsData (type: ${errorsData.runtimeType})',
+        );
+
+        if (errorsData is List) {
+          errors = {};
+          for (String error in errorsData) {
+            final fieldMatch = RegExp(r'^(\w+)').firstMatch(error);
+            if (fieldMatch != null) {
+              final fieldName = fieldMatch.group(1);
+              if (fieldName != null) {
+                errors[fieldName] = error;
+                Print.cyan('📝 Mapped error: $fieldName -> $error');
+              }
+            }
+          }
+          Print.cyan('📋 Final errors map: $errors');
+        } else if (errorsData is Map<String, dynamic>) {
+          errors = errorsData;
+          Print.cyan('📋 Using errors as map: $errors');
+        }
+      }
+    }
+
+    // Determine the best error message to show
+    String finalMessage = message ?? 'an_error_occurred'.tr();
+
+    // If we have validation errors, show the first one instead of the main message
+    if (errors != null && errors.isNotEmpty) {
+      final firstError = errors.values.first;
+      if (firstError is String) {
+        finalMessage = firstError;
+        Print.cyan('📝 Using first validation error: $finalMessage');
+      }
     }
 
     switch (statusCode) {
       case 400:
         return ApiResponse.error(
-          message ?? 'bad_request'.tr(),
+          finalMessage,
           statusCode: statusCode,
           errors: errors,
         );
@@ -493,66 +537,39 @@ class DioHelper {
         Print.red('🔐 401 Unauthorized detected in _handleResponseError');
 
         _handleUnauthorizedError();
-        return ApiResponse.error(
-          message ?? 'unauthorized_request'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 403:
-        return ApiResponse.error(
-          message ?? 'forbidden_access'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 404:
-        return ApiResponse.error(
-          message ?? 'requested_resource_not_found'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 409:
-        return ApiResponse.error(
-          message ?? 'conflict_error'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 422:
         return ApiResponse.error(
-          message ?? 'invalid_request_parameters'.tr(),
+          finalMessage,
           statusCode: statusCode,
           errors: errors,
         );
 
       case 429:
-        return ApiResponse.error(
-          message ?? 'too_many_requests'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 500:
       case 502:
-        return ApiResponse.error(
-          message ?? 'server_error_occurred'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 503:
-        return ApiResponse.error(
-          message ?? 'service_unavailable'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       case 504:
-        return ApiResponse.error(
-          message ?? 'gateway_timeout'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
 
       default:
-        return ApiResponse.error(
-          message ?? 'unknown_error_occurred'.tr(),
-          statusCode: statusCode,
-        );
+        return ApiResponse.error(finalMessage, statusCode: statusCode);
     }
   }
 
@@ -581,7 +598,8 @@ class DioHelper {
     } else {
       if (showErrorToast) {
         await DioHelper.showErrorToast(
-            response.message ?? 'an_error_occurred'.tr());
+          response.message ?? 'an_error_occurred'.tr(),
+        );
       }
     }
   }
