@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../business/cubit/auth_cubit.dart';
+import 'package:baqalty/core/di/service_locator.dart';
+import '../../data/services/auth_services.dart';
 import 'register_screen.dart';
 import 'address_registration_screen.dart';
 
@@ -10,7 +12,7 @@ class RegistrationFlowManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(),
+      create: (context) => AuthCubit(ServiceLocator.get<AuthService>()),
       child: const RegistrationFlowManagerBody(),
     );
   }

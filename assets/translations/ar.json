@@ -355,6 +355,7 @@
   "back_to_personal_info": "العودة للمعلومات الشخصية",
   "name_required": "الاسم مطلوب",
   "phone_required": "رقم الهاتف مطلوب",
+  "invalid_phone_format": "يرجى إدخال رقم هاتف مصري صحيح (مثال: 01234567890)",
   "email_required": "البريد الإلكتروني مطلوب",
   "invalid_email": "يرجى إدخال عنوان بريد إلكتروني صحيح",
   "password_too_short": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
@@ -386,7 +387,11 @@
   "location_permission_permanently_denied": "صلاحية الموقع مرفوضة نهائياً. يرجى تفعيلها في الإعدادات.",
   "error_getting_location": "خطأ في الحصول على موقعك الحالي. يرجى المحاولة مرة أخرى.",
   "ok": "موافق",
-  "tap_to_select_location": "اضغط لاختيار الموقع"
+  "tap_to_select_location": "اضغط لاختيار الموقع",
+  "password_strength": "قوة كلمة المرور",
+  "weak": "ضعيف",
+  "medium": "متوسط",
+  "strong": "قوي"
 
 
   
