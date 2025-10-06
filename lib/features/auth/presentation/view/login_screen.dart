@@ -4,7 +4,6 @@ import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart';
-import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
@@ -38,9 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 16),
+              SizedBox(height: 50),
 
-              CustomBackButton(icon: Icons.chevron_left, size: 40),
+              // CustomBackButton(icon: Icons.chevron_left, size: 40),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

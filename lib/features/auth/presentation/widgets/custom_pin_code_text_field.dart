@@ -50,6 +50,7 @@ class CustomPinCodeTextField extends StatelessWidget {
   Widget get pinCodeTextFieldWidget => Padding(
     padding: EdgeInsets.symmetric(horizontal: 3.w),
     child: PinCodeTextField(
+      backgroundColor: AppColors.scaffoldBackground,
       appContext: context,
       controller: controller,
       length: length,

@@ -19,7 +19,7 @@ class UserRegistrationModel {
       'phone': phone,
       'email': email,
       'password': password,
-      'confirmPassword': confirmPassword,
+      'password_confirmation': confirmPassword,
     };
   }
 

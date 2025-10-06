@@ -12,7 +12,16 @@ class RegistrationDataModel {
   }
 
   Map<String, dynamic> toRegistrationJson() {
-    return {'user': userData.toJson(), 'address': addressData.toJson()};
+    // Create a flat structure by combining user and address data
+    final Map<String, dynamic> flatJson = {};
+
+    // Add user data fields
+    flatJson.addAll(userData.toJson());
+
+    // Add address data fields
+    flatJson.addAll(addressData.toJson());
+
+    return flatJson;
   }
 
   RegistrationDataModel copyWith({

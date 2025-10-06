@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
+import '../navigation_services/navigation_manager.dart';
 
 class CustomBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -8,6 +9,7 @@ class CustomBackButton extends StatelessWidget {
   final IconData? icon;
   final Color? backgroundColor;
   final Color? iconColor;
+  final bool smartBack; // New parameter to enable smart back functionality
 
   const CustomBackButton({
     super.key,
@@ -16,6 +18,7 @@ class CustomBackButton extends StatelessWidget {
     this.icon,
     this.backgroundColor,
     this.iconColor,
+    this.smartBack = false, // Default to false for backward compatibility
   });
 
   @override
@@ -27,7 +30,7 @@ class CustomBackButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onPressed ?? () => Navigator.of(context).pop(),
+        onTap: onPressed ?? () => _handleBackPress(context),
         borderRadius: BorderRadius.circular(buttonSize / 2),
         child: Container(
           width: buttonSize,
@@ -54,5 +57,20 @@ class CustomBackButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleBackPress(BuildContext context) {
+    if (smartBack) {
+      // Check if we can pop the current route
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      } else {
+        // If we're at the root, show exit dialog
+        NavigationManager.showExitDialog(context);
+      }
+    } else {
+      // Default behavior - just pop
+      Navigator.of(context).pop();
+    }
   }
 }

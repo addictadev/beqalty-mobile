@@ -12,16 +12,17 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../widgets/auth_background_widget.dart';
 import '../widgets/step_indicator_widget.dart';
 import '../../business/cubit/auth_cubit.dart';
-import '../../data/services/auth_services_impl.dart';
 import 'location_picker_screen.dart';
 
 class AddressRegistrationScreen extends StatelessWidget {
-  const AddressRegistrationScreen({super.key});
+  final AuthCubit authCubit;
+
+  const AddressRegistrationScreen({super.key, required this.authCubit});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(AuthServicesImpl()),
+    return BlocProvider.value(
+      value: authCubit,
       child: const AddressRegistrationScreenBody(),
     );
   }

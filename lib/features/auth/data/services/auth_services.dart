@@ -6,4 +6,5 @@ abstract class AuthService {
   Future<ApiResponse<RegisterResponseModel>> register(
     RegistrationDataModel request,
   );
+  
 }

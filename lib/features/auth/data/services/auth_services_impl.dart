@@ -16,6 +16,8 @@ class AuthServicesImpl implements AuthService {
         EndPoints.register,
         data: request.toRegistrationJson(),
         requiresAuth: false,
+        fromJson: (json) =>
+            RegisterResponseModel.fromJson(json as Map<String, dynamic>),
       );
       return response;
     } catch (e) {

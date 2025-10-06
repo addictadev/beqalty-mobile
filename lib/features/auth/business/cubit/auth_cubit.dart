@@ -1,6 +1,6 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/custom_new_toast.dart';
-import 'package:baqalty/features/auth/presentation/view/otp_verification_screen.dart';
+import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -346,47 +346,60 @@ class AuthCubit extends Cubit<AuthState> {
   double _lat = 0.0;
   double _lng = 0.0;
 
-  // Password strength variables
   bool _isRegisterPasswordValid = false;
   String _registerPasswordStrength = '';
   Color _registerPasswordStrengthColor = Colors.grey;
   bool _isRegisterConfirmPasswordValid = false;
 
+  void _saveAllDataToState() {
+    updateUserDataFromControllers();
+    updateAddressDataFromControllers();
+  }
+
   Future<void> register() async {
     try {
       emit(RegistrationLoadingState());
-      final registerRequest = RegistrationDataModel(
-        userData: UserRegistrationModel(
-          name: _nameController.text.trim(),
-          phone: _phoneController.text.trim(),
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-          confirmPassword: _confirmPasswordController.text,
-        ),
-        addressData: AddressModel(
-          apartment: _apartmentController.text,
-          buildingNo: _buildingNoController.text,
-          city: _cityController.text,
-          lat: _lat,
-          lng: _lng,
-          street: _streetController.text,
-          marker: _markerController.text,
-          extraDetails: _extraDetailsController.text,
-          title: _titleController.text,
-          floor: _floorController.text,
-        ),
-      );
+
+      _saveAllDataToState();
+
+      RegistrationDataModel registerRequest;
+
+      if (state is RegistrationStepState) {
+        final currentState = state as RegistrationStepState;
+        registerRequest = currentState.registrationData;
+      } else {
+        registerRequest = RegistrationDataModel(
+          userData: UserRegistrationModel(
+            name: _nameController.text.trim(),
+            phone: _phoneController.text.trim(),
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+            confirmPassword: _confirmPasswordController.text,
+          ),
+          addressData: AddressModel(
+            apartment: _apartmentController.text,
+            buildingNo: _buildingNoController.text,
+            city: _cityController.text,
+            lat: _lat,
+            lng: _lng,
+            street: _streetController.text,
+            marker: _markerController.text,
+            extraDetails: _extraDetailsController.text,
+            title: _titleController.text,
+            floor: _floorController.text,
+          ),
+        );
+      }
 
       final response = await _authService.register(registerRequest);
 
       if (response.status) {
         emit(RegistrationSuccessState());
         ToastHelper.showSuccessToast(response.message!);
-        NavigationManager.navigateToAndFinish(const OtpVerificationScreen());
+        NavigationManager.navigateTo(const LoginScreen());
       } else {
-        ToastHelper.showErrorToast(response.message!);
-
         emit(RegistrationErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
       }
     } catch (e) {
       emit(RegistrationErrorState(message: e.toString()));
