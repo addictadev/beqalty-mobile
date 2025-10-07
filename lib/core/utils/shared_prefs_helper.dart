@@ -98,13 +98,11 @@ class SharedPrefsHelper {
   static Future<bool> clearAuthData() async {
     try {
       await clearSecureUserToken();
-      await _service.remove('user_info');
-      await _service.remove('user_email');
-      await _service.remove('user_id');
-      await _service.remove('user_name');
-      await _service.remove('user_phone');
-      await _service.remove('user_avatar');
-      await _service.remove('email_verified');
+      await _service.remove(AppConstants.userEmailKey);
+      await _service.remove(AppConstants.userIdKey);
+      await _service.remove(AppConstants.userNameKey);
+      await _service.remove(AppConstants.userPhoneKey);
+      await _service.remove(AppConstants.userImageKey);
       await setLoginState(false);
       return true;
     } catch (e) {

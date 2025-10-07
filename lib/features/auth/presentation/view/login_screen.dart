@@ -6,11 +6,12 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
-import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
-
+import 'package:baqalty/features/auth/business/cubit/auth_cubit.dart';
+import 'package:baqalty/features/auth/data/services/auth_services_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
@@ -18,77 +19,122 @@ import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import '../widgets/auth_background_widget.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthCubit(AuthServicesImpl()),
+      child: const LoginScreenBody(),
+    );
+  }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenBody extends StatefulWidget {
+  const LoginScreenBody({super.key});
+
+  @override
+  State<LoginScreenBody> createState() => _LoginScreenBodyState();
+}
+
+class _LoginScreenBodyState extends State<LoginScreenBody> {
   @override
   Widget build(BuildContext context) {
-    return AuthBackgroundWidget(
-      backgroundHeight: 200,
-      overlayOpacity: 0.15,
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 50),
+    return AbsorbPointer(
+      absorbing: context.watch<AuthCubit>().state is LoginLoadingState,
+      child: AuthBackgroundWidget(
+        backgroundHeight: 200,
+        overlayOpacity: 0.15,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.responsivePadding,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 50),
 
-              // CustomBackButton(icon: Icons.chevron_left, size: 40),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
+                // CustomBackButton(icon: Icons.chevron_left, size: 40),
+                Expanded(
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final cubit = context.read<AuthCubit>();
+                      return Form(
+                        key: cubit.userFormKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20),
 
-                      _buildWelcomeSection(),
+                              _buildWelcomeSection(),
 
-                      SizedBox(height: 40),
+                              SizedBox(height: 40),
 
-                      CustomTextFormField(
-                        label: "phone_number".tr(),
-                        keyboardType: TextInputType.phone,
-                        textInputAction: TextInputAction.next,
-                      ),
+                              CustomTextFormField(
+                                label: "phone_number".tr(),
+                                keyboardType: TextInputType.phone,
+                                textInputAction: TextInputAction.next,
+                                controller: cubit.phoneController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "phone_required".tr();
+                                  }
+                                  return null;
+                                },
+                              ),
 
-                      SizedBox(height: 20),
+                              SizedBox(height: 20),
 
-                      CustomTextFormField(
-                        label: "password".tr(),
-                        obscureText: true,
-                        showVisibilityToggle: true,
-                        textInputAction: TextInputAction.done,
-                      ),
+                              CustomTextFormField(
+                                label: "password".tr(),
+                                obscureText: true,
+                                showVisibilityToggle: true,
+                                textInputAction: TextInputAction.done,
+                                controller: cubit.passwordController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "password_required".tr();
+                                  }
+                                  return null;
+                                },
+                              ),
 
-                      SizedBox(height: 16),
+                              SizedBox(height: 16),
 
-                      _buildForgotPasswordLink(),
+                              _buildForgotPasswordLink(),
 
-                      SizedBox(height: 32),
+                              SizedBox(height: 32),
 
-                      PrimaryButton(
-                        text: "login".tr(),
-                        onPressed: () {
-                          NavigationManager.navigateTo(MainNavigationScreen());
-                        },
-                      ),
-
-                      SizedBox(height: 40),
-                    ],
+                              PrimaryButton(
+                                isLoading:
+                                    context.watch<AuthCubit>().state
+                                        is LoginLoadingState,
+                                text: "login".tr(),
+                                onPressed: () {
+                                  if (cubit.userFormKey.currentState
+                                          ?.validate() ??
+                                      false) {
+                                    cubit.login();
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 40),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ),
 
-              _buildRegisterLink(),
+                _buildRegisterLink(),
 
-              SizedBox(height: 5.h),
-            ],
+                SizedBox(height: 5.h),
+              ],
+            ),
           ),
         ),
       ),

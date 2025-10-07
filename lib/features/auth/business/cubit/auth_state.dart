@@ -52,3 +52,23 @@ final class RegistrationErrorState extends AuthState {
 final class AuthPasswordStrengthUpdated extends AuthState {}
 
 final class AuthLoading extends AuthState {}
+
+final class LoginLoadingState extends AuthState {}
+
+final class LoginSuccessState extends AuthState {}
+
+final class LoginErrorState extends AuthState {
+  final String message;
+
+  const LoginErrorState({required this.message});
+}
+
+final class LogoutLoadingState extends AuthState {}
+
+final class LogoutSuccessState extends AuthState {}
+
+final class LogoutErrorState extends AuthState {
+  final String message;
+
+  const LogoutErrorState({required this.message});
+}

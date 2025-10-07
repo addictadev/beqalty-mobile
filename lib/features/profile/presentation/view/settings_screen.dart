@@ -1,5 +1,7 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
+import 'package:baqalty/features/auth/business/cubit/auth_cubit.dart';
+import 'package:baqalty/features/auth/data/services/auth_services_impl.dart';
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/change_password_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/notifications_screen.dart';
@@ -13,10 +15,23 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthCubit(AuthServicesImpl()),
+      child: const SettingsScreenBody(),
+    );
+  }
+}
+
+class SettingsScreenBody extends StatelessWidget {
+  const SettingsScreenBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +111,8 @@ class SettingsScreen extends StatelessWidget {
               const Spacer(),
               // Logout Button
               PrimaryButton(
+                isLoading:
+                    context.watch<AuthCubit>().state is LogoutLoadingState,
                 text: "logout".tr(),
                 onPressed: () async {
                   // Show custom confirmation dialog
@@ -103,11 +120,9 @@ class SettingsScreen extends StatelessWidget {
                     context,
                   );
                   if (confirmed == true) {
-                    // Handle logout logic here
                     debugPrint('Logout confirmed');
-                    // Navigate to login screen
                     if (context.mounted) {
-                      NavigationManager.navigateToAndFinish(LoginScreen());
+                      context.read<AuthCubit>().logout();
                     }
                   }
                 },
