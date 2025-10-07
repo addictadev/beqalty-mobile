@@ -394,12 +394,29 @@ class DioHelper {
       Print.green('✅ Success Response: ${response.data}');
       Print.cyan('📍 Endpoint: $path');
 
-      if (response.data is Map<String, dynamic> &&
-          (response.data['status'] == false ||
-              response.data['success'] == false)) {
-        Print.red('❌ Response body indicates error: ${response.data}');
-        Print.red('📊 Response status code: ${response.statusCode}');
-        return _handleResponseError<T>(response, path);
+      // Check for error responses
+      if (response.data is Map<String, dynamic>) {
+        final responseData = response.data as Map<String, dynamic>;
+
+        // Check for explicit error indicators
+        if (responseData['status'] == false ||
+            response.data['success'] == false) {
+          Print.red('❌ Response body indicates error: ${response.data}');
+          Print.red('📊 Response status code: ${response.statusCode}');
+          return _handleResponseError<T>(response, path);
+        }
+
+        // Check for error messages without success/status fields (like 404 responses)
+        if (responseData.containsKey('message') &&
+            !responseData.containsKey('success') &&
+            !responseData.containsKey('status') &&
+            !responseData.containsKey('data')) {
+          Print.red(
+            '❌ Response appears to be an error message: ${response.data}',
+          );
+          Print.red('📊 Response status code: ${response.statusCode}');
+          return _handleResponseError<T>(response, path);
+        }
       }
 
       T? parsedData;

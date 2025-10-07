@@ -124,7 +124,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildBackButton(BuildContext context, Color defaultIconColor) {
     return Container(
-      margin: EdgeInsets.only(left: 3.w),
+      margin: EdgeInsets.only(left: 2.5.w, right: 2.w),
       width: context.responsiveIconSize * 1.4,
       height: context.responsiveIconSize * 1.4,
       decoration: BoxDecoration(color: AppColors.white, shape: BoxShape.circle),

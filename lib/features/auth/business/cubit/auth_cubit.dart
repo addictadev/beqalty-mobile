@@ -12,6 +12,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../data/models/user_registration_model.dart';
 import '../../data/models/address_model.dart';
 import '../../data/models/registration_data_model.dart';
+import '../../data/models/user_profile_response_model.dart';
 import '../../data/services/auth_services.dart';
 
 part 'auth_state.dart';
@@ -470,9 +471,34 @@ class AuthCubit extends Cubit<AuthState> {
         SharedPrefsHelper.clearAuthData();
         SharedPrefsHelper.clearUserToken();
         NavigationManager.navigateToAndFinish(const LoginScreen());
+      } else {
+        emit(LogoutErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
       }
     } catch (e) {
       emit(LogoutErrorState(message: e.toString()));
     }
+  }
+
+  Future<void> getUser() async {
+    try {
+      emit(GetUserLoadingState());
+      final response = await _authService.getUser();
+      if (response.status) {
+        final userData = response.data!.data;
+        _populateUserControllers(userData);
+        emit(GetUserSuccessState(user: userData));
+      } else {
+        emit(GetUserErrorState(message: response.message!));
+      }
+    } catch (e) {
+      emit(GetUserErrorState(message: e.toString()));
+    }
+  }
+
+  void _populateUserControllers(UserProfileDataModel user) {
+    _nameController.text = user.name;
+    _phoneController.text = user.phone;
+    _emailController.text = user.email;
   }
 }

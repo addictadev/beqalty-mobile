@@ -124,8 +124,8 @@ class MainNavigationScreenBody extends StatelessWidget {
               color: navItem.isActive
                   ? AppColors.black
                   : AppColors.textSecondary,
-              width: context.responsiveIconSize * 1.1,
-              height: context.responsiveIconSize * 1.1,
+              width: context.responsiveIconSize,
+              height: context.responsiveIconSize,
             ),
 
             SizedBox(height: context.responsiveMargin * 0.4),

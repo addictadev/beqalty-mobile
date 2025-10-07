@@ -72,3 +72,16 @@ final class LogoutErrorState extends AuthState {
 
   const LogoutErrorState({required this.message});
 }
+
+final class GetUserLoadingState extends AuthState {}
+
+final class GetUserSuccessState extends AuthState {
+  final UserProfileDataModel user;
+  const GetUserSuccessState({required this.user});
+}
+
+final class GetUserErrorState extends AuthState {
+  final String message;
+
+  const GetUserErrorState({required this.message});
+}

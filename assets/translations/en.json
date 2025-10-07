@@ -391,5 +391,13 @@
   "password_strength": "Password Strength",
   "weak": "Weak",
   "medium": "Medium",
-  "strong": "Strong"
+  "strong": "Strong",
+  "take_photo": "Take Photo",
+  "take_photo_desc": "Take a new photo with your camera",
+  "choose_from_gallery": "Choose from Gallery",
+  "choose_from_gallery_desc": "Select an existing photo from your gallery",
+  "profile_updated_successfully": "Profile updated successfully!",
+  "image_selected_successfully": "Image selected successfully!",
+  "failed_to_pick_image": "Failed to pick image",
+  "retry": "Retry"
 }

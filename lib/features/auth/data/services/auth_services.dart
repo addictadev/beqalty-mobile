@@ -3,6 +3,7 @@ import '../models/register_response_model.dart';
 import '../models/registration_data_model.dart';
 import '../models/login_request_model.dart';
 import '../models/login_response_model.dart';
+import '../models/user_profile_response_model.dart';
 
 abstract class AuthService {
   Future<ApiResponse<RegisterResponseModel>> register(
@@ -11,5 +12,8 @@ abstract class AuthService {
 
   Future<ApiResponse<LoginResponseModel>> login(LoginRequestModel request);
 
+  Future<ApiResponse<UserProfileResponseModel>> getUserProfile();
+
   Future<ApiResponse<dynamic>> logout();
+  Future<ApiResponse<UserProfileResponseModel>> getUser();
 }
