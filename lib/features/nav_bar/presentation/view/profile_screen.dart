@@ -1,4 +1,7 @@
+import 'package:baqalty/core/constants/app_constants.dart';
+import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/utils/shared_prefs_helper.dart';
 import 'package:baqalty/features/orders/presentation/view/orders_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/my_account_screen.dart';
@@ -26,7 +29,6 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: AppColors.primary,
       body: Column(
         children: [
-          // Dark header with profile info
           Container(
             width: double.infinity,
             decoration: const BoxDecoration(color: AppColors.primary),
@@ -35,7 +37,6 @@ class ProfileScreen extends StatelessWidget {
                 padding: EdgeInsets.all(context.responsivePadding),
                 child: Column(
                   children: [
-                    // Top row with title and edit button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -61,10 +62,8 @@ class ProfileScreen extends StatelessWidget {
 
                     SizedBox(height: context.responsiveMargin * 4.5),
 
-                    // User profile information
                     Row(
                       children: [
-                        // Profile image
                         Container(
                           width: context.responsiveIconSize * 3,
                           height: context.responsiveIconSize * 3,
@@ -84,29 +83,37 @@ class ProfileScreen extends StatelessWidget {
                             ],
                           ),
                           child: ClipOval(
-                            child: Image.asset(
-                              AppAssets.appIcon,
-                              fit: BoxFit.cover,
-                            ),
+                            child: SharedPrefsHelper.getString(AppConstants.userImageKey)
+                                    ?.isNotEmpty ??
+                                false
+                                ? CustomCachedImage(
+                                    imageUrl:
+                                        SharedPrefsHelper.getString(
+                                            AppConstants.userImageKey) ??
+                                        AppAssets.appIcon,
+                                  )
+                                : Image.asset(
+                                    AppAssets.appIcon,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                         ),
 
                         SizedBox(width: context.responsiveMargin * 2),
 
-                        // User details
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Donye Collins",
+                                SharedPrefsHelper.getString(AppConstants.userNameKey)??"",
                                 style: TextStyles.textViewBold20.copyWith(
                                   color: AppColors.white,
                                 ),
                               ),
                               SizedBox(height: context.responsiveMargin * 0.5),
                               Text(
-                                "iamcollinsdonye@gmail.com",
+                                SharedPrefsHelper.getString(AppConstants.userEmailKey)??"",
                                 style: TextStyles.textViewRegular14.copyWith(
                                   color: AppColors.white.withValues(alpha: 0.9),
                                 ),
@@ -124,7 +131,6 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
 
-          // Main content area with curved top
           Expanded(
             child: Container(
               padding: EdgeInsets.only(
@@ -151,7 +157,6 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Profile menu items
                     Expanded(
                       child: ListView(
                         padding: EdgeInsets.zero,
@@ -216,7 +221,6 @@ class ProfileScreen extends StatelessWidget {
                             iconPath: AppAssets.profilePhone,
                             title: "contact".tr(),
                             onTap: () {
-                              //url launch
                               launchUrl(Uri.parse('tel:01010300353'));
                             },
                           ),

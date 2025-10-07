@@ -1,6 +1,10 @@
+import 'package:baqalty/core/constants/app_constants.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/custom_new_toast.dart';
+import 'package:baqalty/core/utils/shared_prefs_helper.dart';
+import 'package:baqalty/features/auth/data/models/login_request_model.dart';
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
+import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +12,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../data/models/user_registration_model.dart';
 import '../../data/models/address_model.dart';
 import '../../data/models/registration_data_model.dart';
+import '../../data/models/user_profile_response_model.dart';
 import '../../data/services/auth_services.dart';
 
 part 'auth_state.dart';
@@ -404,5 +409,96 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(RegistrationErrorState(message: e.toString()));
     }
+  }
+
+  Future<void> login() async {
+    try {
+      emit(LoginLoadingState());
+      final response = await _authService.login(
+        LoginRequestModel(
+          phone: _phoneController.text.trim(),
+          password: _passwordController.text,
+        ),
+      );
+      if (response.status) {
+        emit(LoginSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+
+        SharedPrefsHelper.setUserToken(response.data!.data.accessToken);
+
+        SharedPrefsHelper.setInt(
+          AppConstants.userIdKey,
+          response.data!.data.user.id,
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userNameKey,
+          response.data!.data.user.name,
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userPhoneKey,
+          response.data!.data.user.phone,
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userImageKey,
+          response.data!.data.user.avatar ?? '',
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userEmailKey,
+          response.data!.data.user.email,
+        );
+        SharedPrefsHelper.setLoginState(true);
+        NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+      } else {
+        emit(LoginErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(LoginErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      emit(LogoutLoadingState());
+      final response = await _authService.logout();
+      if (response.status) {
+        emit(LogoutSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+        SharedPrefsHelper.clearAuthData();
+        SharedPrefsHelper.clearUserToken();
+        NavigationManager.navigateToAndFinish(const LoginScreen());
+      } else {
+        emit(LogoutErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(LogoutErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> getUser() async {
+    try {
+      emit(GetUserLoadingState());
+      final response = await _authService.getUser();
+      if (response.status) {
+        final userData = response.data!.data;
+        _populateUserControllers(userData);
+        emit(GetUserSuccessState(user: userData));
+      } else {
+        emit(GetUserErrorState(message: response.message!));
+      }
+    } catch (e) {
+      emit(GetUserErrorState(message: e.toString()));
+    }
+  }
+
+  void _populateUserControllers(UserProfileDataModel user) {
+    _nameController.text = user.name;
+    _phoneController.text = user.phone;
+    _emailController.text = user.email;
   }
 }

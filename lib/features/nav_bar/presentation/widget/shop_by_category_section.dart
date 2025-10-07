@@ -2,7 +2,6 @@ import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'category_card.dart';
@@ -54,9 +53,9 @@ class ShopByCategorySection extends StatelessWidget {
         GestureDetector(
           onTap: onViewAllTap,
           child: Icon(
-            Iconsax.arrow_right_3,
+            Icons.chevron_right,
             color: AppColors.textSecondary,
-            size: 20,
+            size: 28,
           ),
         ),
       ],

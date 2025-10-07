@@ -25,48 +25,52 @@ class CustomErrorWidget extends StatelessWidget {
     return Container(
       color: AppColors.scaffoldBackground,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: context.responsiveIconSize,
-              height: context.responsiveIconSize,
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon ?? Icons.error_outline,
-                size: 40,
-                color: AppColors.error,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: ResponsiveUtils.getResponsiveTextStyle(
-                context,
-                fontSize: context.isMobile ? 14 : 16,
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 24),
-            if (showRetryButton && onRetry != null)
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.responsivePadding * 6,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.responsivePadding * 2,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: context.responsiveIconSize,
+                height: context.responsiveIconSize,
+                decoration: BoxDecoration(
+                  color: AppColors.error.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
                 ),
-                child: PrimaryButton(
-                  onPressed: onRetry,
-                  text: retryText ?? 'retry'.tr(),
-                  icon: Icons.refresh,
+                child: Icon(
+                  icon ?? Icons.error_outline,
+                  size: 40,
+                  color: AppColors.error,
                 ),
               ),
-          ],
+              const SizedBox(height: 16),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: ResponsiveUtils.getResponsiveTextStyle(
+                  context,
+                  fontSize: context.isMobile ? 14 : 16,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 24),
+              if (showRetryButton && onRetry != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    onPressed: onRetry,
+                    text: retryText ?? 'retry'.tr(),
+                    icon: Icons.refresh,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -94,6 +98,7 @@ class CompactErrorWidget extends StatelessWidget {
           padding: EdgeInsets.all(context.responsivePadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon ?? Icons.error_outline,
@@ -114,10 +119,8 @@ class CompactErrorWidget extends StatelessWidget {
               ),
               if (onRetry != null) ...[
                 const SizedBox(height: 12),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.responsivePadding * 6,
-                  ),
+                SizedBox(
+                  width: double.infinity,
                   child: PrimaryButton(
                     onPressed: onRetry,
                     text: 'retry'.tr(),

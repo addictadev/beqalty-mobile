@@ -391,11 +391,13 @@
   "password_strength": "قوة كلمة المرور",
   "weak": "ضعيف",
   "medium": "متوسط",
-  "strong": "قوي"
-
-
-  
-
-
-
+  "strong": "قوي",
+  "take_photo": "التقاط صورة",
+  "take_photo_desc": "التقاط صورة جديدة بالكاميرا",
+  "choose_from_gallery": "اختيار من المعرض",
+  "choose_from_gallery_desc": "اختيار صورة موجودة من المعرض",
+  "profile_updated_successfully": "تم تحديث الملف الشخصي بنجاح!",
+  "image_selected_successfully": "تم اختيار الصورة بنجاح!",
+  "failed_to_pick_image": "فشل في اختيار الصورة",
+  "retry": "إعادة المحاولة"
 }
