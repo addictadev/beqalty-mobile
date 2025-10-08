@@ -4,6 +4,10 @@ import '../models/registration_data_model.dart';
 import '../models/login_request_model.dart';
 import '../models/login_response_model.dart';
 import '../models/user_profile_response_model.dart';
+import '../models/forgot_password_request_model.dart';
+import '../models/forgot_password_response_model.dart';
+import '../models/verify_forgot_password_otp_response_model.dart';
+import '../models/reset_password_request_model.dart';
 
 abstract class AuthService {
   Future<ApiResponse<RegisterResponseModel>> register(
@@ -16,4 +20,18 @@ abstract class AuthService {
 
   Future<ApiResponse<dynamic>> logout();
   Future<ApiResponse<UserProfileResponseModel>> getUser();
+  Future<ApiResponse<LoginResponseModel>> verifyRegisterOtp(
+    String phone,
+    otpCode,
+  );
+
+  Future<ApiResponse<ForgotPasswordResponseModel>> forgotPassword(
+    ForgotPasswordRequestModel request,
+  );
+
+  Future<ApiResponse<VerifyForgotPasswordOtpResponseModel>>
+  verifyForgotPasswordOtp(String phone, String otpCode);
+
+  Future<ApiResponse<dynamic>> resetPassword(ResetPasswordRequestModel request);
+  
 }

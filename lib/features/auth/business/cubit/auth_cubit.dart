@@ -1,9 +1,15 @@
+import 'dart:developer';
+
 import 'package:baqalty/core/constants/app_constants.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/custom_new_toast.dart';
 import 'package:baqalty/core/utils/shared_prefs_helper.dart';
+import 'package:baqalty/features/auth/data/models/forgot_password_request_model.dart';
 import 'package:baqalty/features/auth/data/models/login_request_model.dart';
+import 'package:baqalty/features/auth/data/models/reset_password_request_model.dart';
+import 'package:baqalty/features/auth/presentation/view/create_new_password_screen.dart';
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
+import 'package:baqalty/features/auth/presentation/view/otp_verification_screen.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -14,148 +20,133 @@ import '../../data/models/address_model.dart';
 import '../../data/models/registration_data_model.dart';
 import '../../data/models/user_profile_response_model.dart';
 import '../../data/services/auth_services.dart';
+import '../controllers/auth_controllers.dart';
+import '../managers/password_strength_manager.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthService _authService;
-  final GlobalKey<FormState> _userFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _addressFormKey = GlobalKey<FormState>();
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _apartmentController = TextEditingController();
-  final TextEditingController _buildingNoController = TextEditingController();
-  final TextEditingController _markerController = TextEditingController();
-  final TextEditingController _extraDetailsController = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _floorController = TextEditingController();
-  final TextEditingController _streetController = TextEditingController();
+  final AuthControllers _controllers = AuthControllers();
+  final PasswordStrengthManager _passwordStrengthManager =
+      PasswordStrengthManager();
 
   AuthCubit(this._authService) : super(AuthInitial());
 
   @override
   Future<void> close() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    _locationController.dispose();
-    _cityController.dispose();
-    _apartmentController.dispose();
-    _buildingNoController.dispose();
-    _markerController.dispose();
-    _extraDetailsController.dispose();
-    _titleController.dispose();
-    _floorController.dispose();
-    _streetController.dispose();
+    _controllers.dispose();
     return super.close();
   }
 
-  TextEditingController get nameController => _nameController;
-  TextEditingController get phoneController => _phoneController;
-  TextEditingController get emailController => _emailController;
-  TextEditingController get passwordController => _passwordController;
+  // Controller getters
+  TextEditingController get nameController => _controllers.nameController;
+  TextEditingController get phoneController => _controllers.phoneController;
+  TextEditingController get emailController => _controllers.emailController;
+  TextEditingController get passwordController =>
+      _controllers.passwordController;
   TextEditingController get confirmPasswordController =>
-      _confirmPasswordController;
+      _controllers.confirmPasswordController;
 
   // Register controllers (aliases for compatibility)
-  TextEditingController get registerPasswordController => _passwordController;
+  TextEditingController get registerPasswordController =>
+      _controllers.passwordController;
   TextEditingController get registerConfirmPasswordController =>
-      _confirmPasswordController;
-  TextEditingController get locationController => _locationController;
-  TextEditingController get cityController => _cityController;
-  TextEditingController get apartmentController => _apartmentController;
-  TextEditingController get buildingNoController => _buildingNoController;
-  TextEditingController get markerController => _markerController;
-  TextEditingController get extraDetailsController => _extraDetailsController;
-  TextEditingController get titleController => _titleController;
-  TextEditingController get floorController => _floorController;
-  TextEditingController get streetController => _streetController;
+      _controllers.confirmPasswordController;
+  TextEditingController get locationController =>
+      _controllers.locationController;
+  TextEditingController get cityController => _controllers.cityController;
+  TextEditingController get apartmentController =>
+      _controllers.apartmentController;
+  TextEditingController get buildingNoController =>
+      _controllers.buildingNoController;
+  TextEditingController get markerController => _controllers.markerController;
+  TextEditingController get extraDetailsController =>
+      _controllers.extraDetailsController;
+  TextEditingController get titleController => _controllers.titleController;
+  TextEditingController get floorController => _controllers.floorController;
+  TextEditingController get streetController => _controllers.streetController;
 
-  GlobalKey<FormState> get userFormKey => _userFormKey;
-  GlobalKey<FormState> get addressFormKey => _addressFormKey;
+  // Password reset controllers
+  TextEditingController get resetPasswordController =>
+      _controllers.resetPasswordController;
+  TextEditingController get resetConfirmPasswordController =>
+      _controllers.resetConfirmPasswordController;
+
+  // Form key getters
+  GlobalKey<FormState> get userFormKey => _controllers.userFormKey;
+  GlobalKey<FormState> get addressFormKey => _controllers.addressFormKey;
+  GlobalKey<FormState> get resetPasswordFormKey =>
+      _controllers.resetPasswordFormKey;
 
   // Password strength getters
-  bool get isRegisterPasswordValid => _isRegisterPasswordValid;
-  String get registerPasswordStrength => _registerPasswordStrength;
-  Color get registerPasswordStrengthColor => _registerPasswordStrengthColor;
-  bool get isRegisterConfirmPasswordValid => _isRegisterConfirmPasswordValid;
+  bool get isRegisterPasswordValid => _passwordStrengthManager.isPasswordValid;
+  String get registerPasswordStrength =>
+      _passwordStrengthManager.passwordStrength;
+  Color get registerPasswordStrengthColor =>
+      _passwordStrengthManager.passwordStrengthColor;
+  bool get isRegisterConfirmPasswordValid =>
+      _passwordStrengthManager.isConfirmPasswordValid;
+
+  // Password reset strength getters
+  bool get isResetPasswordValid => _passwordStrengthManager.isPasswordValid;
+  String get resetPasswordStrength => _passwordStrengthManager.passwordStrength;
+  Color get resetPasswordStrengthColor =>
+      _passwordStrengthManager.passwordStrengthColor;
+  bool get isResetConfirmPasswordValid =>
+      _passwordStrengthManager.isConfirmPasswordValid;
 
   bool validateUserForm() {
-    return _userFormKey.currentState?.validate() ?? false;
+    return _controllers.userFormKey.currentState?.validate() ?? false;
   }
 
   bool validateAddressForm() {
-    return _addressFormKey.currentState?.validate() ?? false;
+    return _controllers.addressFormKey.currentState?.validate() ?? false;
+  }
+
+  bool validateResetPasswordForm() {
+    return _controllers.resetPasswordFormKey.currentState?.validate() ?? false;
   }
 
   bool hasAddressData() {
-    return _locationController.text.isNotEmpty ||
-        _cityController.text.isNotEmpty ||
-        _streetController.text.isNotEmpty ||
-        _buildingNoController.text.isNotEmpty ||
-        _floorController.text.isNotEmpty ||
-        _apartmentController.text.isNotEmpty ||
-        _titleController.text.isNotEmpty ||
-        _markerController.text.isNotEmpty ||
-        _extraDetailsController.text.isNotEmpty;
+    return !_controllers.isAddressDataEmpty;
   }
 
   bool hasUserData() {
-    return _nameController.text.isNotEmpty ||
-        _phoneController.text.isNotEmpty ||
-        _emailController.text.isNotEmpty ||
-        _passwordController.text.isNotEmpty ||
-        _confirmPasswordController.text.isNotEmpty;
+    return !_controllers.isUserDataEmpty;
+  }
+
+  bool hasPasswordResetData() {
+    return !_controllers.isPasswordResetDataEmpty;
   }
 
   void calculateRegisterPasswordStrength(String password) {
-    bool isValid = password.isNotEmpty && password.length >= 6;
-
-    int strength = 0;
-    if (password.length >= 8) strength++;
-    if (password.contains(RegExp(r'[A-Z]'))) strength++;
-    if (password.contains(RegExp(r'[a-z]'))) strength++;
-    if (password.contains(RegExp(r'[0-9]'))) strength++;
-    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) strength++;
-
-    _isRegisterPasswordValid = isValid;
-
-    if (password.isEmpty) {
-      _registerPasswordStrength = '';
-      _registerPasswordStrengthColor = Colors.grey;
-    } else if (strength <= 2) {
-      _registerPasswordStrength = 'weak'.tr();
-      _registerPasswordStrengthColor = Colors.red;
-    } else if (strength <= 3) {
-      _registerPasswordStrength = 'medium'.tr();
-      _registerPasswordStrengthColor = Colors.orange;
-    } else {
-      _registerPasswordStrength = 'strong'.tr();
-      _registerPasswordStrengthColor = Colors.green;
-    }
-
+    _passwordStrengthManager.updatePasswordStrength(password);
     emit(AuthPasswordStrengthUpdated());
   }
 
   void validateRegisterPasswordMatching() {
     final confirmPassword = registerConfirmPasswordController.text;
     final password = registerPasswordController.text;
+    _passwordStrengthManager.validatePasswordMatching(
+      password,
+      confirmPassword,
+    );
+    emit(AuthPasswordStrengthUpdated());
+  }
 
-    _isRegisterConfirmPasswordValid =
-        confirmPassword.isNotEmpty &&
-        password.isNotEmpty &&
-        confirmPassword == password;
+  void calculateResetPasswordStrength(String password) {
+    _passwordStrengthManager.updatePasswordStrength(password);
+    emit(AuthPasswordStrengthUpdated());
+  }
 
+  void validateResetPasswordMatching() {
+    final confirmPassword = resetConfirmPasswordController.text;
+    final password = resetPasswordController.text;
+    _passwordStrengthManager.validatePasswordMatching(
+      password,
+      confirmPassword,
+    );
     emit(AuthPasswordStrengthUpdated());
   }
 
@@ -192,11 +183,11 @@ class AuthCubit extends Cubit<AuthState> {
     if (state is RegistrationStepState) {
       final currentState = state as RegistrationStepState;
       final userData = UserRegistrationModel(
-        name: _nameController.text,
-        phone: _phoneController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-        confirmPassword: _confirmPasswordController.text,
+        name: _controllers.nameController.text,
+        phone: _controllers.phoneController.text,
+        email: _controllers.emailController.text,
+        password: _controllers.passwordController.text,
+        confirmPassword: _controllers.confirmPasswordController.text,
       );
 
       emit(
@@ -217,7 +208,7 @@ class AuthCubit extends Cubit<AuthState> {
       double lng = _lng;
 
       if (lat == 0.0 && lng == 0.0) {
-        final locationParts = _locationController.text.split(',');
+        final locationParts = _controllers.locationController.text.split(',');
         if (locationParts.length == 2) {
           lat = double.tryParse(locationParts[0].trim()) ?? 0.0;
           lng = double.tryParse(locationParts[1].trim()) ?? 0.0;
@@ -227,14 +218,14 @@ class AuthCubit extends Cubit<AuthState> {
       final addressData = AddressModel(
         lat: lat,
         lng: lng,
-        city: _cityController.text,
-        apartment: _apartmentController.text,
-        buildingNo: _buildingNoController.text,
-        marker: _markerController.text,
-        extraDetails: _extraDetailsController.text,
-        title: _titleController.text,
-        floor: _floorController.text,
-        street: _streetController.text,
+        city: _controllers.cityController.text,
+        apartment: _controllers.apartmentController.text,
+        buildingNo: _controllers.buildingNoController.text,
+        marker: _controllers.markerController.text,
+        extraDetails: _controllers.extraDetailsController.text,
+        title: _controllers.titleController.text,
+        floor: _controllers.floorController.text,
+        street: _controllers.streetController.text,
       );
 
       emit(
@@ -350,11 +341,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   double _lat = 0.0;
   double _lng = 0.0;
-
-  bool _isRegisterPasswordValid = false;
-  String _registerPasswordStrength = '';
-  Color _registerPasswordStrengthColor = Colors.grey;
-  bool _isRegisterConfirmPasswordValid = false;
+  String? _resetToken;
 
   void _saveAllDataToState() {
     updateUserDataFromControllers();
@@ -375,23 +362,23 @@ class AuthCubit extends Cubit<AuthState> {
       } else {
         registerRequest = RegistrationDataModel(
           userData: UserRegistrationModel(
-            name: _nameController.text.trim(),
-            phone: _phoneController.text.trim(),
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-            confirmPassword: _confirmPasswordController.text,
+            name: _controllers.nameController.text.trim(),
+            phone: _controllers.phoneController.text.trim(),
+            email: _controllers.emailController.text.trim(),
+            password: _controllers.passwordController.text,
+            confirmPassword: _controllers.confirmPasswordController.text,
           ),
           addressData: AddressModel(
-            apartment: _apartmentController.text,
-            buildingNo: _buildingNoController.text,
-            city: _cityController.text,
+            apartment: _controllers.apartmentController.text,
+            buildingNo: _controllers.buildingNoController.text,
+            city: _controllers.cityController.text,
             lat: _lat,
             lng: _lng,
-            street: _streetController.text,
-            marker: _markerController.text,
-            extraDetails: _extraDetailsController.text,
-            title: _titleController.text,
-            floor: _floorController.text,
+            street: _controllers.streetController.text,
+            marker: _controllers.markerController.text,
+            extraDetails: _controllers.extraDetailsController.text,
+            title: _controllers.titleController.text,
+            floor: _controllers.floorController.text,
           ),
         );
       }
@@ -400,8 +387,15 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (response.status) {
         emit(RegistrationSuccessState());
-        ToastHelper.showSuccessToast(response.message!);
-        NavigationManager.navigateTo(const LoginScreen());
+        ToastHelper.showSuccessToast(
+          "${response.message!} ${response.data!.data.otp}",
+        );
+        NavigationManager.navigateTo(
+          OtpVerificationScreen(
+            fromRegister: 'register',
+            phone: _controllers.phoneController.text.trim(),
+          ),
+        );
       } else {
         emit(RegistrationErrorState(message: response.message!));
         ToastHelper.showErrorToast(response.message!);
@@ -411,13 +405,161 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> verifyRegisterOtp(String otpCode, phone) async {
+    try {
+      emit(VerifyRegisterOtpLoadingState());
+      final response = await _authService.verifyRegisterOtp(
+        phone.trim(),
+        otpCode.trim(),
+      );
+      if (response.status) {
+        emit(VerifyRegisterOtpSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+        SharedPrefsHelper.setUserToken(response.data!.data.accessToken);
+
+        SharedPrefsHelper.setInt(
+          AppConstants.userIdKey,
+          response.data!.data.user.id,
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userNameKey,
+          response.data!.data.user.name,
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userPhoneKey,
+          response.data!.data.user.phone,
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userImageKey,
+          response.data!.data.user.avatar ?? '',
+        );
+
+        SharedPrefsHelper.setString(
+          AppConstants.userEmailKey,
+          response.data!.data.user.email,
+        );
+        SharedPrefsHelper.setLoginState(true);
+        NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+      } else {
+        emit(VerifyRegisterOtpErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(VerifyRegisterOtpErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> forgotPassword({String? phone}) async {
+    try {
+      emit(ForgotPasswordLoadingState());
+
+      final phoneToUse = phone ?? _controllers.phoneController.text.trim();
+
+      if (phoneToUse.isEmpty) {
+        emit(ForgotPasswordErrorState(message: "Phone number is required"));
+        ToastHelper.showErrorToast("Phone number is required");
+        return;
+      }
+
+      final response = await _authService.forgotPassword(
+        ForgotPasswordRequestModel(phone: phoneToUse),
+      );
+
+      if (response.status) {
+        emit(ForgotPasswordSuccessState());
+        ToastHelper.showSuccessToast(
+          "${response.message!} ${response.data!.data.otp}",
+        );
+        // Only navigate if we're not already on OTP screen (for resend functionality)
+        if (phone == null) {
+          NavigationManager.navigateTo(
+            OtpVerificationScreen(phone: phoneToUse),
+          );
+        }
+      } else {
+        emit(ForgotPasswordErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(ForgotPasswordErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> verifyForgotPasswordOtp(String otpCode, String phone) async {
+    try {
+      emit(VerifyRegisterOtpLoadingState());
+      final response = await _authService.verifyForgotPasswordOtp(
+        phone.trim(),
+        otpCode.trim(),
+      );
+      if (response.status) {
+        emit(VerifyRegisterOtpSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+
+        _resetToken = response.data!.data.resetToken;
+        log('Reset token stored: ${_resetToken?.toString()}');
+        SharedPrefsHelper.setUserToken(response.data!.data.resetToken);
+        NavigationManager.navigateTo(CreateNewPasswordScreen(phone: phone));
+      } else {
+        emit(VerifyRegisterOtpErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(VerifyRegisterOtpErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> resetPassword({String? phone}) async {
+    try {
+      emit(ResetPasswordLoadingState());
+
+      var token = await SharedPrefsHelper.getUserToken();
+
+      final phoneToUse = phone ?? _controllers.phoneController.text.trim();
+      if (phoneToUse.isEmpty) {
+        emit(ResetPasswordErrorState(message: "phone_required".tr()));
+        ToastHelper.showErrorToast("phone_required".tr());
+        return;
+      }
+
+      final request = ResetPasswordRequestModel(
+        phone: phoneToUse,
+        token: token!,
+        password: _controllers.resetPasswordController.text.trim(),
+        passwordConfirmation: _controllers.resetConfirmPasswordController.text
+            .trim(),
+      );
+
+      final response = await _authService.resetPassword(request);
+
+      if (response.status) {
+        emit(ResetPasswordSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+
+        _controllers.clearPasswordResetData();
+        _resetToken = null;
+
+        NavigationManager.navigateToAndFinish(const LoginScreen());
+      } else {
+        emit(ResetPasswordErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(ResetPasswordErrorState(message: e.toString()));
+      ToastHelper.showErrorToast(e.toString());
+    }
+  }
+
   Future<void> login() async {
     try {
       emit(LoginLoadingState());
       final response = await _authService.login(
         LoginRequestModel(
-          phone: _phoneController.text.trim(),
-          password: _passwordController.text,
+          phone: _controllers.phoneController.text.trim(),
+          password: _controllers.passwordController.text,
         ),
       );
       if (response.status) {
@@ -497,8 +639,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void _populateUserControllers(UserProfileDataModel user) {
-    _nameController.text = user.name;
-    _phoneController.text = user.phone;
-    _emailController.text = user.email;
+    _controllers.nameController.text = user.name;
+    _controllers.phoneController.text = user.phone;
+    _controllers.emailController.text = user.email;
   }
 }

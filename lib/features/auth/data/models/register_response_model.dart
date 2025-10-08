@@ -38,17 +38,18 @@ class RegisterResponseModel {
 
 class RegisterResponseDataModel {
   final UserResponseModel user;
-
-  RegisterResponseDataModel({required this.user});
+  final int otp;
+  RegisterResponseDataModel({required this.user, required this.otp});
 
   factory RegisterResponseDataModel.fromJson(Map<String, dynamic> json) {
     return RegisterResponseDataModel(
       user: UserResponseModel.fromJson(json['user'] as Map<String, dynamic>),
+      otp: json['otp'] as int,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'user': user.toJson()};
+    return {'user': user.toJson(), 'otp': otp};
   }
 }
 
