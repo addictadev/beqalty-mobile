@@ -12,8 +12,11 @@ class EndPoints {
   // Auth Endpoints
   static const String register = "auth/register";
   static const String login = "auth/login";
-  static const String verifyOtp = "auth/verfiy-otp";
+  static const String verifyRegisterOtp = "auth/verify-register-otp";
+  static const String verifyOtp = "auth/verify-password-otp";
   static const String resendOtp = "auth/resend-otp";
+  static const String forgotPassword = "auth/forgot-password";
+  static const String resetPassword = "auth/reset-password";
   static const String completeProfile = "auth/complete-profile";
   static const String updateImage = "auth/update-image";
   static const String logout = "auth/logout";

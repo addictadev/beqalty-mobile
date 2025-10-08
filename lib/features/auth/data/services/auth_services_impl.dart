@@ -7,6 +7,10 @@ import 'package:baqalty/features/auth/data/models/login_response_model.dart';
 import 'package:baqalty/features/auth/data/models/register_response_model.dart';
 import 'package:baqalty/features/auth/data/models/registration_data_model.dart';
 import 'package:baqalty/features/auth/data/models/user_profile_response_model.dart';
+import 'package:baqalty/features/auth/data/models/forgot_password_request_model.dart';
+import 'package:baqalty/features/auth/data/models/forgot_password_response_model.dart';
+import 'package:baqalty/features/auth/data/models/verify_forgot_password_otp_response_model.dart';
+import 'package:baqalty/features/auth/data/models/reset_password_request_model.dart';
 import 'package:baqalty/features/auth/data/services/auth_services.dart';
 
 class AuthServicesImpl implements AuthService {
@@ -103,6 +107,91 @@ class AuthServicesImpl implements AuthService {
         status: false,
         message: e.toString(),
       );
+    }
+  }
+
+  @override
+  Future<ApiResponse<LoginResponseModel>> verifyRegisterOtp(
+    String phone,
+    otpCode,
+  ) async {
+    try {
+      final response = await DioHelper.post<LoginResponseModel>(
+        EndPoints.verifyRegisterOtp,
+        data: {'phone': phone, 'otp': otpCode},
+        requiresAuth: false,
+        fromJson: (json) =>
+            LoginResponseModel.fromJson(json as Map<String, dynamic>),
+      );
+      return response;
+    } catch (e) {
+      log('❌ auth services verifyRegisterOtp failed: $e');
+      return ApiResponse<LoginResponseModel>(
+        status: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<ApiResponse<ForgotPasswordResponseModel>> forgotPassword(
+    ForgotPasswordRequestModel request,
+  ) async {
+    try {
+      final response = await DioHelper.post<ForgotPasswordResponseModel>(
+        EndPoints.forgotPassword,
+        data: request.toFormData(),
+        requiresAuth: false,
+        fromJson: (json) =>
+            ForgotPasswordResponseModel.fromJson(json as Map<String, dynamic>),
+      );
+      return response;
+    } catch (e) {
+      log('❌ auth services forgotPassword failed: $e');
+      return ApiResponse<ForgotPasswordResponseModel>(
+        status: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<ApiResponse<VerifyForgotPasswordOtpResponseModel>>
+  verifyForgotPasswordOtp(String phone, String otpCode) async {
+    try {
+      final response =
+          await DioHelper.post<VerifyForgotPasswordOtpResponseModel>(
+            EndPoints.verifyOtp,
+            data: {'phone': phone, 'otp': otpCode},
+            requiresAuth: false,
+            fromJson: (json) => VerifyForgotPasswordOtpResponseModel.fromJson(
+              json as Map<String, dynamic>,
+            ),
+          );
+      return response;
+    } catch (e) {
+      log('❌ auth services verifyForgotPasswordOtp failed: $e');
+      return ApiResponse<VerifyForgotPasswordOtpResponseModel>(
+        status: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> resetPassword(
+    ResetPasswordRequestModel request,
+  ) async {
+    try {
+      final response = await DioHelper.post<dynamic>(
+        EndPoints.resetPassword,
+        data: request.toFormData(),
+        requiresAuth: false,
+      );
+      return response;
+    } catch (e) {
+      log('❌ auth services resetPassword failed: $e');
+      return ApiResponse<dynamic>(status: false, message: e.toString());
     }
   }
 }
