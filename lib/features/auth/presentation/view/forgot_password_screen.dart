@@ -1,35 +1,39 @@
-import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/font_family_utils.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:baqalty/features/auth/business/cubit/auth_cubit.dart';
+import 'package:baqalty/features/auth/data/services/auth_services_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import '../widgets/auth_background_widget.dart';
-import 'otp_verification_screen.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthCubit(AuthServicesImpl()),
+      child: const ForgotPasswordScreenBody(),
+    );
+  }
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final TextEditingController _emailController = TextEditingController(
-    text: "abdallah@addicta.com",
-  );
+class ForgotPasswordScreenBody extends StatefulWidget {
+  const ForgotPasswordScreenBody({super.key});
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
-  }
+  State<ForgotPasswordScreenBody> createState() =>
+      _ForgotPasswordScreenBodyState();
+}
 
+class _ForgotPasswordScreenBodyState extends State<ForgotPasswordScreenBody> {
   @override
   Widget build(BuildContext context) {
     return AuthBackgroundWidget(
@@ -112,20 +116,48 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildEmailField() {
-    return CustomTextFormField(
-      label: "email".tr(),
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.done,
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        final cubit = context.read<AuthCubit>();
+        return CustomTextFormField(
+          label: "phone_number".tr(),
+          keyboardType: TextInputType.phone,
+          textInputAction: TextInputAction.done,
+          controller: cubit.phoneController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "phone_required".tr();
+            }
+            String cleanPhone = value.replaceAll(RegExp(r'[^\d]'), '');
+
+            if (cleanPhone.length != 11 || !cleanPhone.startsWith('0')) {
+              return "invalid_phone_format".tr();
+            }
+
+            String prefix = cleanPhone.substring(0, 3);
+            if (prefix.startsWith('01') ||
+                (prefix.startsWith('0') && !prefix.startsWith('01'))) {
+              return null;
+            }
+
+            return "invalid_phone_format".tr();
+          },
+        );
+      },
     );
   }
 
   Widget _buildSendCodeButton() {
-    return PrimaryButton(
-      text: "send_code".tr(),
-      onPressed: () {
-        // Navigate to OTP verification screen
-        NavigationManager.navigateTo(OtpVerificationScreen());
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        final cubit = context.read<AuthCubit>();
+        return PrimaryButton(
+          text: "send_code".tr(),
+          onPressed: () {
+            cubit.forgotPassword();
+          },
+          isLoading: cubit.state is ForgotPasswordLoadingState,
+        );
       },
     );
   }

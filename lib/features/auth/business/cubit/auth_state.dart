@@ -85,3 +85,33 @@ final class GetUserErrorState extends AuthState {
 
   const GetUserErrorState({required this.message});
 }
+
+final class VerifyRegisterOtpLoadingState extends AuthState {}
+
+final class VerifyRegisterOtpSuccessState extends AuthState {}
+
+final class VerifyRegisterOtpErrorState extends AuthState {
+  final String message;
+
+  const VerifyRegisterOtpErrorState({required this.message});
+}
+
+final class ForgotPasswordLoadingState extends AuthState {}
+
+final class ForgotPasswordSuccessState extends AuthState {}
+
+final class ForgotPasswordErrorState extends AuthState {
+  final String message;
+
+  const ForgotPasswordErrorState({required this.message});
+}
+
+final class ResetPasswordLoadingState extends AuthState {}
+
+final class ResetPasswordSuccessState extends AuthState {}
+
+final class ResetPasswordErrorState extends AuthState {
+  final String message;
+
+  const ResetPasswordErrorState({required this.message});
+}
