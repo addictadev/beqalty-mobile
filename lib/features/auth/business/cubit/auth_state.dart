@@ -125,3 +125,4 @@ final class UpdateProfileErrorState extends AuthState {
 
   const UpdateProfileErrorState({required this.message});
 }
+

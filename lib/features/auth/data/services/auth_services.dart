@@ -7,6 +7,7 @@ import '../models/login_request_model.dart';
 import '../models/login_response_model.dart';
 import '../models/user_profile_response_model.dart';
 import '../models/profile_update_response_model.dart';
+
 import '../models/forgot_password_request_model.dart';
 import '../models/forgot_password_response_model.dart';
 import '../models/verify_forgot_password_otp_response_model.dart';
@@ -43,4 +44,5 @@ abstract class AuthService {
     String email,
     String phone,
   );
+
 }

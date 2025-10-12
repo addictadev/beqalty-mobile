@@ -9,6 +9,7 @@ import 'package:baqalty/features/auth/data/models/register_response_model.dart';
 import 'package:baqalty/features/auth/data/models/registration_data_model.dart';
 import 'package:baqalty/features/auth/data/models/user_profile_response_model.dart';
 import 'package:baqalty/features/auth/data/models/profile_update_response_model.dart';
+
 import 'package:baqalty/features/auth/data/models/forgot_password_request_model.dart';
 import 'package:baqalty/features/auth/data/models/forgot_password_response_model.dart';
 import 'package:baqalty/features/auth/data/models/verify_forgot_password_otp_response_model.dart';
@@ -244,4 +245,5 @@ class AuthServicesImpl implements AuthService {
       );
     }
   }
+
 }
