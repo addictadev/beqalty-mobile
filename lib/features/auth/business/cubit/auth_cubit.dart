@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:baqalty/core/constants/app_constants.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
@@ -642,5 +643,28 @@ class AuthCubit extends Cubit<AuthState> {
     _controllers.nameController.text = user.name;
     _controllers.phoneController.text = user.phone;
     _controllers.emailController.text = user.email;
+  }
+
+  Future<void> updateProfile(File? selectedImage) async {
+    try {
+      emit(UpdateProfileLoadingState());
+      final response = await _authService.updateProfile(
+        selectedImage, // ✅ Pass nullable image directly
+        _controllers.nameController.text.trim(),
+        _controllers.emailController.text.trim(),
+        _controllers.phoneController.text.trim(),
+      );
+      if (response.status) {
+        emit(UpdateProfileSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+        NavigationManager.pop();
+      } else {
+        emit(UpdateProfileErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(UpdateProfileErrorState(message: e.toString()));
+      ToastHelper.showErrorToast(e.toString());
+    }
   }
 }

@@ -115,3 +115,13 @@ final class ResetPasswordErrorState extends AuthState {
 
   const ResetPasswordErrorState({required this.message});
 }
+
+final class UpdateProfileLoadingState extends AuthState {}
+
+final class UpdateProfileSuccessState extends AuthState {}
+
+final class UpdateProfileErrorState extends AuthState {
+  final String message;
+
+  const UpdateProfileErrorState({required this.message});
+}

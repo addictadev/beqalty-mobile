@@ -22,6 +22,7 @@ class EndPoints {
   static const String logout = "auth/logout";
   static const String deleteAccount = "auth/delete-account";
   static const String getUser = "auth/user";
+  static const String updateProfile = "profile";
 
   // Home Endpoints
   static const String banner = "banner";

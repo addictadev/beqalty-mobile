@@ -399,5 +399,8 @@
   "profile_updated_successfully": "تم تحديث الملف الشخصي بنجاح!",
   "image_selected_successfully": "تم اختيار الصورة بنجاح!",
   "failed_to_pick_image": "فشل في اختيار الصورة",
-  "retry": "إعادة المحاولة"
+  "retry": "إعادة المحاولة",
+  "save_with_image": "حفظ مع الصورة",
+  "save_changes": "حفظ التغييرات",
+  "profile_image_optional": "الصورة الشخصية اختيارية"
 }

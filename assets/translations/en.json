@@ -399,5 +399,8 @@
   "profile_updated_successfully": "Profile updated successfully!",
   "image_selected_successfully": "Image selected successfully!",
   "failed_to_pick_image": "Failed to pick image",
-  "retry": "Retry"
+  "retry": "Retry",
+  "save_with_image": "Save with Image",
+  "save_changes": "Save Changes",
+  "profile_image_optional": "Profile image is optional"
 }

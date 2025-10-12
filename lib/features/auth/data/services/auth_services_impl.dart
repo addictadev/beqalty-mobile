@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:baqalty/core/network/dio/dio_helper.dart';
 import 'package:baqalty/core/network/end%20points/end_points.dart';
@@ -7,11 +8,13 @@ import 'package:baqalty/features/auth/data/models/login_response_model.dart';
 import 'package:baqalty/features/auth/data/models/register_response_model.dart';
 import 'package:baqalty/features/auth/data/models/registration_data_model.dart';
 import 'package:baqalty/features/auth/data/models/user_profile_response_model.dart';
+import 'package:baqalty/features/auth/data/models/profile_update_response_model.dart';
 import 'package:baqalty/features/auth/data/models/forgot_password_request_model.dart';
 import 'package:baqalty/features/auth/data/models/forgot_password_response_model.dart';
 import 'package:baqalty/features/auth/data/models/verify_forgot_password_otp_response_model.dart';
 import 'package:baqalty/features/auth/data/models/reset_password_request_model.dart';
 import 'package:baqalty/features/auth/data/services/auth_services.dart';
+import 'package:dio/dio.dart';
 
 class AuthServicesImpl implements AuthService {
   @override
@@ -192,6 +195,53 @@ class AuthServicesImpl implements AuthService {
     } catch (e) {
       log('❌ auth services resetPassword failed: $e');
       return ApiResponse<dynamic>(status: false, message: e.toString());
+    }
+  }
+
+  @override
+  Future<ApiResponse<ProfileUpdateResponseModel>> updateProfile(
+    File? image,
+    String name,
+    String email,
+    String phone,
+  ) async {
+    try {
+      final FormData formData = FormData.fromMap({
+        'name': name,
+        'email': email,
+        'phone': phone,
+      });
+
+      if (image != null && image.path.isNotEmpty) {
+        final imageFile = File(image.path);
+        if (await imageFile.exists()) {
+          formData.files.add(
+            MapEntry(
+              'image',
+              await MultipartFile.fromFile(
+                image.path,
+                filename: 'profile_image.jpg',
+              ),
+            ),
+          );
+        }
+      }
+
+      final response = await DioHelper.post<ProfileUpdateResponseModel>(
+        EndPoints.updateProfile,
+        data: formData,
+        requiresAuth: true,
+        fromJson: (json) =>
+            ProfileUpdateResponseModel.fromJson(json as Map<String, dynamic>),
+      );
+
+      return response;
+    } catch (e) {
+      log('❌ auth services updateProfile failed: $e');
+      return ApiResponse<ProfileUpdateResponseModel>(
+        status: false,
+        message: e.toString(),
+      );
     }
   }
 }

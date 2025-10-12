@@ -1,70 +1,63 @@
-/// Model for user profile response data
-/// Contains the complete response structure from the GET /api/v1/auth/user endpoint
-class UserProfileResponseModel {
+/// Model for profile update response data
+/// Contains the complete response structure from the POST /api/v1/profile endpoint
+class ProfileUpdateResponseModel {
   final bool success;
   final String message;
   final int code;
-  final UserProfileDataModel data;
-  final String timestamp;
+  final ProfileUpdateDataModel data;
 
-  UserProfileResponseModel({
+  ProfileUpdateResponseModel({
     required this.success,
     required this.message,
     required this.code,
     required this.data,
-    required this.timestamp,
   });
 
-  /// Creates a UserProfileResponseModel from JSON data
-  factory UserProfileResponseModel.fromJson(Map<String, dynamic> json) {
-    return UserProfileResponseModel(
+  /// Creates a ProfileUpdateResponseModel from JSON data
+  factory ProfileUpdateResponseModel.fromJson(Map<String, dynamic> json) {
+    return ProfileUpdateResponseModel(
       success: json['success'] as bool,
       message: json['message'] as String,
       code: json['code'] as int,
-      data: UserProfileDataModel.fromJson(json['data'] as Map<String, dynamic>),
-      timestamp: json['timestamp'] as String,
+      data: ProfileUpdateDataModel.fromJson(
+        json['data'] as Map<String, dynamic>,
+      ),
     );
   }
 
-  /// Converts UserProfileResponseModel to JSON data
+  /// Converts ProfileUpdateResponseModel to JSON data
   Map<String, dynamic> toJson() {
     return {
       'success': success,
       'message': message,
       'code': code,
       'data': data.toJson(),
-      'timestamp': timestamp,
     };
   }
 
   @override
   String toString() {
-    return 'UserProfileResponseModel(success: $success, message: $message, code: $code, data: $data, timestamp: $timestamp)';
+    return 'ProfileUpdateResponseModel(success: $success, message: $message, code: $code, data: $data)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is UserProfileResponseModel &&
+    return other is ProfileUpdateResponseModel &&
         other.success == success &&
         other.message == message &&
         other.code == code &&
-        other.data == data &&
-        other.timestamp == timestamp;
+        other.data == data;
   }
 
   @override
   int get hashCode =>
-      success.hashCode ^
-      message.hashCode ^
-      code.hashCode ^
-      data.hashCode ^
-      timestamp.hashCode;
+      success.hashCode ^ message.hashCode ^ code.hashCode ^ data.hashCode;
 }
 
-/// Model for the user profile data section
-/// Contains user information returned from the profile endpoint
-class UserProfileDataModel {
+/// Model for the profile update data section
+/// Contains updated user information returned from the profile update endpoint
+class ProfileUpdateDataModel {
   final int id;
   final String name;
   final String email;
@@ -75,7 +68,7 @@ class UserProfileDataModel {
   final String updatedAt;
   final List<dynamic> addresses; // Array of address objects (can be empty)
 
-  UserProfileDataModel({
+  ProfileUpdateDataModel({
     required this.id,
     required this.name,
     required this.email,
@@ -87,9 +80,9 @@ class UserProfileDataModel {
     required this.addresses,
   });
 
-  /// Creates a UserProfileDataModel from JSON data
-  factory UserProfileDataModel.fromJson(Map<String, dynamic> json) {
-    return UserProfileDataModel(
+  /// Creates a ProfileUpdateDataModel from JSON data
+  factory ProfileUpdateDataModel.fromJson(Map<String, dynamic> json) {
+    return ProfileUpdateDataModel(
       id: json['id'] as int,
       name: json['name'] as String,
       email: json['email'] as String,
@@ -102,7 +95,7 @@ class UserProfileDataModel {
     );
   }
 
-  /// Converts UserProfileDataModel to JSON data
+  /// Converts ProfileUpdateDataModel to JSON data
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -117,15 +110,40 @@ class UserProfileDataModel {
     };
   }
 
+  /// Creates a copy of this model with updated fields
+  ProfileUpdateDataModel copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? phone,
+    String? avatar,
+    String? emailVerifiedAt,
+    String? createdAt,
+    String? updatedAt,
+    List<dynamic>? addresses,
+  }) {
+    return ProfileUpdateDataModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      avatar: avatar ?? this.avatar,
+      emailVerifiedAt: emailVerifiedAt ?? this.emailVerifiedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      addresses: addresses ?? this.addresses,
+    );
+  }
+
   @override
   String toString() {
-    return 'UserProfileDataModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar, emailVerifiedAt: $emailVerifiedAt, createdAt: $createdAt, updatedAt: $updatedAt, addresses: $addresses)';
+    return 'ProfileUpdateDataModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar, emailVerifiedAt: $emailVerifiedAt, createdAt: $createdAt, updatedAt: $updatedAt, addresses: $addresses)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is UserProfileDataModel &&
+    return other is ProfileUpdateDataModel &&
         other.id == id &&
         other.name == name &&
         other.email == email &&
