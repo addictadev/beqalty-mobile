@@ -14,6 +14,8 @@ import 'package:baqalty/features/auth/data/models/forgot_password_request_model.
 import 'package:baqalty/features/auth/data/models/forgot_password_response_model.dart';
 import 'package:baqalty/features/auth/data/models/verify_forgot_password_otp_response_model.dart';
 import 'package:baqalty/features/auth/data/models/reset_password_request_model.dart';
+import 'package:baqalty/features/auth/data/models/change_password_request_model.dart';
+import 'package:baqalty/features/auth/data/models/change_password_response_model.dart';
 import 'package:baqalty/features/auth/data/services/auth_services.dart';
 import 'package:dio/dio.dart';
 
@@ -246,4 +248,39 @@ class AuthServicesImpl implements AuthService {
     }
   }
 
+  @override
+  Future<ApiResponse<ChangePasswordResponseModel>> changePassword(
+    ChangePasswordRequestModel request,
+  ) async {
+    try {
+      final response = await DioHelper.post<ChangePasswordResponseModel>(
+        EndPoints.changePassword,
+        data: request.toJson(),
+        requiresAuth: true,
+        fromJson: (json) =>
+            ChangePasswordResponseModel.fromJson(json as Map<String, dynamic>),
+      );
+      return response;
+    } catch (e) {
+      log('❌ auth services changePassword failed: $e');
+      return ApiResponse<ChangePasswordResponseModel>(
+        status: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> deleteAccount() async {
+    try {
+      final response = await DioHelper.delete(
+        EndPoints.deleteAccount,
+        requiresAuth: true,
+      );
+      return response;
+    } catch (e) {
+      log('❌ auth services deleteAccount failed: $e');
+      return ApiResponse<dynamic>(status: false, message: e.toString());
+    }
+  }
 }

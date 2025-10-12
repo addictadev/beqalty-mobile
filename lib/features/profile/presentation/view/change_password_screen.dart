@@ -1,4 +1,6 @@
+import 'package:baqalty/features/auth/data/services/auth_services_impl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
@@ -6,15 +8,29 @@ import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import '../../../auth/business/cubit/auth_cubit.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthCubit(AuthServicesImpl()),
+      child: const ChangePasswordScreenBody(),
+    );
+  }
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+class ChangePasswordScreenBody extends StatefulWidget {
+  const ChangePasswordScreenBody({super.key});
+
+  @override
+  State<ChangePasswordScreenBody> createState() =>
+      _ChangePasswordScreenBodyState();
+}
+
+class _ChangePasswordScreenBodyState extends State<ChangePasswordScreenBody> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _retypePasswordController =
@@ -24,7 +40,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _isOldPasswordValid = false;
   bool _isNewPasswordValid = false;
   bool _isRetypePasswordValid = false;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -36,80 +51,87 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      appBar: CustomAppBar(
-        title: "change_password".tr(),
-        titleColor: AppColors.textPrimary,
-        iconColor: AppColors.textPrimary,
-        backgroundColor: AppColors.white,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(context.responsivePadding),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Content
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: context.responsiveMargin * 2),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is ChangePasswordLoadingState) {
+        } else if (state is ChangePasswordSuccessState) {
+        } else if (state is ChangePasswordErrorState) {}
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        appBar: CustomAppBar(
+          title: "change_password".tr(),
+          titleColor: AppColors.textPrimary,
+          iconColor: AppColors.textPrimary,
+          backgroundColor: AppColors.white,
+          elevation: 0,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(context.responsivePadding),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: context.responsiveMargin * 2),
 
-                        // Old Password Field
-                        _buildPasswordField(
-                          controller: _oldPasswordController,
-                          label: "old_password".tr(),
-                          onChanged: (value) {
-                            setState(() {
-                              _isOldPasswordValid = value.isNotEmpty;
-                            });
-                          },
-                        ),
+                          _buildPasswordField(
+                            controller: _oldPasswordController,
+                            label: "old_password".tr(),
+                            onChanged: (value) {
+                              setState(() {
+                                _isOldPasswordValid = value.isNotEmpty;
+                              });
+                            },
+                          ),
 
-                        SizedBox(height: context.responsiveMargin * 2),
+                          SizedBox(height: context.responsiveMargin * 2),
 
-                        // New Password Field
-                        _buildPasswordField(
-                          controller: _newPasswordController,
-                          label: "new_password".tr(),
-                          onChanged: (value) {
-                            setState(() {
-                              _isNewPasswordValid =
-                                  value.isNotEmpty && value.length >= 8;
-                              _validateRetypePassword();
-                            });
-                          },
-                        ),
+                          _buildPasswordField(
+                            controller: _newPasswordController,
+                            label: "new_password".tr(),
+                            onChanged: (value) {
+                              setState(() {
+                                _isNewPasswordValid =
+                                    value.isNotEmpty && value.length >= 8;
+                                _validateRetypePassword();
+                              });
+                            },
+                          ),
 
-                        SizedBox(height: context.responsiveMargin * 2),
+                          SizedBox(height: context.responsiveMargin * 2),
 
-                        // Retype New Password Field
-                        _buildPasswordField(
-                          controller: _retypePasswordController,
-                          label: "retype_new_password".tr(),
-                          textInputAction: TextInputAction.done,
-                          onChanged: (value) {
-                            setState(() {
-                              _validateRetypePassword();
-                            });
-                          },
-                        ),
+                          _buildPasswordField(
+                            controller: _retypePasswordController,
+                            label: "retype_new_password".tr(),
+                            textInputAction: TextInputAction.done,
+                            onChanged: (value) {
+                              setState(() {
+                                _validateRetypePassword();
+                              });
+                            },
+                          ),
 
-                        SizedBox(height: context.responsiveMargin * 4),
-                      ],
+                          SizedBox(height: context.responsiveMargin * 4),
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                // Save Button
-                _buildSaveButton(),
-              ],
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final isLoading = state is ChangePasswordLoadingState;
+                      return _buildSaveButton(isLoading: isLoading);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -146,14 +168,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton({required bool isLoading}) {
     final isFormValid =
         _isOldPasswordValid && _isNewPasswordValid && _isRetypePasswordValid;
 
     return PrimaryButton(
       text: "save".tr(),
       onPressed: isFormValid ? _handleSavePassword : null,
-      isLoading: _isLoading,
+      isLoading: isLoading,
       color: isFormValid ? AppColors.primary : AppColors.borderLight,
       textStyle: TextStyles.textViewMedium16.copyWith(
         color: isFormValid ? AppColors.white : AppColors.textSecondary,
@@ -175,33 +197,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    // Show success message
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Password changed successfully!',
-            style: TextStyles.textViewMedium14.copyWith(color: AppColors.white),
-          ),
-          backgroundColor: AppColors.success,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-      );
-
-      // Navigate back
-      Navigator.of(context).pop();
-    }
+    context.read<AuthCubit>().changePassword(
+      oldPassword: _oldPasswordController.text.trim(),
+      newPassword: _newPasswordController.text.trim(),
+      newPasswordConfirmation: _retypePasswordController.text.trim(),
+    );
   }
 }

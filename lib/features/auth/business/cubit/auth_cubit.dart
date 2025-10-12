@@ -8,6 +8,7 @@ import 'package:baqalty/core/utils/shared_prefs_helper.dart';
 import 'package:baqalty/features/auth/data/models/forgot_password_request_model.dart';
 import 'package:baqalty/features/auth/data/models/login_request_model.dart';
 import 'package:baqalty/features/auth/data/models/reset_password_request_model.dart';
+import 'package:baqalty/features/auth/data/models/change_password_request_model.dart';
 import 'package:baqalty/features/auth/presentation/view/create_new_password_screen.dart';
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import 'package:baqalty/features/auth/presentation/view/otp_verification_screen.dart';
@@ -649,7 +650,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(UpdateProfileLoadingState());
       final response = await _authService.updateProfile(
-        selectedImage, // ✅ Pass nullable image directly
+        selectedImage,
         _controllers.nameController.text.trim(),
         _controllers.emailController.text.trim(),
         _controllers.phoneController.text.trim(),
@@ -657,6 +658,23 @@ class AuthCubit extends Cubit<AuthState> {
       if (response.status) {
         emit(UpdateProfileSuccessState());
         ToastHelper.showSuccessToast(response.message!);
+        SharedPrefsHelper.setString(
+          AppConstants.userEmailKey,
+          response.data!.data.email,
+        );
+        SharedPrefsHelper.setString(
+          AppConstants.userPhoneKey,
+          response.data!.data.phone,
+        );
+        SharedPrefsHelper.setString(
+          AppConstants.userNameKey,
+          response.data!.data.name,
+        );
+        SharedPrefsHelper.setString(
+          AppConstants.userImageKey,
+          response.data!.data.avatar ?? '',
+        );
+
         NavigationManager.pop();
       } else {
         emit(UpdateProfileErrorState(message: response.message!));
@@ -664,6 +682,53 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } catch (e) {
       emit(UpdateProfileErrorState(message: e.toString()));
+      ToastHelper.showErrorToast(e.toString());
+    }
+  }
+
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
+    try {
+      emit(ChangePasswordLoadingState());
+
+      final request = ChangePasswordRequestModel(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        newPasswordConfirmation: newPasswordConfirmation,
+      );
+
+      final response = await _authService.changePassword(request);
+
+      if (response.status) {
+        emit(ChangePasswordSuccessState(message: response.data!.message));
+        ToastHelper.showSuccessToast(response.data!.message);
+        NavigationManager.pop();
+      } else {
+        emit(ChangePasswordErrorState(message: response.message!));
+        ToastHelper.showErrorToast(response.message!);
+      }
+    } catch (e) {
+      emit(ChangePasswordErrorState(message: e.toString()));
+      ToastHelper.showErrorToast(e.toString());
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      emit(DeleteAccountLoadingState());
+      final response = await _authService.deleteAccount();
+      if (response.status) {
+        emit(DeleteAccountSuccessState());
+        ToastHelper.showSuccessToast(response.message!);
+        SharedPrefsHelper.clearAuthData();
+        SharedPrefsHelper.clearUserToken();
+        NavigationManager.navigateToAndFinish(const LoginScreen());
+      }
+    } catch (e) {
+      emit(DeleteAccountErrorState(message: e.toString()));
       ToastHelper.showErrorToast(e.toString());
     }
   }

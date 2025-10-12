@@ -126,3 +126,26 @@ final class UpdateProfileErrorState extends AuthState {
   const UpdateProfileErrorState({required this.message});
 }
 
+final class ChangePasswordLoadingState extends AuthState {}
+
+final class ChangePasswordSuccessState extends AuthState {
+  final String message;
+
+  const ChangePasswordSuccessState({required this.message});
+}
+
+final class ChangePasswordErrorState extends AuthState {
+  final String message;
+
+  const ChangePasswordErrorState({required this.message});
+}
+
+final class DeleteAccountLoadingState extends AuthState {}
+
+final class DeleteAccountSuccessState extends AuthState {}
+
+final class DeleteAccountErrorState extends AuthState {
+  final String message;
+
+  const DeleteAccountErrorState({required this.message});
+}

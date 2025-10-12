@@ -12,6 +12,8 @@ import '../models/forgot_password_request_model.dart';
 import '../models/forgot_password_response_model.dart';
 import '../models/verify_forgot_password_otp_response_model.dart';
 import '../models/reset_password_request_model.dart';
+import '../models/change_password_request_model.dart';
+import '../models/change_password_response_model.dart';
 
 abstract class AuthService {
   Future<ApiResponse<RegisterResponseModel>> register(
@@ -45,4 +47,8 @@ abstract class AuthService {
     String phone,
   );
 
+  Future<ApiResponse<ChangePasswordResponseModel>> changePassword(
+    ChangePasswordRequestModel request,
+  );
+  Future<ApiResponse<dynamic>> deleteAccount();
 }

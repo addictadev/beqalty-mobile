@@ -2,7 +2,6 @@ import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
 import 'package:baqalty/features/auth/business/cubit/auth_cubit.dart';
 import 'package:baqalty/features/auth/data/services/auth_services_impl.dart';
-import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/change_password_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/notifications_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/privacy_policy_screen.dart';
@@ -85,11 +84,8 @@ class SettingsScreenBody extends StatelessWidget {
                         context,
                       );
                   if (confirmed == true) {
-                    // Handle delete account logic here
-                    debugPrint('Delete Account confirmed');
-                    // Navigate to login screen after account deletion
                     if (context.mounted) {
-                      NavigationManager.navigateToAndFinish(LoginScreen());
+                      context.read<AuthCubit>().deleteAccount();
                     }
                   }
                 },

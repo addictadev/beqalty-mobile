@@ -20,9 +20,10 @@ class EndPoints {
   static const String completeProfile = "auth/complete-profile";
   static const String updateImage = "auth/update-image";
   static const String logout = "auth/logout";
-  static const String deleteAccount = "auth/delete-account";
+  static const String deleteAccount = "account";
   static const String getUser = "auth/user";
   static const String updateProfile = "profile";
+  static const String changePassword = "profile/reset-password";
 
   // Home Endpoints
   static const String banner = "banner";
