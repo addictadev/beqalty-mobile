@@ -28,4 +28,5 @@ class EndPoints {
   // Home Endpoints
   static const String home = "home";
   static const String banner = "banner";
+  static const String categories = "categories/parents";
 }

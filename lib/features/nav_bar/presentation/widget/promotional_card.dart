@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:baqalty/core/images_preview/app_assets.dart';
-import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
@@ -57,9 +55,9 @@ class PromotionalCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // SizedBox(width: context.responsivePadding),
-                  // Spacer(),
-                  _buildCharacterIllustration(),
+                  SizedBox(width: context.responsivePadding * 5),
+                  Spacer(),
+                  // _buildCharacterIllustration(),
                   SizedBox(width: context.responsivePadding),
 
                   Expanded(child: _buildContentSection(context)),
@@ -72,35 +70,34 @@ class PromotionalCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCharacterIllustration() {
-    return CustomSvgImage(
-      assetName: AppAssets.authLoginBackground,
-      width: 80,
-      height: 80,
-    );
-  }
+  // Widget _buildCharacterIllustration() {
+  //   return CustomSvgImage(
+  //     assetName: AppAssets.authLoginBackground,
+  //     width: 80,
+  //     height: 80,
+  //   );
+  // }
 
   Widget _buildContentSection(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Flexible(
-          child: Text(
-            title ?? "free_delivery_title".tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
-              color: AppColors.white,
-              height: 1.2,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-
-        SizedBox(height: context.responsiveMargin),
+        // Flexible(
+        //   child: Text(
+        //     title ?? "free_delivery_title".tr(),
+        //     textAlign: TextAlign.center,
+        //     style: TextStyle(
+        //       fontSize: 18.sp,
+        //       fontWeight: FontWeight.w700,
+        //       color: AppColors.white,
+        //       height: 1.2,
+        //     ),
+        //     maxLines: 2,
+        //     overflow: TextOverflow.ellipsis,
+        //   ),
+        // ),
+        SizedBox(height: context.responsiveMargin * 6),
 
         Flexible(child: _buildPlaceOrderButton()),
       ],

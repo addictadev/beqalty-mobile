@@ -402,5 +402,13 @@
   "retry": "إعادة المحاولة",
   "save_with_image": "حفظ مع الصورة",
   "save_changes": "حفظ التغييرات",
-  "profile_image_optional": "الصورة الشخصية اختيارية"
+  "profile_image_optional": "الصورة الشخصية اختيارية",
+
+  "search_categories": "البحث في الفئات",
+  "no_search_results": "لا توجد نتائج بحث",
+  "no_categories_found": "لم يتم العثور على فئات",
+  "try_different_search_terms": "جرب مصطلحات بحث مختلفة",
+  "categories_will_appear_here": "ستظهر الفئات هنا",
+  "search_tips": "نصائح البحث",
+  "check_spelling_or_try_general_terms": "تحقق من الإملاء أو جرب مصطلحات عامة"
 }
