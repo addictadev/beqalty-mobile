@@ -402,5 +402,13 @@
   "retry": "Retry",
   "save_with_image": "Save with Image",
   "save_changes": "Save Changes",
-  "profile_image_optional": "Profile image is optional"
+  "profile_image_optional": "Profile image is optional",
+
+  "search_categories": "Search Categories",
+  "no_search_results": "No Search Results",
+  "no_categories_found": "No Categories Found",
+  "try_different_search_terms": "Try different search terms",
+  "categories_will_appear_here": "Categories will appear here",
+  "search_tips": "Search Tips",
+  "check_spelling_or_try_general_terms": "Check spelling or try general terms"
 }
