@@ -1,13 +1,19 @@
-import 'package:baqalty/core/images_preview/app_assets.dart' show AppAssets;
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/features/nav_bar/data/models/home_response_model.dart';
+import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'product_card.dart';
 
 class SpecialOffersSection extends StatelessWidget {
   final VoidCallback? onViewAllTap;
-  final VoidCallback? onProductTap;
+  final List<DiscountedProductModel> discountProducts;
 
-  const SpecialOffersSection({super.key, this.onViewAllTap, this.onProductTap});
+  const SpecialOffersSection({
+    super.key,
+    this.onViewAllTap,
+    required this.discountProducts,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,48 +21,28 @@ class SpecialOffersSection extends StatelessWidget {
   }
 
   Widget _buildProductsList(BuildContext context) {
-    final products = [
-      ProductData(
-        name: "Juhayna Yogurt Plain",
-        image: AppAssets.juhaynaCoconutMilk, // Using existing placeholder
-        currentPrice: 12.25,
-        originalPrice: 14.0,
-      ),
-      ProductData(
-        name: "Al Marai Milk",
-        image: AppAssets.alMaraiMilk, // Using existing placeholder
-        currentPrice: 13.50,
-        originalPrice: 15.0,
-      ),
-      ProductData(
-        name: "Chocolate Milk",
-        image: AppAssets.chocolateMilk, // Using existing placeholder
-        currentPrice: 11.75,
-        originalPrice: 13.5,
-      ),
-      ProductData(
-        name: "Juhayna Yogurt",
-        image: AppAssets.alMaraiMilk, // Using existing placeholder
-        currentPrice: 12.00,
-        originalPrice: 14.0,
-      ),
-    ];
-
     return SizedBox(
       height: context.responsiveContainerHeight * 0.55,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: products.length,
+        itemCount: discountProducts.length,
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product = discountProducts[index];
           return ProductCard(
             productName: product.name,
-            productImage: product.image,
-            currentPrice: product.currentPrice,
-            originalPrice: product.originalPrice,
+            productImage: product.baseImage,
+            currentPrice: double.parse(product.finalPrice),
+            originalPrice: double.parse(product.basePrice),
             onTap: () {
-              onProductTap?.call();
+              NavigationManager.navigateTo(
+                ProductDetailsScreen(
+                  productName: product.name,
+                  productImage: product.baseImage,
+                  productPrice: double.parse(product.finalPrice),
+                  productCategory: "default_category",
+                ),
+              );
             },
           );
         },

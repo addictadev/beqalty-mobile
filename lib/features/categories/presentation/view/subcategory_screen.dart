@@ -14,8 +14,9 @@ import 'subcategory_products_screen.dart';
 
 class SubcategoryScreen extends StatefulWidget {
   final String categoryName;
+  final String categoryId;
 
-  const SubcategoryScreen({super.key, required this.categoryName});
+  const SubcategoryScreen({super.key, required this.categoryName, required this.categoryId});
 
   @override
   State<SubcategoryScreen> createState() => _SubcategoryScreenState();
@@ -87,7 +88,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen>
         child: SafeArea(
           child: Column(
             children: [
-              CustomAppBar(title: widget.categoryName.tr()),
+              CustomAppBar(title: widget.categoryName),
               SizedBox(height: context.responsiveMargin),
 
               // Search Bar

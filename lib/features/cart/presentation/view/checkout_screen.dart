@@ -10,7 +10,7 @@ import 'package:baqalty/features/cart/presentation/widget/cart_summary.dart';
 import 'package:baqalty/features/cart/presentation/widget/card_selector.dart';
 import 'package:baqalty/features/cart/presentation/widget/payment_method_selector.dart';
 import 'package:baqalty/features/cart/presentation/view/payment_success_screen.dart';
-import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';

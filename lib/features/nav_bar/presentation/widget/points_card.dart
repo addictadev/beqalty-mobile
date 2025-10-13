@@ -7,7 +7,7 @@ import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class PointsCard extends StatelessWidget {
-  final int points;
+  final dynamic points;
   final VoidCallback? onRedeemTap;
 
   const PointsCard({super.key, required this.points, this.onRedeemTap});
@@ -35,11 +35,9 @@ class PointsCard extends StatelessWidget {
           ),
           Row(
             children: [
-              // Points Icon and Display
               Expanded(
                 child: Row(
                   children: [
-                    // Points Icon
                     Container(
                       width: context.responsiveIconSize * 1.2,
                       height: context.responsiveIconSize * 1.2,
@@ -57,7 +55,6 @@ class PointsCard extends StatelessWidget {
 
                     SizedBox(width: context.responsiveMargin),
 
-                    // Points Text
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +64,7 @@ class PointsCard extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                "1,250",
+                                "$points",
                                 style: TextStyles.textViewBold20.copyWith(
                                   color: AppColors.textPrimary,
                                 ),
@@ -90,8 +87,7 @@ class PointsCard extends StatelessWidget {
 
               SizedBox(width: context.responsiveMargin),
 
-              // Redeem Button
-              _buildRedeemButton(context),
+              _buildRedeemButton(context, points),
             ],
           ),
         ],
@@ -99,16 +95,16 @@ class PointsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildRedeemButton(BuildContext context) {
+  Widget _buildRedeemButton(BuildContext context, var points) {
     return GestureDetector(
-      onTap: onRedeemTap,
+      onTap: points > 0 ? onRedeemTap : null,
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: context.responsivePadding * 1.2,
           vertical: context.responsiveMargin * 1.5,
         ),
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: points > 0 ? AppColors.primary : AppColors.textSecondary,
           borderRadius: BorderRadius.circular(
             context.responsiveBorderRadius * 1.5,
           ),
