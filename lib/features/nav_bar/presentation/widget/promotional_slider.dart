@@ -1,8 +1,10 @@
+import 'package:baqalty/features/nav_bar/data/models/home_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'promotional_card.dart';
 
 class PromotionalSlider extends StatefulWidget {
-  final List<PromotionalCardData> cards;
+  final List<AdvertisementModel> cards;
   final double height;
   final VoidCallback? onCardTap;
 
@@ -41,18 +43,15 @@ class _PromotionalSliderState extends State<PromotionalSlider> {
           child: PageView.builder(
             physics: const BouncingScrollPhysics(),
             controller: _pageController,
-            onPageChanged: (index) {
-              // Page changed callback if needed in the future
-            },
+            onPageChanged: (index) {},
             itemCount: widget.cards.length,
             itemBuilder: (context, index) {
               final card = widget.cards[index];
               return PromotionalCard(
-                title: card.title,
-                buttonText: card.buttonText,
-                onPlaceOrderTap: () {
-                  widget.onCardTap?.call();
-                },
+                title: card.advType,
+                buttonText: "place_order".tr(),
+                onPlaceOrderTap: widget.onCardTap,
+                image: card.baseImage,
               );
             },
           ),

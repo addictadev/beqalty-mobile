@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -59,21 +60,11 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(
                   context.responsiveBorderRadius,
                 ),
-                child: Image.asset(
+                child: CustomCachedImage(
                   width: context.responsiveWidth * 0.3,
                   height: context.responsiveWidth * 0.3,
-                  productImage,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: AppColors.scaffoldBackground,
-                      child: Icon(
-                        Icons.image_not_supported,
-                        color: AppColors.textSecondary,
-                        size: context.responsiveIconSize,
-                      ),
-                    );
-                  },
+                imageUrl: productImage,
                 ),
               ),
             ),

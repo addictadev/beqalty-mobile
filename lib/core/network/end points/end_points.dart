@@ -26,5 +26,6 @@ class EndPoints {
   static const String changePassword = "profile/reset-password";
 
   // Home Endpoints
+  static const String home = "home";
   static const String banner = "banner";
 }

@@ -1,7 +1,8 @@
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
-import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart';
+import 'package:baqalty/core/widgets/custom_error_widget.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/home_cubit/home_cubit.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:baqalty/features/categories/presentation/view/subcategory_screen.dart';
@@ -17,121 +18,136 @@ import '../widget/shop_by_category_section.dart';
 import '../widget/points_card.dart';
 import '../widget/special_offers_section.dart';
 import '../widget/saved_carts_section.dart';
-import 'package:baqalty/core/widgets/shimmer_widget.dart';
+import 'home_shimmer_view.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => HomeCubit(),
+      child: const HomeViewBody(),
+    );
+  }
 }
 
-class _HomeViewState extends State<HomeView> {
-  bool _isLoading = true;
+class HomeViewBody extends StatefulWidget {
+  const HomeViewBody({super.key});
 
+  @override
+  State<HomeViewBody> createState() => _HomeViewBodyState();
+}
+
+class _HomeViewBodyState extends State<HomeViewBody> {
   @override
   void initState() {
     super.initState();
-    _simulateLoading();
-  }
-
-  void _simulateLoading() {
-    // Simulate API call or data loading
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
-  }
-
-  void _refreshData() {
-    setState(() {
-      _isLoading = true;
-    });
-    _simulateLoading();
+    context.read<HomeCubit>().getHomeData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final promotionalCards = [
-      PromotionalCardData(
-        title: "free_delivery_title".tr(),
-        buttonText: "place_order".tr(),
-      ),
-      PromotionalCardData(
-        title: "50% Off on First Order!",
-        buttonText: "Shop Now",
-      ),
-      PromotionalCardData(
-        title: "Special Weekend Deals!",
-        buttonText: "Explore",
-      ),
-    ];
-
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
-      body: Column(
-        children: [
-          HomeHeader(
-            onSearchTap: () {
-              context.read<NavBarCubit>().changeTab(2);
-            },
-            onNotificationTap: () {},
-          ),
+      body: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state is HomeLoading || state is HomeInitial) {
+            return const HomeShimmerView();
+          }
 
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  _refreshData();
-                  // Wait for loading to complete
-                  await Future.delayed(const Duration(seconds: 2));
-                },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 2.h),
+          if (state is HomeError) {
+            return Column(
+              children: [
+                HomeHeader(
+                  onSearchTap: () {
+                    context.read<NavBarCubit>().changeTab(2);
+                  },
+                  onNotificationTap: () {},
+                ),
+                Expanded(
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 16.w,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: CustomErrorWidget(
+                          message: state.message,
+                          onRetry: () =>
+                              context.read<HomeCubit>().getHomeData(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
 
-                      // Show shimmer for slider and content
-                      if (_isLoading)
-                        _buildSliderAndContentShimmer(context)
-                      else
-                        Column(
+          if (state is HomeLoaded) {
+            final homeData = state.homeData;
+
+            return Column(
+              children: [
+                HomeHeader(
+                  onSearchTap: () {
+                    context.read<NavBarCubit>().changeTab(2);
+                  },
+                  onNotificationTap: () {},
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<HomeCubit>().getHomeData();
+                      },
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
                           children: [
+                            SizedBox(height: 2.h),
+
                             PromotionalSlider(
-                              cards: promotionalCards,
+                              cards: homeData.data.advertisements,
                               height: context.responsiveContainerHeight * 0.6,
                               onCardTap: () {},
                             ),
                             SizedBox(height: 1.h),
-                            _buildContent(context),
+                            _buildContent(context, homeData),
                           ],
                         ),
-                    ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ],
+              ],
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, homeData) {
     return Column(
       children: [
         ShopByCategorySection(
+          categories: homeData.data.categories,
           onViewAllTap: () {
             context.read<NavBarCubit>().changeTab(3);
           },
-          onCategoryTap: (categoryName) {
+          onCategoryTap: (category) {
             NavigationManager.navigateTo(
-              SubcategoryScreen(categoryName: 'default_category'),
+              SubcategoryScreen(
+                categoryName: category.catName,
+                categoryId: category.catId.toString(),
+              ),
             );
           },
         ),
@@ -139,7 +155,7 @@ class _HomeViewState extends State<HomeView> {
         SizedBox(height: 2.h),
 
         PointsCard(
-          points: 1250,
+          points: homeData.data.points ?? 0,
           onRedeemTap: () {
             NavigationManager.navigateTo(RewardsScreen());
           },
@@ -159,17 +175,9 @@ class _HomeViewState extends State<HomeView> {
         SizedBox(height: 2.h),
 
         SpecialOffersSection(
+          discountProducts: homeData.data.discountedProducts,
           onViewAllTap: () {},
-          onProductTap: () {
-            NavigationManager.navigateTo(
-              ProductDetailsScreen(
-                productName: 'product_name',
-                productImage: 'product_image',
-                productPrice: 100,
-                productCategory: 'product_category',
-              ),
-            );
-          },
+        
         ),
         SizedBox(height: 2.h),
         SavedCartsSection(
@@ -182,294 +190,6 @@ class _HomeViewState extends State<HomeView> {
         ),
 
         SizedBox(height: 2.h),
-      ],
-    );
-  }
-
-  Widget _buildSliderAndContentShimmer(BuildContext context) {
-    return Column(
-      children: [
-        // Promotional Slider Shimmer
-        _buildPromotionalSliderShimmer(context),
-
-        SizedBox(height: 3.h),
-
-        // Categories Section Shimmer
-        _buildCategoriesShimmer(context),
-
-        SizedBox(height: 3.h),
-
-        // Points Card Shimmer
-        _buildPointsCardShimmer(context),
-
-        SizedBox(height: 2.h),
-
-        // Special Offers Title Shimmer
-        _buildSpecialOffersTitleShimmer(context),
-
-        SizedBox(height: 2.h),
-
-        // Special Offers Section Shimmer
-        _buildSpecialOffersShimmer(context),
-
-        SizedBox(height: 2.h),
-
-        // Saved Carts Section Shimmer
-        _buildSavedCartsShimmer(context),
-
-        SizedBox(height: 2.h),
-      ],
-    );
-  }
-
-  Widget _buildPromotionalSliderShimmer(BuildContext context) {
-    return ShimmerWidget(
-      isLoading: true,
-      child: ShimmerBox(
-        width: double.infinity,
-        height: context.responsiveContainerHeight * 0.6,
-        borderRadius: context.responsiveBorderRadius * 2,
-      ),
-    );
-  }
-
-  Widget _buildCategoriesShimmer(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section Title
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ShimmerWidget(
-              isLoading: true,
-              child: ShimmerText(width: 30.w, height: 2.h),
-            ),
-            ShimmerWidget(
-              isLoading: true,
-              child: ShimmerText(width: 15.w, height: 1.5.h),
-            ),
-          ],
-        ),
-
-        // Categories Grid
-        GridView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 3.h),
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.2,
-          ),
-          itemCount: 6,
-          itemBuilder: (context, index) {
-            return ShimmerWidget(
-              isLoading: true,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.shadowLight,
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ShimmerCircle(size: 8.w),
-                    SizedBox(height: 1.h),
-                    ShimmerText(width: 20.w, height: 1.h),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPointsCardShimmer(BuildContext context) {
-    return ShimmerWidget(
-      isLoading: true,
-      child: Container(
-        width: double.infinity,
-        height: 12.h,
-        decoration: BoxDecoration(
-          color: AppColors.shadowLight,
-          borderRadius: BorderRadius.circular(
-            context.responsiveBorderRadius * 2,
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(context.responsivePadding),
-          child: Row(
-            children: [
-              ShimmerCircle(size: 8.w),
-              SizedBox(width: context.responsiveMargin),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ShimmerText(
-                      width: 25.w,
-                      height: 1.5.h,
-                      margin: EdgeInsets.only(bottom: 0.5.h),
-                    ),
-                    ShimmerText(width: 15.w, height: 1.h),
-                  ],
-                ),
-              ),
-              ShimmerBox(width: 20.w, height: 4.h, borderRadius: 2.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSpecialOffersTitleShimmer(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: ShimmerWidget(
-        isLoading: true,
-        child: ShimmerText(width: 25.w, height: 2.h),
-      ),
-    );
-  }
-
-  Widget _buildSpecialOffersShimmer(BuildContext context) {
-    return SizedBox(
-      height: 25.h,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return Container(
-            width: 40.w,
-            margin: EdgeInsets.only(right: context.responsiveMargin),
-            child: ShimmerWidget(
-              isLoading: true,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.shadowLight,
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Product Image
-                    ShimmerBox(
-                      width: double.infinity,
-                      height: 15.h,
-                      borderRadius: context.responsiveBorderRadius,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(context.responsivePadding * 0.8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ShimmerText(
-                            width: double.infinity,
-                            height: 1.5.h,
-                            margin: EdgeInsets.only(bottom: 0.5.h),
-                          ),
-                          ShimmerText(
-                            width: 60.w,
-                            height: 1.h,
-                            margin: EdgeInsets.only(bottom: 0.5.h),
-                          ),
-                          ShimmerText(width: 20.w, height: 1.5.h),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSavedCartsShimmer(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section Title
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ShimmerWidget(
-              isLoading: true,
-              child: ShimmerText(width: 30.w, height: 2.h),
-            ),
-            ShimmerWidget(
-              isLoading: true,
-              child: ShimmerText(width: 15.w, height: 1.5.h),
-            ),
-          ],
-        ),
-
-        SizedBox(height: 2.h),
-
-        // Saved Carts List
-        SizedBox(
-          height: 12.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Container(
-                width: 60.w,
-                margin: EdgeInsets.only(right: context.responsiveMargin),
-                child: ShimmerWidget(
-                  isLoading: true,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.shadowLight,
-                      borderRadius: BorderRadius.circular(
-                        context.responsiveBorderRadius,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(context.responsivePadding),
-                      child: Row(
-                        children: [
-                          ShimmerBox(
-                            width: 8.w,
-                            height: 8.w,
-                            borderRadius: 4.w,
-                          ),
-                          SizedBox(width: context.responsiveMargin),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ShimmerText(
-                                  width: double.infinity,
-                                  height: 1.5.h,
-                                  margin: EdgeInsets.only(bottom: 0.5.h),
-                                ),
-                                ShimmerText(width: 40.w, height: 1.h),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
       ],
     );
   }

@@ -1,6 +1,6 @@
 import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
 import 'package:baqalty/core/widgets/exit_popup.dart';
-import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/nav_bar/business/models/nav_item_model.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart'
     show HomeView;

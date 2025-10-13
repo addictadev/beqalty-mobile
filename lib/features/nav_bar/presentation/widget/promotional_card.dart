@@ -3,6 +3,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 
@@ -10,12 +11,14 @@ class PromotionalCard extends StatelessWidget {
   final VoidCallback? onPlaceOrderTap;
   final String? title;
   final String? buttonText;
+  final String? image;
 
   const PromotionalCard({
     super.key,
     this.onPlaceOrderTap,
     this.title,
     this.buttonText,
+    this.image,
   });
 
   @override
@@ -27,23 +30,42 @@ class PromotionalCard extends StatelessWidget {
         maxHeight: context.responsiveContainerHeight * 1.8,
       ),
       margin: EdgeInsets.only(right: context.responsivePadding / 2),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(AppAssets.promotionalCard),
-          fit: BoxFit.cover,
-        ),
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(context.responsivePadding),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            _buildCharacterIllustration(),
+            CustomCachedImage(
+              imageUrl: image ?? '',
+              width: double.infinity,
+              height: context.responsiveContainerHeight * 1.8,
+              fit: BoxFit.cover,
+            ),
 
-            SizedBox(width: context.responsivePadding),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.black.withOpacity(0.3), Colors.transparent],
+                ),
+              ),
+            ),
 
-            Expanded(child: _buildContentSection(context)),
+            Padding(
+              padding: EdgeInsets.all(context.responsivePadding),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // SizedBox(width: context.responsivePadding),
+                  // Spacer(),
+                  _buildCharacterIllustration(),
+                  SizedBox(width: context.responsivePadding),
+
+                  Expanded(child: _buildContentSection(context)),
+                ],
+              ),
+            ),
           ],
         ),
       ),

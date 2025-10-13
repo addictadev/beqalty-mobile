@@ -255,7 +255,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         child: InkWell(
           borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
           onTap: () {
-            NavigationManager.navigateTo(SubcategoryScreen(categoryName: name));
+            NavigationManager.navigateTo(SubcategoryScreen(categoryName: name, categoryId: '0'));
           },
           child: Padding(
             padding: EdgeInsets.all(context.responsivePadding),

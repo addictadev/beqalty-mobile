@@ -1,4 +1,5 @@
-import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'dart:math' as math;
+import 'package:baqalty/features/nav_bar/data/models/home_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -8,18 +9,24 @@ import 'category_card.dart';
 
 class ShopByCategorySection extends StatelessWidget {
   final VoidCallback? onViewAllTap;
-  final Function(String)? onCategoryTap;
+  final Function(CategoryModel)? onCategoryTap;
+  final List<CategoryModel> categories;
 
   const ShopByCategorySection({
     super.key,
     this.onViewAllTap,
     this.onCategoryTap,
+    required this.categories,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.responsivePadding,
+        vertical: context.responsivePadding * 0.5,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
@@ -63,44 +70,17 @@ class ShopByCategorySection extends StatelessWidget {
   }
 
   Widget _buildCategoryGrid() {
-    final categories = [
-      CategoryData(
-        title: "hot_deals".tr(),
-        icon: AppAssets.hotmealIcon,
-        iconBackgroundColor: const Color(0xFFFFE5E5),
-        iconColor: const Color(0xFFFF4444),
-      ),
-      CategoryData(
-        title: "snacks".tr(),
-        icon: AppAssets.snacksIcon,
-        iconBackgroundColor: const Color(0xFFFFF8E1),
-        iconColor: const Color(0xFFFFB300),
-      ),
-      CategoryData(
-        title: "bread".tr(),
-        icon: AppAssets.breadIcon,
-        iconBackgroundColor: const Color(0xFFFFF3E0),
-        iconColor: const Color(0xFFFF9800),
-      ),
-      CategoryData(
-        title: "fruits".tr(),
-        icon: AppAssets.fruitsIcon,
-        iconBackgroundColor: const Color(0xFFFFF3E0),
-        iconColor: const Color(0xFFFF9800),
-      ),
-      CategoryData(
-        title: "vegetables".tr(),
-        icon: AppAssets.vegetableIcon,
-        iconBackgroundColor: const Color(0xFFE8F5E8),
-        iconColor: const Color(0xFF4CAF50),
-      ),
-      CategoryData(
-        title: "meat".tr(),
-        icon: AppAssets.meatIcon,
-        iconBackgroundColor: const Color(0xFFFFE5E5),
-        iconColor: const Color(0xFFE91E63),
-      ),
-    ];
+    if (categories.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(2.h),
+          child: Text(
+            "no_categories_available".tr(),
+            style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
+          ),
+        ),
+      );
+    }
 
     return GridView.builder(
       shrinkWrap: true,
@@ -108,37 +88,70 @@ class ShopByCategorySection extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1.0,
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
         final category = categories[index];
+        final backgroundColor = _getRandomBackgroundColor(category.catId);
+        final iconColor = _getRandomIconColor(category.catId);
+
         return CategoryCard(
-          title: category.title,
-          icon: category.icon,
-          iconBackgroundColor: category.iconBackgroundColor,
-          iconColor: category.iconColor,
+          title: category.catName,
+          backgroundColor: backgroundColor,
+          iconColor: iconColor,
+          imageUrl: category.catImage,
           onTap: () {
-            onCategoryTap?.call(category.title);
+            onCategoryTap?.call(category);
           },
         );
       },
     );
   }
-}
 
-class CategoryData {
-  final String title;
-  final String icon;
-  final Color iconBackgroundColor;
-  final Color iconColor;
+  Color _getRandomBackgroundColor(int categoryId) {
+    final pastelColors = [
+      const Color(0xFFFFE5E5),
+      const Color(0xFFFFF8E1),
+      const Color(0xFFE8F5E8),
+      const Color(0xFFE3F2FD),
+      const Color(0xFFFFF3E0),
+      const Color(0xFFF3E5F5),
+      const Color(0xFFE0F7FA),
+      const Color(0xFFFCE4EC),
+      const Color(0xFFF1F8E9),
+      const Color(0xFFFFF9C4),
+      const Color(0xFFE1BEE7),
+      const Color(0xFFFFCCBC),
+    ];
 
-  const CategoryData({
-    required this.title,
-    required this.icon,
-    required this.iconBackgroundColor,
-    required this.iconColor,
-  });
+    final random = math.Random(categoryId);
+    return pastelColors[random.nextInt(pastelColors.length)];
+  }
+
+  Color _getRandomIconColor(int categoryId) {
+    final vibrantColors = [
+      const Color(0xFFE91E63),
+      const Color(0xFF9C27B0),
+      const Color(0xFF673AB7),
+      const Color(0xFF3F51B5),
+      const Color(0xFF2196F3),
+      const Color(0xFF03A9F4),
+      const Color(0xFF00BCD4),
+      const Color(0xFF009688),
+      const Color(0xFF4CAF50),
+      const Color(0xFF8BC34A),
+      const Color(0xFFCDDC39),
+      const Color(0xFFFFEB3B),
+      const Color(0xFFFFC107),
+      const Color(0xFFFF9800),
+      const Color(0xFFFF5722),
+      const Color(0xFFF44336),
+    ];
+
+    final random = math.Random(categoryId + 1000);
+    return vibrantColors[random.nextInt(vibrantColors.length)];
+  }
 }

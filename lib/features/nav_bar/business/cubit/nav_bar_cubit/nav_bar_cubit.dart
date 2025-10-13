@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/images_preview/app_assets.dart';
-import '../models/nav_item_model.dart';
+import '../../../../../core/images_preview/app_assets.dart';
+import '../../models/nav_item_model.dart';
 
 part 'nav_bar_state.dart';
 
