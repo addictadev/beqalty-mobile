@@ -5,6 +5,7 @@ import 'package:baqalty/features/auth/data/services/auth_services_impl.dart';
 import 'package:baqalty/features/profile/presentation/view/change_password_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/notifications_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/privacy_policy_screen.dart';
+import 'package:baqalty/features/profile/presentation/view/addresses_screen.dart';
 import 'package:baqalty/core/widgets/confirmation_dialogs.dart';
 import 'package:baqalty/features/profile/presentation/widgets/language_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +73,15 @@ class SettingsScreenBody extends StatelessWidget {
                 title: "language".tr(),
                 onTap: () {
                   _showLanguageSelectionBottomSheet(context);
+                },
+              ),
+
+              _buildSettingsItem(
+                context,
+                title: "my_addresses".tr(),
+                subtitle: "manage_your_addresses".tr(),
+                onTap: () {
+                  NavigationManager.navigateTo(const AddressesScreen());
                 },
               ),
               SizedBox(height: context.responsiveMargin * 2),
