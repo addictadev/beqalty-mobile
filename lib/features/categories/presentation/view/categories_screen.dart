@@ -332,7 +332,7 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
                       context.responsiveBorderRadius,
                     ),
                     child: CustomCachedImage(
-                      imageUrl: category.catImage,
+                      imageUrl: category.catImage!,
                       width: context.responsiveIconSize * 2,
                       height: context.responsiveIconSize * 2,
                       fit: BoxFit.cover,

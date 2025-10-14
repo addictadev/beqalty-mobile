@@ -29,4 +29,7 @@ class EndPoints {
   static const String home = "home";
   static const String banner = "banner";
   static const String categories = "categories/parents";
+  static String subcategories(String parentId) =>
+      "categories/parent/$parentId/sublevels";
+  static const String addresses = "addresses";
 }

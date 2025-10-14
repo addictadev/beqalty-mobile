@@ -15,11 +15,13 @@ import '../../../../core/widgets/saved_item_card.dart';
 class SubcategoryProductsScreen extends StatefulWidget {
   final String subcategoryName;
   final String categoryName;
+  final String subcategoryId;
 
   const SubcategoryProductsScreen({
     super.key,
     required this.subcategoryName,
     required this.categoryName,
+    required this.subcategoryId,
   });
 
   @override
@@ -42,9 +44,8 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
       vsync: this,
     );
 
-    // Create staggered animations for each product item
     _itemAnimationControllers = List.generate(
-      10, // Maximum number of products
+      10,
       (index) => AnimationController(
         duration: const Duration(milliseconds: 500),
         vsync: this,
@@ -58,14 +59,12 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
       ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
 
-    // Start animations with stagger
     _startAnimations();
   }
 
   void _startAnimations() {
     _animationController.forward();
 
-    // Stagger the item animations
     for (int i = 0; i < _itemAnimationControllers.length; i++) {
       Future.delayed(Duration(milliseconds: 60 * i), () {
         if (mounted) {
@@ -94,13 +93,13 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
           child: Column(
             children: [
               CustomAppBar(
-                title: widget.subcategoryName.tr(),
+                title: widget.subcategoryName,
                 onBackPressed: () {
                   NavigationManager.pop();
                 },
               ),
               SizedBox(height: context.responsiveMargin),
-              // Search Bar
+
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: context.responsivePadding,
@@ -113,12 +112,10 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                     Iconsax.search_normal,
                     color: AppColors.textSecondary,
                   ),
-                  onChanged: (value) {
-                    // Search functionality will be implemented
-                  },
+                  onChanged: (value) {},
                 ),
               ),
-              // Products List
+
               Expanded(child: _buildProductsList(context)),
             ],
           ),
@@ -158,7 +155,6 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                       showFavoriteButton: false,
                       showAddToCartButton: false,
                       onTap: () {
-                        // Add tap animation
                         if (index < _itemAnimationControllers.length) {
                           _itemAnimationControllers[index].reverse().then((_) {
                             _itemAnimationControllers[index].forward();
@@ -237,7 +233,6 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
   List<Map<String, dynamic>> _getProductsForSubcategory(
     String subcategoryName,
   ) {
-    // Mock data - in real app, this would come from API
     switch (subcategoryName.toLowerCase()) {
       case 'healthy':
         return [
@@ -245,7 +240,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
             'name': 'organic_nuts_mix'.tr(),
             'category': 'healthy_snacks'.tr(),
             'price': 12.99,
-            'image': AppAssets.juhaynaMilk, // Using placeholder image
+            'image': AppAssets.juhaynaMilk,
           },
           {
             'name': 'dried_fruits'.tr(),

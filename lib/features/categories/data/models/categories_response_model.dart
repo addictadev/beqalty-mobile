@@ -18,13 +18,17 @@ class CategoriesResponseModel {
   /// Creates a CategoriesResponseModel from JSON data
   factory CategoriesResponseModel.fromJson(Map<String, dynamic> json) {
     return CategoriesResponseModel(
-      success: json['success'] as bool,
-      message: json['message'] as String,
-      code: json['code'] as int,
-      data: (json['data'] as List<dynamic>)
-          .map((item) => CategoryModel.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      timestamp: json['timestamp'] as String,
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      code: json['code'] as int? ?? 0,
+      data:
+          (json['data'] as List<dynamic>?)
+              ?.map(
+                (item) => CategoryModel.fromJson(item as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
+      timestamp: json['timestamp'] as String? ?? '',
     );
   }
 
@@ -69,22 +73,22 @@ class CategoriesResponseModel {
 class CategoryModel {
   final int catId;
   final String catName;
-  final String catImage;
+  final String? catImage;
   final String? catDescription;
 
   CategoryModel({
     required this.catId,
     required this.catName,
-    required this.catImage,
-    required this.catDescription,
+    this.catImage,
+    this.catDescription,
   });
 
   /// Creates a CategoryModel from JSON data
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      catId: json['cat_id'] as int,
-      catName: json['cat_name'] as String,
-      catImage: json['cat_image'] as String,
+      catId: json['cat_id'] as int? ?? 0,
+      catName: json['cat_name'] as String? ?? '',
+      catImage: json['cat_image'] as String?,
       catDescription: json['cat_description'] as String?,
     );
   }
@@ -98,6 +102,12 @@ class CategoryModel {
       'cat_description': catDescription,
     };
   }
+
+  /// Gets a placeholder image URL if catImage is null
+  String get displayImage => catImage ?? '';
+
+  /// Checks if the category has an image
+  bool get hasImage => catImage != null && catImage!.isNotEmpty;
 
   @override
   String toString() {

@@ -34,3 +34,36 @@ final class CategoryError extends CategoryState {
   @override
   List<Object> get props => [message];
 }
+
+final class SubCategoryLoading extends CategoryState {}
+
+final class SubCategoryLoaded extends CategoryState {
+  final SubcategoriesResponseModel subcategories;
+  final List<CategoryModel> allSubcategories;
+  final bool hasMore;
+  final int currentPage;
+  final String searchQuery;
+
+  const SubCategoryLoaded({
+    required this.subcategories,
+    required this.allSubcategories,
+    required this.hasMore,
+    required this.currentPage,
+    this.searchQuery = '',
+  });
+
+  @override
+  List<Object> get props => [
+    subcategories,
+    allSubcategories,
+    hasMore,
+    currentPage,
+    searchQuery,
+  ];
+}
+
+final class SubCategoryError extends CategoryState {
+  final String message;
+
+  const SubCategoryError({required this.message});
+}
