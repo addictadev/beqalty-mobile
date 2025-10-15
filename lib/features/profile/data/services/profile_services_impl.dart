@@ -78,44 +78,12 @@ class ProfileServicesImpl implements ProfileServices {
     UpdateAddressRequestModel request,
   ) async {
     try {
-      log(
-        '🔄 ProfileServicesImpl: Making PUT request to update address $addressId',
-      );
-      log('🔄 ProfileServicesImpl: Request data: ${request.toFormData()}');
-
-      final response = await DioHelper.put<AddressModel>(
+      final response = await DioHelper.post<AddressModel>(
         '${EndPoints.addresses}/$addressId',
         requiresAuth: true,
         data: request.toFormData(),
-        fromJson: (json) {
-          log(
-            '📥 ProfileServicesImpl: Raw JSON response for update address: $json',
-          );
-          try {
-            final parsedResponse = AddressModel.fromJson(
-              json as Map<String, dynamic>,
-            );
-            log(
-              '✅ ProfileServicesImpl: Successfully parsed update address response',
-            );
-            return parsedResponse;
-          } catch (parseError) {
-            log(
-              '❌ ProfileServicesImpl: JSON parsing error for update address: $parseError',
-            );
-            log('❌ ProfileServicesImpl: JSON data: $json');
-            rethrow;
-          }
-        },
+        fromJson: (json) => AddressModel.fromJson(json as Map<String, dynamic>),
       );
-
-      log(
-        '📥 ProfileServicesImpl: Update address response status: ${response.status}',
-      );
-      log(
-        '📥 ProfileServicesImpl: Update address response message: ${response.message}',
-      );
-
       return response;
     } catch (e, stackTrace) {
       log('❌ ProfileServicesImpl: Exception occurred in updateAddress: $e');

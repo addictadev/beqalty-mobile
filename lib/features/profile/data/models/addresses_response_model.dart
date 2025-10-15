@@ -1,3 +1,5 @@
+import 'package:localize_and_translate/localize_and_translate.dart';
+
 /// Model for addresses API response data
 /// Contains the complete response structure from the addresses API endpoint
 class AddressesResponseModel {
@@ -156,9 +158,9 @@ class AddressModel {
     final parts = <String>[];
 
     if (addressLine1.isNotEmpty) parts.add(addressLine1);
-    if (buildingNo.isNotEmpty) parts.add('Building $buildingNo');
-    if (floor.isNotEmpty) parts.add('Floor $floor');
-    if (apartment.isNotEmpty) parts.add('Apartment $apartment');
+    if (buildingNo.isNotEmpty) parts.add('${"building".tr()} $buildingNo');
+    if (floor.isNotEmpty) parts.add('${"floor".tr()} $floor');
+    if (apartment.isNotEmpty) parts.add('${"apartment".tr()} $apartment');
     if (city.isNotEmpty) parts.add(city);
     if (marker.isNotEmpty) parts.add('($marker)');
 

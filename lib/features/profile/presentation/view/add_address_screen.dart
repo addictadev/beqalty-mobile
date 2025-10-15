@@ -1,5 +1,6 @@
+import 'package:baqalty/core/utils/custom_new_toast.dart';
 import 'package:baqalty/features/profile/business/cubit/profile_cubit.dart';
-import 'package:baqalty/features/profile/data/models/add_address_request_model.dart';
+import 'package:baqalty/features/profile/data/models/addresses_response_model.dart';
 import 'package:baqalty/features/profile/presentation/view/location_picker_add_addressscreen.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_back_button.dart';
@@ -14,127 +15,89 @@ import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class AddAddressScreen extends StatelessWidget {
-  const AddAddressScreen({super.key});
+  final bool isEdit;
+  final AddressModel? addressToEdit;
+
+  const AddAddressScreen({super.key, this.isEdit = false, this.addressToEdit});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileCubit(),
-      child: const AddAddressScreenBody(),
+      create: (context) {
+        final cubit = ProfileCubit();
+        if (isEdit && addressToEdit != null) {
+          cubit.initializeEditAddressForm(addressToEdit!);
+        } else {
+          cubit.initializeAddressForm();
+        }
+        return cubit;
+      },
+      child: AddAddressScreenBody(isEdit: isEdit, addressToEdit: addressToEdit),
     );
   }
 }
 
-class AddAddressScreenBody extends StatefulWidget {
-  const AddAddressScreenBody({super.key});
+class AddAddressScreenBody extends StatelessWidget {
+  final bool isEdit;
+  final AddressModel? addressToEdit;
 
-  @override
-  State<AddAddressScreenBody> createState() => _AddAddressScreenBodyState();
-}
-
-class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
-  final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _streetController = TextEditingController();
-  final _cityController = TextEditingController();
-  final _floorController = TextEditingController();
-  final _apartmentController = TextEditingController();
-  final _buildingNoController = TextEditingController();
-  final _markerController = TextEditingController();
-  final _extraDetailsController = TextEditingController();
-
-  double _lat = 0.0;
-  double _lng = 0.0;
-  String _selectedAddress = '';
-  final bool _isDefault = false;
-  bool _isLoading = false;
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _streetController.dispose();
-    _cityController.dispose();
-    _floorController.dispose();
-    _apartmentController.dispose();
-    _buildingNoController.dispose();
-    _markerController.dispose();
-    _extraDetailsController.dispose();
-    super.dispose();
-  }
+  const AddAddressScreenBody({
+    super.key,
+    this.isEdit = false,
+    this.addressToEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      appBar: CustomAppBar(
-        title: "add_address".tr(),
-        titleColor: AppColors.textPrimary,
-        iconColor: AppColors.textPrimary,
-        leading: const CustomBackButton(),
-      ),
-      body: BlocListener<ProfileCubit, ProfileState>(
-        listener: (context, state) {
-          if (state is ProfileLoading) {
-            setState(() {
-              _isLoading = true;
-            });
-          } else if (state is ProfileLoaded) {
-            setState(() {
-              _isLoading = false;
-            });
-            // Show success message and navigate back
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("address_added_successfully".tr()),
-                backgroundColor: AppColors.success,
-                duration: const Duration(seconds: 2),
-              ),
-            );
-            Navigator.pop(context, true); // Return true to indicate success
-          } else if (state is ProfileError) {
-            setState(() {
-              _isLoading = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        },
-        child: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(context.responsivePadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header Section
-                  _buildHeaderSection(context),
-
-                  SizedBox(height: context.responsiveMargin * 2),
-
-                  // Address Form
-                  _buildAddressForm(context),
-
-                  SizedBox(height: context.responsiveMargin * 2),
-
-                  // Location Section
-                  _buildLocationSection(context),
-
-                  SizedBox(height: context.responsiveMargin * 3),
-
-                  // Save Button
-                  _buildSaveButton(context),
-
-                  SizedBox(height: context.responsiveMargin * 2),
-                ],
-              ),
-            ),
+    return BlocListener<ProfileCubit, ProfileState>(
+      listener: (context, state) {},
+      child: AbsorbPointer(
+        absorbing: context.read<ProfileCubit>().state is AddAddressLoading,
+        child: Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          appBar: CustomAppBar(
+            title: isEdit ? "edit_address".tr() : "add_address".tr(),
+            titleColor: AppColors.textPrimary,
+            iconColor: AppColors.textPrimary,
+            leading: const CustomBackButton(),
           ),
+          body: BlocBuilder<ProfileCubit, ProfileState>(
+            builder: (context, state) {
+              if (state is AddressFormLoaded) {
+                return _buildForm(context, state);
+              } else {
+                return _buildForm(context, null);
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForm(BuildContext context, AddressFormLoaded? state) {
+    final cubit = context.read<ProfileCubit>();
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(context.responsivePadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeaderSection(context),
+            SizedBox(height: context.responsiveMargin * 2),
+            _buildAddressForm(context, cubit),
+            SizedBox(height: context.responsiveMargin * 2),
+            _buildLocationSection(context, state),
+            SizedBox(height: context.responsiveMargin * 2),
+            // if (isEdit) ...[
+            //   _buildDefaultToggle(context, state),
+            //   SizedBox(height: context.responsiveMargin * 2),
+            // ],
+            SizedBox(height: context.responsiveMargin * 3),
+            _buildSaveButton(context),
+            SizedBox(height: context.responsiveMargin * 2),
+          ],
         ),
       ),
     );
@@ -168,14 +131,16 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "add_new_address".tr(),
+                  isEdit ? "edit_address_details".tr() : "add_new_address".tr(),
                   style: TextStyles.textViewSemiBold16.copyWith(
                     color: AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: context.responsiveMargin * 0.5),
                 Text(
-                  "fill_address_details".tr(),
+                  isEdit
+                      ? "update_address_details".tr()
+                      : "fill_address_details".tr(),
                   style: TextStyles.textViewRegular14.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -188,7 +153,7 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
     );
   }
 
-  Widget _buildAddressForm(BuildContext context) {
+  Widget _buildAddressForm(BuildContext context, ProfileCubit cubit) {
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
@@ -213,9 +178,8 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
           ),
           SizedBox(height: context.responsiveMargin),
 
-          // Title Field
           CustomTextFormField(
-            controller: _titleController,
+            controller: cubit.titleController,
             label: "address_title".tr(),
             hint: "enter_address_title".tr(),
             prefixIcon: Icon(Iconsax.tag),
@@ -229,9 +193,8 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // Street Field
           CustomTextFormField(
-            controller: _streetController,
+            controller: cubit.streetController,
             label: "street".tr(),
             hint: "enter_street_name".tr(),
             prefixIcon: Icon(Iconsax.map),
@@ -245,9 +208,8 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // City Field
           CustomTextFormField(
-            controller: _cityController,
+            controller: cubit.cityController,
             label: "city".tr(),
             hint: "enter_city_name".tr(),
             prefixIcon: Icon(Iconsax.building),
@@ -261,13 +223,11 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // Building Details Row
           Row(
             children: [
-              // Building Number
               Expanded(
                 child: CustomTextFormField(
-                  controller: _buildingNoController,
+                  controller: cubit.buildingNoController,
                   label: "building_no".tr(),
                   hint: "enter_building_no".tr(),
                   prefixIcon: Icon(Iconsax.home),
@@ -281,10 +241,10 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
                 ),
               ),
               SizedBox(width: context.responsiveMargin),
-              // Floor
+
               Expanded(
                 child: CustomTextFormField(
-                  controller: _floorController,
+                  controller: cubit.floorController,
                   label: "floor".tr(),
                   hint: "enter_floor".tr(),
                   prefixIcon: Icon(Iconsax.arrow_up),
@@ -302,9 +262,8 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // Apartment Field
           CustomTextFormField(
-            controller: _apartmentController,
+            controller: cubit.apartmentController,
             label: "apartment".tr(),
             hint: "enter_apartment".tr(),
             prefixIcon: Icon(Iconsax.home_2),
@@ -318,9 +277,8 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // Marker Field
           CustomTextFormField(
-            controller: _markerController,
+            controller: cubit.markerController,
             label: "marker".tr(),
             hint: "enter_landmark".tr(),
             prefixIcon: Icon(Iconsax.location),
@@ -334,15 +292,13 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // Extra Details Field
           CustomTextFormField(
-            controller: _extraDetailsController,
+            controller: cubit.extraDetailsController,
             label: "extra_details".tr(),
             hint: "enter_extra_details".tr(),
             prefixIcon: Icon(Iconsax.document_text),
             maxLines: 3,
             validator: (value) {
-              // Extra details are optional
               return null;
             },
           ),
@@ -351,7 +307,11 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
     );
   }
 
-  Widget _buildLocationSection(BuildContext context) {
+  Widget _buildLocationSection(BuildContext context, AddressFormLoaded? state) {
+    final cubit = context.read<ProfileCubit>();
+    final hasLocation = state?.lat != 0.0 && state?.lng != 0.0;
+    final selectedAddress = state?.selectedAddress ?? '';
+
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
       decoration: BoxDecoration(
@@ -386,18 +346,15 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
           ),
           SizedBox(height: context.responsiveMargin),
 
-          // Location Status
           Container(
             padding: EdgeInsets.all(context.responsivePadding),
             decoration: BoxDecoration(
-              color: _lat != 0.0 && _lng != 0.0
+              color: hasLocation
                   ? AppColors.success.withOpacity(0.1)
                   : AppColors.warning.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: _lat != 0.0 && _lng != 0.0
-                    ? AppColors.success
-                    : AppColors.warning,
+                color: hasLocation ? AppColors.success : AppColors.warning,
                 width: 1,
               ),
             ),
@@ -407,10 +364,8 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
                 Row(
                   children: [
                     Icon(
-                      _lat != 0.0 && _lng != 0.0
-                          ? Iconsax.tick_circle
-                          : Iconsax.warning_2,
-                      color: _lat != 0.0 && _lng != 0.0
+                      hasLocation ? Iconsax.tick_circle : Iconsax.warning_2,
+                      color: hasLocation
                           ? AppColors.success
                           : AppColors.warning,
                       size: context.responsiveIconSize * 0.8,
@@ -418,11 +373,11 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
                     SizedBox(width: context.responsiveMargin * 0.5),
                     Expanded(
                       child: Text(
-                        _lat != 0.0 && _lng != 0.0
+                        hasLocation
                             ? "location_selected".tr()
                             : "location_required".tr(),
                         style: TextStyles.textViewRegular14.copyWith(
-                          color: _lat != 0.0 && _lng != 0.0
+                          color: hasLocation
                               ? AppColors.success
                               : AppColors.warning,
                         ),
@@ -431,10 +386,7 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
                   ],
                 ),
 
-                // Show selected address if available
-                if (_lat != 0.0 &&
-                    _lng != 0.0 &&
-                    _selectedAddress.isNotEmpty) ...[
+                if (hasLocation && selectedAddress.isNotEmpty) ...[
                   SizedBox(height: context.responsiveMargin * 0.5),
                   Container(
                     padding: EdgeInsets.all(context.responsivePadding * 0.8),
@@ -456,7 +408,7 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
                         SizedBox(width: context.responsiveMargin * 0.5),
                         Expanded(
                           child: Text(
-                            _selectedAddress,
+                            selectedAddress,
                             style: TextStyles.textViewRegular12.copyWith(
                               color: AppColors.textPrimary,
                             ),
@@ -474,11 +426,10 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
 
           SizedBox(height: context.responsiveMargin),
 
-          // Select Location Button
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () => _selectLocation(context),
+              onPressed: () => _selectLocation(context, cubit),
               icon: Icon(
                 Iconsax.location,
                 color: AppColors.primary,
@@ -512,79 +463,49 @@ class _AddAddressScreenBodyState extends State<AddAddressScreenBody> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButton(
-        text: "save_address".tr(),
-        isLoading: _isLoading,
-        onPressed: _isLoading ? null : () => _saveAddress(context),
+        text: isEdit ? "update_address".tr() : "save_address".tr(),
+        isLoading: context.read<ProfileCubit>().state is AddAddressLoading,
+        onPressed: () => _saveAddress(context),
       ),
     );
   }
 
-  void _selectLocation(BuildContext context) async {
+  void _selectLocation(BuildContext context, ProfileCubit cubit) async {
     final result = await Navigator.push<Map<String, dynamic>>(
       context,
       MaterialPageRoute(
-        builder: (context) => LocationPickerAddAdressScreen(
-          initialLat: _lat != 0.0 ? _lat : null,
-          initialLng: _lng != 0.0 ? _lng : null,
-          initialAddress: _selectedAddress.isNotEmpty ? _selectedAddress : null,
+        builder: (context) => BlocProvider.value(
+          value: cubit,
+          child: LocationPickerAddAdressScreen(
+            initialLat: cubit.lat != 0.0 ? cubit.lat : null,
+            initialLng: cubit.lng != 0.0 ? cubit.lng : null,
+            initialAddress: cubit.selectedAddress.isNotEmpty
+                ? cubit.selectedAddress
+                : null,
+          ),
         ),
       ),
     );
 
-    if (result != null && mounted) {
-      setState(() {
-        _lat = result['lat'] as double;
-        _lng = result['lng'] as double;
-        _selectedAddress = result['address'] as String;
-      });
+    if (result != null) {
+      cubit.updateLocation(
+        result['lat'] as double,
+        result['lng'] as double,
+        result['address'] as String,
+      );
     }
   }
 
   void _saveAddress(BuildContext context) {
-    if (!_formKey.currentState!.validate()) {
+    final cubit = context.read<ProfileCubit>();
+
+    if (!cubit.hasLocation) {
+      ToastHelper.showErrorToast("please_select_location".tr());
       return;
     }
 
-    if (_lat == 0.0 && _lng == 0.0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("please_select_location".tr()),
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
-
-    final request = AddAddressRequestModel(
-      title: _titleController.text.trim(),
-      street: _streetController.text.trim(),
-      city: _cityController.text.trim(),
-      floor: _floorController.text.trim(),
-      apartment: _apartmentController.text.trim(),
-      buildingNo: _buildingNoController.text.trim(),
-      marker: _markerController.text.trim(),
-      extraDetails: _extraDetailsController.text.trim(),
-      lat: _lat,
-      lng: _lng,
-      isDefault: _isDefault,
-    );
-
-    // Validate the request
-    final validationErrors = request.validate();
-    if (validationErrors.isNotEmpty) {
-      final firstError = validationErrors.values.first;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(firstError),
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
-
-    // Call the API
-    context.read<ProfileCubit>().addAddress(request);
+    // Pass addressId for edit mode
+    final addressId = isEdit ? addressToEdit?.id : null;
+    cubit.submitAddress(addressId: addressId);
   }
 }

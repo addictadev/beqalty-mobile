@@ -47,6 +47,7 @@ class UpdateAddressRequestModel {
   }
 
   /// Converts UpdateAddressRequestModel to form-data Map for API requests
+  /// Matches the exact API structure from the POST request
   Map<String, dynamic> toFormData() {
     return {
       'title': title,
@@ -59,7 +60,7 @@ class UpdateAddressRequestModel {
       'extra_details': extraDetails,
       'lat': lat.toString(),
       'lng': lng.toString(),
-      'is_default': isDefault ? 1 : 0,
+      'default': isDefault ? 1 : 0, // API uses 'default' not 'is_default'
     };
   }
 
@@ -76,7 +77,7 @@ class UpdateAddressRequestModel {
       'extra_details': extraDetails,
       'lat': lat,
       'lng': lng,
-      'is_default': isDefault ? 1 : 0,
+      'default': isDefault ? 1 : 0, // API uses 'default' not 'is_default'
     };
   }
 

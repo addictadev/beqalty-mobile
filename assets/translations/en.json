@@ -472,5 +472,15 @@
   "location_permission_permanently_denied": "Location permission permanently denied. Please enable it in app settings.",
   "error_getting_location": "Error getting your location. Please try again.",
   "ok": "OK",
-  "tap_on_map_to_select_location": "Tap on the map to select a location"
+  "tap_on_map_to_select_location": "Tap on the map to select a location",
+  "edit_address": "Edit Address",
+  "edit_address_details": "Edit Address Details",
+  "update_address_details": "Update the address details below",
+  "update_address": "Update Address",
+  "loading_address": "Loading address...",
+  "set_default_confirmation": "Are you sure you want to set '{address}' as your default address?",
+  "delete_address_confirmation": "Are you sure you want to delete '{address}'? This action cannot be undone.",
+  "map_view_coming_soon": "Map View Coming Soon",
+  "open_in_maps": "Open in Maps",
+  "cancel": "Cancel"
 }
