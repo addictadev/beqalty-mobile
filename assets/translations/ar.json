@@ -472,5 +472,13 @@
   "location_permission_permanently_denied": "تم رفض إذن الموقع نهائياً. يرجى تفعيله في إعدادات التطبيق.",
   "error_getting_location": "خطأ في الحصول على موقعك. يرجى المحاولة مرة أخرى.",
   "ok": "موافق",
-  "tap_on_map_to_select_location": "اضغط على الخريطة لاختيار موقع"
+  "tap_on_map_to_select_location": "اضغط على الخريطة لاختيار موقع",
+  "edit_address": "تعديل العنوان",
+  "edit_address_details": "تعديل تفاصيل العنوان",
+  "update_address_details": "قم بتحديث تفاصيل العنوان أدناه",
+  "update_address": "تحديث العنوان",
+  "loading_address": "جاري تحميل العنوان...",
+  "set_default_confirmation": "هل أنت متأكد من أنك تريد تعيين '{address}' كعنوان افتراضي لك؟",
+  "delete_address_confirmation": "هل أنت متأكد من أنك تريد حذف '{address}'؟ لا يمكن التراجع عن هذا الإجراء.",
+  "cancel": "إلغاء"
 }

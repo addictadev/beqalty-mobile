@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:baqalty/features/profile/business/cubit/profile_cubit.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/font_family_utils.dart';
@@ -11,8 +8,9 @@ import 'package:baqalty/core/widgets/custom_back_button.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LocationPickerAddAdressScreen extends StatefulWidget {
+class LocationPickerAddAdressScreen extends StatelessWidget {
   final double? initialLat;
   final double? initialLng;
   final String? initialAddress;
@@ -25,160 +23,45 @@ class LocationPickerAddAdressScreen extends StatefulWidget {
   });
 
   @override
-  State<LocationPickerAddAdressScreen> createState() =>
-      _LocationPickerAddAdressScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: context.read<ProfileCubit>(),
+      child: LocationPickerAddAdressScreenBody(
+        initialLat: initialLat,
+        initialLng: initialLng,
+        initialAddress: initialAddress,
+      ),
+    );
+  }
 }
 
-class _LocationPickerAddAdressScreenState
-    extends State<LocationPickerAddAdressScreen> {
-  GoogleMapController? _mapController;
-  LatLng? _selectedLocation;
-  String? _selectedAddress;
-  bool _isLoading = false;
-  bool _isGettingAddress = false;
+class LocationPickerAddAdressScreenBody extends StatefulWidget {
+  final double? initialLat;
+  final double? initialLng;
+  final String? initialAddress;
 
-  static const LatLng _defaultLocation = LatLng(30.0444, 31.2357);
-  LatLng _currentLocation = _defaultLocation;
+  const LocationPickerAddAdressScreenBody({
+    super.key,
+    this.initialLat,
+    this.initialLng,
+    this.initialAddress,
+  });
 
+  @override
+  State<LocationPickerAddAdressScreenBody> createState() =>
+      _LocationPickerAddAdressScreenBodyState();
+}
+
+class _LocationPickerAddAdressScreenBodyState
+    extends State<LocationPickerAddAdressScreenBody> {
   @override
   void initState() {
     super.initState();
-    _initializeLocation();
-    _getCurrentLocation();
-  }
-
-  void _initializeLocation() {
-    if (widget.initialLat != null && widget.initialLng != null) {
-      _currentLocation = LatLng(widget.initialLat!, widget.initialLng!);
-      _selectedLocation = _currentLocation;
-      _selectedAddress = widget.initialAddress;
-    }
-  }
-
-  Future<void> _getCurrentLocation() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        _showLocationErrorDialog('location_services_disabled'.tr());
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          _showLocationErrorDialog('location_permission_denied'.tr());
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        _showLocationErrorDialog('location_permission_permanently_denied'.tr());
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      setState(() {
-        _currentLocation = LatLng(position.latitude, position.longitude);
-        _selectedLocation ??= _currentLocation;
-      });
-
-      await _getAddressFromCoordinates(_currentLocation);
-    } catch (e) {
-      log('Error getting current location: $e');
-      _showLocationErrorDialog('error_getting_location'.tr());
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _getAddressFromCoordinates(LatLng location) async {
-    setState(() {
-      _isGettingAddress = true;
-    });
-
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        location.latitude,
-        location.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        Placemark placemark = placemarks.first;
-        String address = _formatAddress(placemark);
-        setState(() {
-          _selectedAddress = address;
-        });
-      }
-    } catch (e) {
-      log('Error getting address: $e');
-      setState(() {
-        _selectedAddress =
-            '${location.latitude.toStringAsFixed(6)}, ${location.longitude.toStringAsFixed(6)}';
-      });
-    } finally {
-      setState(() {
-        _isGettingAddress = false;
-      });
-    }
-  }
-
-  String _formatAddress(Placemark placemark) {
-    List<String> addressComponents = [];
-
-    if (placemark.street != null && placemark.street!.isNotEmpty) {
-      addressComponents.add(placemark.street!);
-    }
-    if (placemark.locality != null && placemark.locality!.isNotEmpty) {
-      addressComponents.add(placemark.locality!);
-    }
-    if (placemark.administrativeArea != null &&
-        placemark.administrativeArea!.isNotEmpty) {
-      addressComponents.add(placemark.administrativeArea!);
-    }
-    if (placemark.country != null && placemark.country!.isNotEmpty) {
-      addressComponents.add(placemark.country!);
-    }
-
-    return addressComponents.join(', ');
-  }
-
-  void _onMapTap(LatLng location) {
-    setState(() {
-      _selectedLocation = location;
-    });
-    _getAddressFromCoordinates(location);
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    _mapController = controller;
-  }
-
-  void _moveToCurrentLocation() {
-    if (_mapController != null) {
-      _mapController!.animateCamera(CameraUpdate.newLatLng(_currentLocation));
-    }
-  }
-
-  void _confirmLocation() {
-    if (_selectedLocation != null) {
-      Navigator.pop(context, {
-        'lat': _selectedLocation!.latitude,
-        'lng': _selectedLocation!.longitude,
-        'address':
-            _selectedAddress ??
-            '${_selectedLocation!.latitude.toStringAsFixed(6)}, ${_selectedLocation!.longitude.toStringAsFixed(6)}',
-      });
-    }
+    context.read<ProfileCubit>().initializeLocationPicker(
+      initialLat: widget.initialLat,
+      initialLng: widget.initialLng,
+      initialAddress: widget.initialAddress,
+    );
   }
 
   void _showLocationErrorDialog(String message) {
@@ -214,33 +97,56 @@ class _LocationPickerAddAdressScreenState
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<ProfileCubit, ProfileState>(
+      listener: (context, state) {
+        if (state is LocationPickerError) {
+          _showLocationErrorDialog(state.message);
+        }
+      },
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state is LocationPickerLoaded) {
+            return _buildMapView(context, state);
+          } else if (state is LocationPickerLoading) {
+            return _buildLoadingView(context);
+          } else {
+            return _buildMapView(context, null);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildMapView(BuildContext context, LocationPickerLoaded? state) {
+    final cubit = context.read<ProfileCubit>();
+    final currentLocation = cubit.currentLocation;
+    final selectedLocation = cubit.selectedLocation;
+    final isLoading = cubit.isLoading;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
+            _buildHeader(context, cubit),
 
             Expanded(
               child: Stack(
                 children: [
                   GoogleMap(
-                    onMapCreated: _onMapCreated,
+                    onMapCreated: cubit.onMapCreated,
                     initialCameraPosition: CameraPosition(
-                      target: _currentLocation,
+                      target: currentLocation,
                       zoom: 15.0,
                     ),
-                    onTap: _onMapTap,
-                    markers: _selectedLocation != null
+                    onTap: cubit.onMapTap,
+                    markers: selectedLocation != null
                         ? {
                             Marker(
                               markerId: const MarkerId('selected_location'),
-                              position: _selectedLocation!,
+                              position: selectedLocation,
                               draggable: true,
                               onDragEnd: (newPosition) {
-                                setState(() {
-                                  _selectedLocation = newPosition;
-                                });
-                                _getAddressFromCoordinates(newPosition);
+                                cubit.onMapTap(newPosition);
                               },
                             ),
                           }
@@ -250,7 +156,7 @@ class _LocationPickerAddAdressScreenState
                     zoomControlsEnabled: false,
                   ),
 
-                  if (_selectedLocation == null)
+                  if (selectedLocation == null)
                     const Center(
                       child: Icon(
                         Iconsax.location,
@@ -259,7 +165,7 @@ class _LocationPickerAddAdressScreenState
                       ),
                     ),
 
-                  if (_isLoading)
+                  if (isLoading)
                     Container(
                       color: Colors.black54,
                       child: const Center(
@@ -272,20 +178,50 @@ class _LocationPickerAddAdressScreenState
               ),
             ),
 
-            _buildBottomPanel(),
+            _buildBottomPanel(context, state),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildLoadingView(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context, context.read<ProfileCubit>()),
+            Expanded(
+              child: Container(
+                color: Colors.black54,
+                child: const Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, ProfileCubit cubit) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: context.responsivePadding,
         vertical: 16,
       ),
-
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           CustomBackButton(
@@ -307,15 +243,16 @@ class _LocationPickerAddAdressScreenState
           ),
 
           IconButton(
-            onPressed: _isLoading
+            onPressed: cubit.isLoading
                 ? null
                 : () {
-                    _getCurrentLocation();
-                    _moveToCurrentLocation();
+                    cubit.moveToCurrentLocation();
                   },
             icon: Icon(
               Icons.my_location,
-              color: _isLoading ? AppColors.textSecondary : AppColors.primary,
+              color: cubit.isLoading
+                  ? AppColors.textSecondary
+                  : AppColors.primary,
             ),
             tooltip: 'current_location'.tr(),
           ),
@@ -324,7 +261,12 @@ class _LocationPickerAddAdressScreenState
     );
   }
 
-  Widget _buildBottomPanel() {
+  Widget _buildBottomPanel(BuildContext context, LocationPickerLoaded? state) {
+    final cubit = context.read<ProfileCubit>();
+    final selectedAddress = state?.address ?? '';
+    final hasLocation = state?.hasLocation ?? false;
+    final isGettingAddress = state?.isGettingAddress ?? false;
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: context.responsivePadding,
@@ -344,14 +286,14 @@ class _LocationPickerAddAdressScreenState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_selectedAddress != null) ...[
+          if (selectedAddress.isNotEmpty) ...[
             Row(
               children: [
                 Icon(Icons.location_on, color: AppColors.primary, size: 20),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    _selectedAddress!,
+                    selectedAddress,
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -359,7 +301,7 @@ class _LocationPickerAddAdressScreenState
                     ),
                   ),
                 ),
-                if (_isGettingAddress)
+                if (isGettingAddress)
                   SizedBox(
                     width: 16,
                     height: 16,
@@ -388,11 +330,22 @@ class _LocationPickerAddAdressScreenState
 
           PrimaryButton(
             text: 'confirm_location'.tr(),
-            onPressed: _selectedLocation != null ? _confirmLocation : null,
-            isLoading: _isGettingAddress,
+            onPressed: hasLocation
+                ? () => _confirmLocation(context, cubit)
+                : null,
+            isLoading: isGettingAddress,
           ),
         ],
       ),
     );
+  }
+
+  void _confirmLocation(BuildContext context, ProfileCubit cubit) {
+    cubit.confirmLocation();
+    Navigator.pop(context, {
+      'lat': cubit.lat,
+      'lng': cubit.lng,
+      'address': cubit.selectedAddress,
+    });
   }
 }

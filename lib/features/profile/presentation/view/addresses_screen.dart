@@ -1,3 +1,4 @@
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/features/profile/business/cubit/profile_cubit.dart';
 import 'package:baqalty/features/profile/data/models/addresses_response_model.dart';
 import 'package:baqalty/features/profile/presentation/view/addresses_shimmer_view.dart';
@@ -45,16 +46,16 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
-          if (state is ProfileLoading) {
+          if (state is GetAddressesLoading) {
             return _buildLoadingState();
           }
 
-          if (state is ProfileError) {
+          if (state is GetAddressesError) {
             return _buildErrorState(context, state.message);
           }
 
-          if (state is ProfileLoaded) {
-            return _buildLoadedState(context, state);
+          if (state is GetAddressesLoaded) {
+            return _buildLoadedState(context, state.addresses);
           }
 
           return _buildLoadingState();
@@ -62,9 +63,10 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
       ),
       floatingActionButton: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
-          if (state is ProfileLoaded && state.addresses.data.isNotEmpty) {
+          if (state is GetAddressesLoaded && state.addresses.isNotEmpty) {
             return FloatingActionButton(
-              onPressed: () => _navigateToAddAddress(context),
+              onPressed: () =>
+                  NavigationManager.navigateTo(const AddAddressScreen()),
               backgroundColor: AppColors.primary,
               child: Icon(
                 Iconsax.add,
@@ -97,8 +99,8 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
     );
   }
 
-  Widget _buildLoadedState(BuildContext context, ProfileLoaded state) {
-    if (state.addresses.data.isEmpty) {
+  Widget _buildLoadedState(BuildContext context, List<AddressModel> addresses) {
+    if (addresses.isEmpty) {
       return _buildEmptyState(context);
     }
 
@@ -106,13 +108,16 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
       onRefresh: () async {
         context.read<ProfileCubit>().getAddresses();
       },
-      child: ListView.builder(
-        padding: EdgeInsets.all(context.responsivePadding),
-        itemCount: state.addresses.data.length,
-        itemBuilder: (context, index) {
-          final address = state.addresses.data[index];
-          return _buildAddressCard(context, address);
-        },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: ListView.builder(
+          padding: EdgeInsets.all(context.responsivePadding),
+          itemCount: addresses.length,
+          itemBuilder: (context, index) {
+            final address = addresses[index];
+            return _buildAddressCard(context, address);
+          },
+        ),
       ),
     );
   }
@@ -156,7 +161,8 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
             SizedBox(height: context.responsiveMargin * 3),
             PrimaryButton(
               text: "add_address".tr(),
-              onPressed: () => _navigateToAddAddress(context),
+              onPressed: () =>
+                  NavigationManager.navigateTo(const AddAddressScreen()),
               width: double.infinity,
             ),
           ],
@@ -281,23 +287,23 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
                           ],
                         ),
                       ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            Icon(
-                              Iconsax.trash,
-                              size: 16,
-                              color: AppColors.error,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              "delete".tr(),
-                              style: TextStyle(color: AppColors.error),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // PopupMenuItem(
+                      //   value: 'delete',
+                      //   child: Row(
+                      //     children: [
+                      //       Icon(
+                      //         Iconsax.trash,
+                      //         size: 16,
+                      //         color: AppColors.error,
+                      //       ),
+                      //       SizedBox(width: 8),
+                      //       Text(
+                      //         "delete".tr(),
+                      //         style: TextStyle(color: AppColors.error),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                     child: Icon(
                       Iconsax.more,
@@ -317,31 +323,15 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
   void _handleAddressAction(String action, AddressModel address) {
     switch (action) {
       case 'edit':
-        _showComingSoonDialog();
+        _navigateToEditAddress(context, address);
         break;
       case 'set_default':
-        _showComingSoonDialog();
+        _setAddressAsDefault(context, address);
         break;
       case 'delete':
-        _showComingSoonDialog();
+        _deleteAddress(context, address);
         break;
     }
-  }
-
-  void _showComingSoonDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("coming_soon".tr()),
-        content: Text("feature_coming_soon".tr()),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("ok".tr()),
-          ),
-        ],
-      ),
-    );
   }
 
   IconData _getAddressTypeIcon(AddressType type) {
@@ -366,15 +356,76 @@ class _AddressesScreenBodyState extends State<AddressesScreenBody> {
     }
   }
 
-  void _navigateToAddAddress(BuildContext context) async {
-    final result = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (context) => const AddAddressScreen()),
+  void _navigateToEditAddress(BuildContext context, AddressModel address) {
+    NavigationManager.navigateTo(
+      AddAddressScreen(isEdit: true, addressToEdit: address),
     );
+  }
 
-    // Refresh addresses if a new address was added
-    if (result == true && context.mounted) {
-      context.read<ProfileCubit>().getAddresses();
-    }
+  void _setAddressAsDefault(BuildContext context, AddressModel address) {
+    final profileCubit = context.read<ProfileCubit>();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text("set_as_default".tr()),
+        content: Text(
+          "set_default_confirmation".tr().replaceAll(
+            '{address}',
+            address.title,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text("cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+
+              profileCubit.setAddressAsDefault(address);
+            },
+            child: Text(
+              "confirm".tr(),
+              style: TextStyle(color: AppColors.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteAddress(BuildContext context, AddressModel address) {
+    final profileCubit = context.read<ProfileCubit>();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text("delete_address".tr()),
+        content: Text(
+          "delete_address_confirmation".tr().replaceAll(
+            '{address}',
+            address.title,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text("cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              profileCubit.deleteAddress(address.id);
+            },
+            child: Text(
+              "delete".tr(),
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
