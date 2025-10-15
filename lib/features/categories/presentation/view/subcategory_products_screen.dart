@@ -7,10 +7,12 @@ import 'package:baqalty/features/product_details/presentation/view/product_detai
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/saved_item_card.dart';
+import '../../../../core/widgets/custom_error_widget.dart';
+import '../../business/cubit/subcategory_products_cubit.dart';
 
 class SubcategoryProductsScreen extends StatefulWidget {
   final String subcategoryName;
@@ -29,12 +31,45 @@ class SubcategoryProductsScreen extends StatefulWidget {
       _SubcategoryProductsScreenState();
 }
 
-class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
+class SubcategoryProductsScreenBody extends StatefulWidget {
+  final String subcategoryName;
+  final String categoryName;
+  final String subcategoryId;
+
+  const SubcategoryProductsScreenBody({
+    super.key,
+    required this.subcategoryName,
+    required this.categoryName,
+    required this.subcategoryId,
+  });
+
+  @override
+  State<SubcategoryProductsScreenBody> createState() =>
+      _SubcategoryProductsScreenBodyState();
+}
+
+class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SubcategoryProductsCubit()
+        ..loadSubcategoryProducts(widget.subcategoryId),
+      child: SubcategoryProductsScreenBody(
+        subcategoryName: widget.subcategoryName,
+        categoryName: widget.categoryName,
+        subcategoryId: widget.subcategoryId,
+      ),
+    );
+  }
+}
+
+class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScreenBody>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late AnimationController _animationController;
   late List<AnimationController> _itemAnimationControllers;
   late List<Animation<double>> _itemAnimations;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -45,7 +80,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
     );
 
     _itemAnimationControllers = List.generate(
-      10,
+      20, // Increased for more products
       (index) => AnimationController(
         duration: const Duration(milliseconds: 500),
         vsync: this,
@@ -60,6 +95,17 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
     }).toList();
 
     _startAnimations();
+    _setupScrollListener();
+  }
+
+  void _setupScrollListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        // Load more products when near bottom
+        context.read<SubcategoryProductsCubit>().loadMoreProducts();
+      }
+    });
   }
 
   void _startAnimations() {
@@ -77,6 +123,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     _animationController.dispose();
     for (var controller in _itemAnimationControllers) {
       controller.dispose();
@@ -107,12 +154,13 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
                 child: CustomTextFormField(
                   controller: _searchController,
                   hint: "search_products".tr(),
-
                   prefixIcon: Icon(
                     Iconsax.search_normal,
                     color: AppColors.textSecondary,
                   ),
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    context.read<SubcategoryProductsCubit>().searchProducts(value);
+                  },
                 ),
               ),
 
@@ -125,76 +173,140 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
   }
 
   Widget _buildProductsList(BuildContext context) {
-    final products = _getProductsForSubcategory(widget.subcategoryName);
+    return BlocBuilder<SubcategoryProductsCubit, SubcategoryProductsState>(
+      builder: (context, state) {
+        if (state is SubcategoryProductsLoading) {
+          return _buildLoadingState(context);
+        } else if (state is SubcategoryProductsError) {
+          return _buildErrorState(context, state.message);
+        } else if (state is SubcategoryProductsLoaded) {
+          if (state.products.isEmpty) {
+            return _buildEmptyState(context);
+          }
+          return _buildProductsListView(context, state);
+        }
+        return _buildLoadingState(context);
+      },
+    );
+  }
 
-    if (products.isEmpty) {
-      return _buildEmptyState(context);
-    }
+  Widget _buildLoadingState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: AppColors.primary,
+          ),
+          SizedBox(height: context.responsiveMargin),
+          Text(
+            "loading_products".tr(),
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-    return Padding(
-      padding: EdgeInsets.all(context.responsivePadding),
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return AnimatedBuilder(
-            animation: _itemAnimations[index],
-            builder: (context, child) {
-              return Transform.translate(
-                offset: Offset(0, 30 * (1 - _itemAnimations[index].value)),
-                child: Opacity(
-                  opacity: _itemAnimations[index].value.clamp(0.0, 1.0),
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: context.responsiveMargin),
-                    child: SavedItemCard(
-                      productName: product['name'],
-                      productCategory: product['category'],
-                      productPrice: product['price'],
-                      productImage: product['image'],
-                      showFavoriteButton: false,
-                      showAddToCartButton: false,
-                      onTap: () {
-                        if (index < _itemAnimationControllers.length) {
-                          _itemAnimationControllers[index].reverse().then((_) {
-                            _itemAnimationControllers[index].forward();
-                          });
-                        }
+  Widget _buildErrorState(BuildContext context, String message) {
+    return Center(
+      child: CustomErrorWidget(
+        message: message,
+        onRetry: () {
+          context.read<SubcategoryProductsCubit>().refreshProducts();
+        },
+      ),
+    );
+  }
 
-                        NavigationManager.navigateTo(
-                          ProductDetailsScreen(
-                            productName: product['name'],
-                            productImage: product['image'],
-                            productPrice: product['price'],
-                            productCategory: product['category'],
-                          ),
-                        );
-                      },
-                      onFavorite: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              '${product['name']} added to favorites',
-                            ),
-                            backgroundColor: AppColors.success,
-                          ),
-                        );
-                      },
-                      onAddToCart: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${product['name']} added to cart'),
-                            backgroundColor: AppColors.primary,
-                          ),
-                        );
-                      },
-                    ),
+  Widget _buildProductsListView(BuildContext context, SubcategoryProductsLoaded state) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<SubcategoryProductsCubit>().refreshProducts();
+      },
+      child: Padding(
+        padding: EdgeInsets.all(context.responsivePadding),
+        child: ListView.builder(
+          controller: _scrollController,
+          physics: const BouncingScrollPhysics(),
+          itemCount: state.products.length + (state.hasMoreProducts ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index >= state.products.length) {
+              // Loading indicator for pagination
+              return Padding(
+                padding: EdgeInsets.all(context.responsiveMargin),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
                   ),
                 ),
               );
-            },
-          );
-        },
+            }
+
+            final product = state.products[index];
+            final animationIndex = index % _itemAnimations.length;
+            
+            return AnimatedBuilder(
+              animation: _itemAnimations[animationIndex],
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, 30 * (1 - _itemAnimations[animationIndex].value)),
+                  child: Opacity(
+                    opacity: _itemAnimations[animationIndex].value.clamp(0.0, 1.0),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: context.responsiveMargin),
+                      child: SavedItemCard(
+                        productName: product.name,
+                        productCategory: widget.subcategoryName,
+                        productPrice: product.finalPriceDouble,
+                        productImage: product.baseImage,
+                        showFavoriteButton: false,
+                        showAddToCartButton: false,
+                        onTap: () {
+                          if (animationIndex < _itemAnimationControllers.length) {
+                            _itemAnimationControllers[animationIndex].reverse().then((_) {
+                              _itemAnimationControllers[animationIndex].forward();
+                            });
+                          }
+
+                          NavigationManager.navigateTo(
+                            ProductDetailsScreen(
+                              productName: product.name,
+                              productImage: product.baseImage,
+                              productPrice: product.finalPriceDouble,
+                              productCategory: widget.subcategoryName,
+                            ),
+                          );
+                        },
+                        onFavorite: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${product.name} added to favorites',
+                              ),
+                              backgroundColor: AppColors.success,
+                            ),
+                          );
+                        },
+                        onAddToCart: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${product.name} added to cart'),
+                              backgroundColor: AppColors.primary,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -228,195 +340,5 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen>
         ],
       ),
     );
-  }
-
-  List<Map<String, dynamic>> _getProductsForSubcategory(
-    String subcategoryName,
-  ) {
-    switch (subcategoryName.toLowerCase()) {
-      case 'healthy':
-        return [
-          {
-            'name': 'organic_nuts_mix'.tr(),
-            'category': 'healthy_snacks'.tr(),
-            'price': 12.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'dried_fruits'.tr(),
-            'category': 'healthy_snacks'.tr(),
-            'price': 8.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-          {
-            'name': 'granola_bars'.tr(),
-            'category': 'healthy_snacks'.tr(),
-            'price': 6.99,
-            'image': AppAssets.juhaynaCreamMilk,
-          },
-          {
-            'name': 'protein_snacks'.tr(),
-            'category': 'healthy_snacks'.tr(),
-            'price': 15.99,
-            'image': AppAssets.chocolateMilk,
-          },
-        ];
-      case 'savory':
-        return [
-          {
-            'name': 'chips_variety'.tr(),
-            'category': 'savory_snacks'.tr(),
-            'price': 4.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'pretzels'.tr(),
-            'category': 'savory_snacks'.tr(),
-            'price': 3.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-          {
-            'name': 'crackers'.tr(),
-            'category': 'savory_snacks'.tr(),
-            'price': 2.99,
-            'image': AppAssets.juhaynaCreamMilk,
-          },
-          {
-            'name': 'popcorn'.tr(),
-            'category': 'savory_snacks'.tr(),
-            'price': 5.99,
-            'image': AppAssets.chocolateMilk,
-          },
-        ];
-      case 'sweet':
-        return [
-          {
-            'name': 'chocolate_bars'.tr(),
-            'category': 'sweet_snacks'.tr(),
-            'price': 7.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'cookies'.tr(),
-            'category': 'sweet_snacks'.tr(),
-            'price': 4.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-          {
-            'name': 'candy_mix'.tr(),
-            'category': 'sweet_snacks'.tr(),
-            'price': 6.99,
-            'image': AppAssets.juhaynaCreamMilk,
-          },
-          {
-            'name': 'gummy_bears'.tr(),
-            'category': 'sweet_snacks'.tr(),
-            'price': 3.99,
-            'image': AppAssets.chocolateMilk,
-          },
-        ];
-      case 'popcorn':
-        return [
-          {
-            'name': 'butter_popcorn'.tr(),
-            'category': 'popcorn'.tr(),
-            'price': 5.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'caramel_popcorn'.tr(),
-            'category': 'popcorn'.tr(),
-            'price': 6.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-          {
-            'name': 'cheese_popcorn'.tr(),
-            'category': 'popcorn'.tr(),
-            'price': 7.99,
-            'image': AppAssets.juhaynaCreamMilk,
-          },
-        ];
-      case 'frozen':
-        return [
-          {
-            'name': 'ice_cream_sandwich'.tr(),
-            'category': 'frozen_treats'.tr(),
-            'price': 8.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'frozen_yogurt'.tr(),
-            'category': 'frozen_treats'.tr(),
-            'price': 6.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-          {
-            'name': 'frozen_fruit_bars'.tr(),
-            'category': 'frozen_treats'.tr(),
-            'price': 4.99,
-            'image': AppAssets.juhaynaCreamMilk,
-          },
-        ];
-      case 'ice_cream':
-        return [
-          {
-            'name': 'vanilla_ice_cream'.tr(),
-            'category': 'ice_cream'.tr(),
-            'price': 9.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'chocolate_ice_cream'.tr(),
-            'category': 'ice_cream'.tr(),
-            'price': 10.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-          {
-            'name': 'strawberry_ice_cream'.tr(),
-            'category': 'ice_cream'.tr(),
-            'price': 11.99,
-            'image': AppAssets.juhaynaCreamMilk,
-          },
-        ];
-      case 'creamy':
-        return [
-          {
-            'name': 'cream_cookies'.tr(),
-            'category': 'creamy_snacks'.tr(),
-            'price': 5.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'cream_cakes'.tr(),
-            'category': 'creamy_snacks'.tr(),
-            'price': 7.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-        ];
-      case 'chilled':
-        return [
-          {
-            'name': 'cold_drinks'.tr(),
-            'category': 'chilled_beverages'.tr(),
-            'price': 3.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-          {
-            'name': 'chilled_yogurt'.tr(),
-            'category': 'chilled_beverages'.tr(),
-            'price': 4.99,
-            'image': AppAssets.juhaynaCoconutMilk,
-          },
-        ];
-      default:
-        return [
-          {
-            'name': 'sample_product'.tr(),
-            'category': 'general'.tr(),
-            'price': 9.99,
-            'image': AppAssets.juhaynaMilk,
-          },
-        ];
-    }
   }
 }

@@ -246,18 +246,9 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
     SubCategoryLoaded state,
   ) {
     if (state.allSubcategories.isEmpty) {
-      return SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: NoCategoriesWidget(
+      return  NoCategoriesWidget(
           isSearchResult: state.searchQuery.isNotEmpty,
-          onRetry: state.searchQuery.isEmpty
-              ? () {
-                  context.read<CategoryCubit>().getSubcategories(
-                    widget.categoryId,
-                  );
-                }
-              : null,
-        ),
+        
       );
     }
 

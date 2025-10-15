@@ -97,7 +97,7 @@ class SavedItemCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-        child: Image.asset(
+        child: Image.network(
           productImage,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {

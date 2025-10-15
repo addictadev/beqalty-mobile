@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 
@@ -30,15 +31,14 @@ class NoCategoriesWidget extends StatelessWidget {
         children: [
           // Illustration Container
           Container(
-            width: 80.w,
-            height: 40.w,
+      padding: EdgeInsets.all(context.responsivePadding),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
-              isSearchResult ? Icons.search_off : Icons.category_outlined,
-              size: 60,
+              isSearchResult ? Icons.search_off : Iconsax.category,
+              size: 8.w,
               color: AppColors.primary.withOpacity(0.6),
             ),
           ),

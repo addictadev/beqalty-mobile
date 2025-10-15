@@ -31,5 +31,7 @@ class EndPoints {
   static const String categories = "categories/parents";
   static String subcategories(String parentId) =>
       "categories/parent/$parentId/sublevels";
+  static String subcategoryProducts(String subcategoryId) =>
+      "sublevel/$subcategoryId/products";
   static const String addresses = "addresses";
 }
