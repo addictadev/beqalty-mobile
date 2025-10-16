@@ -1,27 +1,28 @@
-import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart' show CustomAppBar;
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
-import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:baqalty/core/di/service_locator.dart';
+import '../../business/cubit/product_details_cubit.dart';
+import '../../data/models/product_details_response_model.dart';
+import '../../data/services/product_details_service.dart';
+import '../../../cart/business/cubit/cart_cubit.dart';
+import '../../../cart/data/services/cart_service.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final String productName;
-  final String productImage;
-  final double productPrice;
-  final String productCategory;
+  final int productId;
 
   const ProductDetailsScreen({
     super.key,
-    required this.productName,
-    required this.productImage,
-    required this.productPrice,
-    required this.productCategory,
+    required this.productId,
   });
 
   @override
@@ -29,275 +30,379 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  int quantity = 2;
-  String selectedSize = "250 g";
-  String selectedFlavor = "Original";
-
-  final List<String> sizeOptions = ["250 g", "500 g", "700 g"];
-  final List<String> flavorOptions = ["Original", "Spice"];
+  int quantity = 1;
+  String? selectedSize;
+  String? selectedFlavor;
+  int currentImageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return AuthBackgroundWidget(
-      backgroundHeight: MediaQuery.of(context).size.height * 0.25,
-      overlayOpacity: 0.3,
-      child: SafeArea(
-        child: Column(
-          children: [
-            // App Bar (Fixed)
-            CustomAppBar(
-              title: "product_details".tr(),
-              onBackPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            // Scrollable Content
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Product Image Section with Action Buttons
-                    Container(
-                      width: context.responsiveWidth,
-                      padding: EdgeInsets.all(3.w),
-                      margin: EdgeInsets.all(3.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(
-                          context.responsiveBorderRadius * 2,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Product Image Container with fixed height
-                          SizedBox(
-                            height: 30.h,
-                            child: Stack(
-                              children: [
-                                // Product Image
-                                _buildProductImage(context),
-
-                                // Action Buttons (Share and Favorite)
-                                Positioned(
-                                  top: context.responsiveMargin,
-                                  right: context.responsivePadding,
-                                  child: Row(
-                                    children: [
-                                      // Share Button
-                                      Container(
-                                        padding: EdgeInsets.all(
-                                          context.responsivePadding * .6,
-                                        ),
-                                        width: context.responsiveIconSize * 1.8,
-                                        height:
-                                            context.responsiveIconSize * 1.8,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white.withValues(
-                                            alpha: 0.9,
-                                          ),
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: AppColors.shadowLight,
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: CustomSvgImage(
-                                          width: 12,
-                                          assetName: AppAssets.share,
-                                        ),
-                                      ),
-
-                                      SizedBox(width: context.responsiveMargin),
-                                      // Favorite Button
-                                      Container(
-                                        padding: EdgeInsets.all(
-                                          context.responsivePadding * .6,
-                                        ),
-                                        width: context.responsiveIconSize * 1.8,
-                                        height:
-                                            context.responsiveIconSize * 1.8,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.error.withOpacity(
-                                            0.1,
-                                          ),
-                                          shape: BoxShape.circle,
-                                          boxShadow: [],
-                                        ),
-                                        child: CustomSvgImage(
-                                          width: 12,
-                                          assetName: AppAssets.heart,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Pagination Dots
-                          _buildPaginationDots(context),
-                        ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CartCubit>(
+          create: (context) => CartCubit(ServiceLocator.get<CartService>()),
+        ),
+      ],
+      child: BlocConsumer<CartCubit, CartState>(
+          listener: (context, cartState) {
+            print('CartState changed: $cartState');
+            if (cartState is CartItemAdded) {
+              print('Showing success toast with message: ${cartState.cartItem.message}');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(cartState.cartItem.message),
+                  backgroundColor: AppColors.success,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            } else if (cartState is CartError) {
+              print('Showing error toast with message: ${cartState.message}');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(cartState.message),
+                  backgroundColor: AppColors.error,
+                ),
+              );
+            }
+          },
+          builder: (context, cartState) {
+            // We don't need to rebuild UI based on cart state, just listen for changes
+            return BlocConsumer<ProductDetailsCubit, ProductDetailsState>(
+              listener: (context, state) {
+                print('🔊 BlocListener received state: ${state.runtimeType}');
+                if (state is ProductDetailsError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: AppColors.error,
+                      action: SnackBarAction(
+                        label: 'Retry',
+                        textColor: AppColors.white,
+                        onPressed: () {
+                          context.read<ProductDetailsCubit>().getProductDetails(widget.productId);
+                        },
                       ),
                     ),
+                  );
+                } else if (state is ProductLiked) {
+                  print('🎉 Showing liked success message');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('product_liked_successfully'.tr()),
+                      backgroundColor: AppColors.success,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                } else if (state is ProductUnliked) {
+                  print('🎉 Showing unliked success message');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('product_unliked_successfully'.tr()),
+                      backgroundColor: AppColors.success,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                print('🔄 BlocBuilder rebuilding with state: ${state.runtimeType}');
+                if (state is ProductDetailsLoaded) {
+                  print('✅ ProductDetailsLoaded - isLiked: ${state.productDetails.isLiked}');
+                } else if (state is ProductLiked) {
+                  print('❤️ ProductLiked - isLiked: ${state.productDetails.isLiked}');
+                } else if (state is ProductUnliked) {
+                  print('💔 ProductUnliked - isLiked: ${state.productDetails.isLiked}');
+                }
+                
+                // Trigger API call when state is initial
+                if (state is ProductDetailsInitial) {
+                  print('🔄 UI: ProductDetailsInitial detected, calling getProductDetails for productId: ${widget.productId}');
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.read<ProductDetailsCubit>().getProductDetails(widget.productId);
+                  });
+                  return _buildLoadingState();
+                }
+                
+                if (state is ProductDetailsLoading) {
+                  return _buildLoadingState();
+                } else if (state is ProductDetailsLoaded) {
+                  return _buildLoadedState(state.productDetails);
+                } else if (state is ProductLiked) {
+                  return _buildLoadedState(state.productDetails);
+                } else if (state is ProductUnliked) {
+                  return _buildLoadedState(state.productDetails);
+                } else if (state is ProductDetailsError) {
+                  return _buildErrorState(state.message);
+                }
+                return _buildLoadingState();
+              },
+            );
+          },
+        ),
+      );
+    
+  }
 
-                    _buildProductInfo(context),
+  Widget _buildLoadingState() {
+    return AuthBackgroundWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("product_details".tr()),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
 
-                    SizedBox(height: context.responsiveMargin * 2),
-                    // Bottom Section with Details (Scrollable)
-                    _buildBottomSection(context),
-                    SizedBox(
-                      height: context.responsiveMargin * 2,
-                    ), // More Like This Section
-                    _buildMoreLikeThisSection(context),
+  Widget _buildErrorState(String message) {
+    return AuthBackgroundWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("product_details".tr()),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
+                color: AppColors.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<ProductDetailsCubit>().getProductDetails(widget.productId);
+                },
+                child: Text("retry".tr()),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-                    SizedBox(height: context.responsiveMargin * 2),
+  Widget _buildLoadedState(ProductDetailsDataModel productDetails) {
+    // Initialize selections if not set
+    if (selectedSize == null && productDetails.attributes.isNotEmpty) {
+      final sizeAttribute = productDetails.attributes.firstWhere(
+        (attr) => attr.attributeName.toLowerCase().contains('size') ||
+                   attr.attributeName.toLowerCase().contains('حجم'),
+        orElse: () => productDetails.attributes.first,
+      );
+      if (sizeAttribute.products.isNotEmpty) {
+        selectedSize = sizeAttribute.products.first.name;
+      }
+    }
 
-                    // Extra space for bottom padding
-                    SizedBox(height: context.responsiveMargin * 4),
+    if (selectedFlavor == null && productDetails.attributes.length > 1) {
+      final flavorAttribute = productDetails.attributes.firstWhere(
+        (attr) => attr.attributeName.toLowerCase().contains('flavor') ||
+                   attr.attributeName.toLowerCase().contains('نكهة'),
+        orElse: () => productDetails.attributes.length > 1 ? productDetails.attributes[1] : productDetails.attributes.first,
+      );
+      if (flavorAttribute.products.isNotEmpty) {
+        selectedFlavor = flavorAttribute.products.first.name;
+      }
+    }
+
+    return AuthBackgroundWidget(
+      child: Column(
+        children: [
+          CustomAppBar(title: "product_details".tr(), onBackPressed: () => Navigator.of(context).pop()),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildProductImage(context, productDetails),
+                  _buildPaginationDots(context, productDetails.images),
+                  _buildProductInfo(context, productDetails),
+                  _buildBottomSection(context, productDetails),
+                  _buildMoreLikeThisSection(context, productDetails.relatedProducts),
+                ],
+              ),
+            ),
+          ),
+          _buildActionButtons(context, productDetails),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductImage(BuildContext context, ProductDetailsDataModel productDetails) {
+    return Container(
+      width: context.responsiveWidth,
+      padding: EdgeInsets.all(3.w),
+      margin: EdgeInsets.all(3.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+      ),
+      child: Stack(
+        children: [
+          // Product Images Slider
+          GestureDetector(
+            onTap: () => _openImageGallery(context, productDetails.images, currentImageIndex),
+            child: SizedBox(
+              height: 30.h,
+              child: PageView.builder(
+                onPageChanged: (index) {
+                  setState(() {
+                    currentImageIndex = index;
+                  });
+                },
+                itemCount: productDetails.images.length,
+                itemBuilder: (context, index) {
+                  return CachedNetworkImage(
+                    imageUrl: productDetails.images[index],
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.image_not_supported,
+                      size: 64,
+                      color: AppColors.textSecondary,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          // Favorite Button positioned at top right
+          Positioned(
+            top: context.responsiveMargin,
+            right: context.responsivePadding,
+            child: GestureDetector(
+              onTap: () {
+                context.read<ProductDetailsCubit>().toggleFavorite(productDetails);
+              },
+              child: Container(
+                padding: EdgeInsets.all(2.w),
+                decoration: BoxDecoration(
+                  color: AppColors.homeGradientWhite,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
                   ],
+                ),
+                child: Icon(
+                  productDetails.isLiked ? Iconsax.heart5 : Iconsax.heart,
+                  color: productDetails.isLiked ? AppColors.error : AppColors.grey,
+                  size: 6.w,
                 ),
               ),
             ),
-
-            // Fixed Action Buttons at Bottom
-            _buildActionButtons(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-  Widget _buildProductImage(BuildContext context) {
-    return Center(
-      child: Container(
-        width: context.responsiveWidth,
-        height: context.responsiveWidth,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            context.responsiveBorderRadius * 2,
           ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(
-            context.responsiveBorderRadius * 2,
-          ),
-          child: Image.asset(
-            widget.productImage,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: AppColors.scaffoldBackground,
-                child: Icon(
-                  Icons.image_not_supported,
-                  color: AppColors.textSecondary,
-                  size: context.responsiveIconSize * 2,
+          // Image counter (if multiple images)
+          if (productDetails.images.length > 1)
+            Positioned(
+              top: context.responsiveMargin,
+              left: context.responsivePadding,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 2.w,
+                  vertical: 1.w,
                 ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPaginationDots(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(3, (index) {
-        return Container(
-          width: 8,
-          height: 8,
-          margin: EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: index == 1
-                ? AppColors.textPrimary
-                : AppColors.textSecondary.withValues(alpha: 0.3),
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget _buildBottomSection(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(context.responsiveBorderRadius * 3),
-          topRight: Radius.circular(context.responsiveBorderRadius * 3),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                ),
+                child: Text(
+                  '${currentImageIndex + 1}/${productDetails.images.length}',
+                  style: TextStyles.textViewRegular12.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
-      child: Padding(
-        padding: EdgeInsets.all(context.responsivePadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product Title and Description
+    );
+  }
 
-            // Quantity Selector
-            _buildQuantitySelector(context),
-
-            SizedBox(height: context.responsiveMargin * 2),
-
-            // Size Options
-            _buildSizeOptions(context),
-
-            SizedBox(height: context.responsiveMargin * 2),
-
-            // Flavor Options
-            _buildFlavorOptions(context),
-
-            SizedBox(height: context.responsiveMargin * 2),
-          ],
+  Widget _buildPaginationDots(BuildContext context, List<String> images) {
+    if (images.length <= 1) return const SizedBox.shrink();
+    
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        images.length,
+        (index) => Container(
+          margin: EdgeInsets.symmetric(horizontal: 1.w),
+          width: 2.w,
+          height: 2.w,
+          decoration: BoxDecoration(
+            color: index == 0 ? AppColors.primary : AppColors.grey,
+            shape: BoxShape.circle,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProductInfo(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+  Widget _buildProductInfo(BuildContext context, ProductDetailsDataModel productDetails) {
+    return Container(
+      width: context.responsiveWidth,
+      padding: EdgeInsets.all(3.w),
+      margin: EdgeInsets.all(3.w),
+   
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Title
           Text(
-            "crunchy_chicken_nuggets".tr(),
-            style: TextStyles.textViewBold18.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w700,
-            ),
+            productDetails.name,
+            style: TextStyles.textViewBold18,
           ),
-
-          SizedBox(height: context.responsiveMargin),
-
-          // Description
-          Text(
-            "chicken_nuggets_description".tr(),
-            style: TextStyles.textViewRegular14.copyWith(
-              color: AppColors.textSecondary,
-              height: 1.5,
-              fontSize: 15.sp,
+          if (productDetails.description.isNotEmpty) ...[
+            SizedBox(height: context.responsiveMargin),
+            Text(
+              productDetails.description,
+              style: TextStyles.textViewRegular14.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
-          ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomSection(BuildContext context, ProductDetailsDataModel productDetails) {
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      margin: EdgeInsets.symmetric(horizontal: 3.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildQuantitySelector(context),
+          ...productDetails.attributes.map((attribute) => Column(
+            children: [
+              SizedBox(height:2.h),
+              _buildAttributeOptions(context, attribute),
+            ],
+          )),
         ],
       ),
     );
@@ -305,146 +410,109 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget _buildQuantitySelector(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "quantity".tr(),
-          style: TextStyles.textViewMedium16.copyWith(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
+        Text("quantity".tr(), style: TextStyles.textViewMedium16),
+ 
+ SizedBox(height: 2.h),
+   Row(children: [     GestureDetector(
+          onTap: () {
+            if (quantity > 1) {
+              setState(() {
+                quantity--;
+              });
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(1.w),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.primary),
+              borderRadius: BorderRadius.circular(2.2.w),
+            ),
+            child: Icon(Icons.remove, color: AppColors.primary,size: 5.w,),
           ),
         ),
-
-        SizedBox(height: context.responsiveMargin * 1.5),
-
-        // Quantity Controls
-        Row(
-          children: [
-            // Decrease Button
-            GestureDetector(
-              onTap: () {
-                if (quantity > 1) {
-                  setState(() {
-                    quantity--;
-                  });
-                }
-              },
-              child: Container(
-                width: context.responsiveIconSize * 1.2,
-                height: context.responsiveIconSize * 1.2,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius * .8,
-                  ),
-                  border: Border.all(color: AppColors.textPrimary, width: 1.5),
-                ),
-                child: Icon(
-                  Icons.remove,
-                  color: AppColors.textPrimary,
-                  size: context.responsiveIconSize,
-                ),
-              ),
+        SizedBox(width: 3.w),
+        Text(quantity.toString(), style: TextStyles.textViewBold20),
+        SizedBox(width: 3.w),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              quantity++;
+            });
+          },
+          child: Container(
+            padding: EdgeInsets.all(1.w),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(2.2.w),
             ),
-
-            SizedBox(width: context.responsiveMargin),
-
-            // Quantity Display
-            Text(
-              quantity.toString(),
-              style: TextStyles.textViewBold18.copyWith(
-                color: AppColors.textPrimary,
-              ),
-            ),
-
-            SizedBox(width: context.responsiveMargin),
-
-            // Increase Button
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  quantity++;
-                });
-              },
-              child: Container(
-                width: context.responsiveIconSize * 1.2,
-                height: context.responsiveIconSize * 1.2,
-                decoration: BoxDecoration(
-                  color: AppColors.textPrimary,
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius * .8,
-                  ),
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: AppColors.white,
-                  size: context.responsiveIconSize,
-                ),
-              ),
-            ),
-          ],
+            child: Icon(Icons.add, color: AppColors.white,size: 5.w,),
+          ),
         ),
+      ],)
+      
       ],
     );
   }
 
-  Widget _buildSizeOptions(BuildContext context) {
+  Widget _buildAttributeOptions(BuildContext context, ProductAttributeModel attribute) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "size".tr(),
-          style: TextStyles.textViewMedium16.copyWith(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
-          ),
+          attribute.attributeName,
+          style: TextStyles.textViewMedium16,
         ),
-
-        SizedBox(height: context.responsiveMargin),
-
-        Row(
-          children: sizeOptions.map((size) {
-            final isSelected = selectedSize == size;
-            return SizedBox(
-              width: context.responsiveWidth * 0.25,
-              height: 4.h,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedSize = size;
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.only(
-                    right: sizeOptions.last == size
-                        ? 0
-                        : context.responsiveMargin,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    vertical: context.responsiveMargin,
-                    horizontal: context.responsivePadding,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.textPrimary : AppColors.white,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveBorderRadius * 2,
-                    ),
-                    border: Border.all(
-                      color: AppColors.textPrimary,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Text(
-                    size,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.textViewMedium14.copyWith(
-                      color: isSelected
-                          ? AppColors.white
-                          : AppColors.textPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
+        SizedBox(height: 2.h),
+        Wrap(
+          
+          spacing: context.responsiveMargin,
+          children: attribute.products.asMap().entries.map((entry) {
+            final index = entry.key;
+            final product = entry.value;
+            return GestureDetector(
+              onTap: () {
+               
+               if(!attribute.products[index].selected){
+                Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider<ProductDetailsCubit>(
+                              create: (context) => ProductDetailsCubit(
+                                ServiceLocator.get<ProductDetailsService>(),
+                              ),
+                            ),
+                            BlocProvider<CartCubit>(
+                              create: (context) => CartCubit(ServiceLocator.get<CartService>()),
+                            ),
+                          ],
+                          child: ProductDetailsScreen(productId: product.productId),
+                        ),
+                      ),
+                    );
+               }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 4.w,
+                  vertical: 2.w,
+                ),
+                decoration: BoxDecoration(
+                  color: product.selected ? AppColors.primary : AppColors.white,
+                 
+                 border: Border.all(color:
+                  AppColors.primary),
+                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                ),
+                child: Text(
+                  '${product.name} \n${product.finalPrice}${'egp'.tr()}',
+                  textAlign: TextAlign.center,
+                  style: TextStyles.textViewMedium14.copyWith(
+                    
+                    color: product.selected ? AppColors.white : AppColors.primary,
                   ),
                 ),
               ),
@@ -455,215 +523,342 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildFlavorOptions(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "flavor".tr(),
-          style: TextStyles.textViewMedium16.copyWith(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-
-        SizedBox(height: context.responsiveMargin),
-
-        Row(
-          children: flavorOptions.map((flavor) {
-            final isSelected = selectedFlavor == flavor;
-            return SizedBox(
-              width: context.responsiveWidth * 0.3,
-              height: 4.h,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedFlavor = flavor;
-                  });
-                },
-                child: Container(
-                  width: context.responsiveWidth * 0.3,
-                  margin: EdgeInsets.only(
-                    right: flavorOptions.last == flavor
-                        ? 0
-                        : context.responsiveMargin,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    vertical: context.responsiveMargin,
-                    horizontal: context.responsivePadding * .5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.textPrimary : AppColors.white,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveBorderRadius * 2,
-                    ),
-                    border: Border.all(
-                      color: AppColors.textPrimary,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Text(
-                    flavor,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.textViewMedium14.copyWith(
-                      color: isSelected
-                          ? AppColors.white
-                          : AppColors.textPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, ProductDetailsDataModel productDetails) {
+    // Calculate total price based on quantity
+    final double unitPrice = _extractPrice(productDetails.finalPrice);
+    final double totalPrice = unitPrice * quantity;
+    
     return Container(
-      padding: EdgeInsets.all(context.responsivePadding),
+      padding: EdgeInsets.only(left: 4.w, right: 4.w, top: 4.w, bottom: 6.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius * 2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, -2),
+          ),
+        ],
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.responsiveBorderRadius * 2)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Add to Cart Button
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                "253",
-                style: TextStyles.textViewBold20.copyWith(color: Colors.green),
+            Text(
+                '${totalPrice.toStringAsFixed(2)} ${productDetails.finalPrice.split(' ').length > 1 ? productDetails.finalPrice.split(' ').last : ''}',
+                style: TextStyles.textViewBold18.copyWith(
+                  color: Colors.green,
+                ),
               ),
-              Text(
-                'EGP',
-                style: TextStyles.textViewBold16.copyWith(color: Colors.green),
+               Text(
+                "egp".tr(),
+                style: TextStyles.textViewBold16.copyWith(
+                  color: Colors.green,
+                ),
               ),
+             
             ],
           ),
-
-          PrimaryButton(
-            text: "place_order".tr(),
+          const Spacer(),
+          SizedBox(
             width: 45.w,
-            onPressed: () {},
-            color: AppColors.primary,
+            height: 7.h,
+            child: BlocBuilder<CartCubit, CartState>(
+              builder: (context, cartState) {
+                return PrimaryButton(
+                  isLoading: cartState is CartLoading,
+                  borderRadius: 20.w,
+                  width: 40.w,
+                  text: "add_to_cart".tr(),
+                  onPressed: () {
+                    // Handle place order with quantity
+                    _handlePlaceOrder(context.read<CartCubit>(), productDetails, quantity, totalPrice);
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMoreLikeThisSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+  /// Opens full-screen image gallery
+  void _openImageGallery(BuildContext context, List<String> images, int initialIndex) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ImageGalleryScreen(
+          images: images,
+          initialIndex: initialIndex,
+        ),
+      ),
+    );
+  }
+
+  /// Extracts numeric price from price string (handles currency symbols and spaces)
+  double _extractPrice(String priceString) {
+    // Remove common currency symbols and extract numbers
+    final cleanPrice = priceString.replaceAll(RegExp(r'[^\d.,]'), '');
+    return double.tryParse(cleanPrice.replaceAll(',', '.')) ?? 0.0;
+  }
+
+  void _handlePlaceOrder(CartCubit cartCubit, ProductDetailsDataModel productDetails, int quantity, double totalPrice) {
+    print('_handlePlaceOrder called with productId: ${productDetails.id}, quantity: $quantity');
+    // Add item to cart using the CartCubit
+    cartCubit.addToCart(
+      productId: productDetails.id,
+      quantity: quantity,
+      warehouseId: 1, // Default warehouse ID - you might want to get this from user location or settings
+    );
+  }
+
+  Widget _buildMoreLikeThisSection(BuildContext context, List<RelatedProductModel> relatedProducts) {
+    if (relatedProducts.isEmpty) return const SizedBox.shrink();
+    
+    return Container(
+      width: context.responsiveWidth,
+      padding: EdgeInsets.all(3.w),
+      margin: EdgeInsets.all(3.w),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "more_like_this".tr(),
             style: TextStyles.textViewBold16.copyWith(
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
             ),
           ),
-
-          SizedBox(height: context.responsiveMargin),
-
+          SizedBox(height: 2.h),
           SizedBox(
-            height:
-                context.responsiveContainerHeight *
-                1.1, // Made bigger as requested
+            height: 24.h,
             child: ListView.builder(
+              padding: EdgeInsets.zero,
               scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemCount: 3,
+              itemCount: relatedProducts.length,
               itemBuilder: (context, index) {
-                return Container(
-                  width: context.responsiveWidth * 0.42,
-                  margin: EdgeInsets.only(right: context.responsiveMargin),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveBorderRadius * 1.5,
+                final product = relatedProducts[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider<ProductDetailsCubit>(
+                              create: (context) => ProductDetailsCubit(
+                                ServiceLocator.get<ProductDetailsService>(),
+                              ),
+                            ),
+                            BlocProvider<CartCubit>(
+                              create: (context) => CartCubit(ServiceLocator.get<CartService>()),
+                            ),
+                          ],
+                          child: ProductDetailsScreen(productId: product.id),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 45.w,
+                    margin: EdgeInsets.only(left: 3.w),
+                    padding: EdgeInsets.all(3.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(3.w),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    border: Border.all(color: AppColors.borderLight, width: 1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.shadowLight,
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min, // Fix overflow
-                    children: [
-                      // Product Image
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          context.responsiveBorderRadius,
-                        ),
-                        child: Image.asset(
-                          height: 13.h,
-                          AppAssets.juhaynaCoconutMilk, // Placeholder image
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: AppColors.borderLight,
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: AppColors.textSecondary,
-                                size: context.responsiveIconSize,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-
-                      // Product Info
-                      Flexible(
-                        // Changed from Expanded to Flexible to prevent overflow
-                        child: Padding(
-                          padding: EdgeInsets.all(context.responsivePadding),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min, // Fix overflow
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "juhayna_yogurt_plain".tr(),
-                                style: TextStyles.textViewMedium14.copyWith(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w600,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Product Image Container
+                        Expanded(
+                          flex: 5,
+                          child: 
+                          Center(
+                            child: Container(
+                            margin: EdgeInsets.only(bottom: 1.h),
+                            decoration: BoxDecoration(
+                              color: AppColors.homeGradientWhite,
+                              borderRadius: BorderRadius.circular(3.w),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(3.w),
+                              child: CachedNetworkImage(
+                                imageUrl: product.baseImage,
+                                fit: BoxFit.contain,
+                                placeholder: (context, url) => Container(
+                                  color: AppColors.homeGradientWhite,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                              SizedBox(height: context.responsiveMargin * 0.3),
-
-                              Text(
-                                "12.25 ${"egp".tr()}",
-                                style: TextStyles.textViewBold16.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w700,
+                                errorWidget: (context, url, error) => Container(
+                                  color: AppColors.homeGradientWhite,
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    color: AppColors.textSecondary,
+                                    size: 8.w,
+                                  ),
                                 ),
                               ),
-                            ],
+                            ),
+                          )),
+                        ),
+                        // Product Info
+                        Expanded(
+                          flex: 2,
+                          child:  Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    product.name,
+                                    style: TextStyles.textViewMedium16.copyWith(
+                                      color: AppColors.textPrimary,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                          
+                                Text(
+                                  '${product.finalPrice} ${"egp".tr()}',
+                                  style: TextStyles.textViewBold16.copyWith(
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Full-screen image gallery for product images
+class ImageGalleryScreen extends StatefulWidget {
+  final List<String> images;
+  final int initialIndex;
+
+  const ImageGalleryScreen({
+    super.key,
+    required this.images,
+    required this.initialIndex,
+  });
+
+  @override
+  State<ImageGalleryScreen> createState() => _ImageGalleryScreenState();
+}
+
+class _ImageGalleryScreenState extends State<ImageGalleryScreen> {
+  late PageController _pageController;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          '${_currentIndex + 1} / ${widget.images.length}',
+          style: const TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          // Image viewer
+          PageView.builder(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            itemCount: widget.images.length,
+            itemBuilder: (context, index) {
+              return Center(
+                child: InteractiveViewer(
+                  minScale: 0.5,
+                  maxScale: 3.0,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.images[index],
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 64,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          // Bottom indicator dots
+          if (widget.images.length > 1)
+            Positioned(
+              bottom: 100,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.images.length,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentIndex == index
+                          ? Colors.black
+                          : Colors.black.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+      
+      
         ],
       ),
     );
