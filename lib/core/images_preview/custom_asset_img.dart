@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -38,7 +39,10 @@ class CustomImageAsset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: Image.asset(
+      child: 
+      
+      assetName.contains('.svg') ? CustomSvgImage(assetName: assetName,width: width,height: height) :
+      Image.asset(
         assetName,
         width: width,
         height: height,

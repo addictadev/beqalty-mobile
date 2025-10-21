@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.app.baqalty",
+        "sha256_cert_fingerprints": [
+          "E2:C8:05:56:A1:E1:77:7C:A1:67:C4:30:68:E5:09:E5:59:CB:FA:61:DA:49:BB:B1:E4:0C:60:5B:42:36:51:1C"
+        ]
+    }
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "TEAM_ID.com.app.baqalty"
+        ],
+        "components": [
+          {
+            "/": "/shared-cart*",
+            "comment": "Matches shared cart links"
+          },
+          {
+            "/": "/shared-cart.html*",
+            "comment": "Matches shared cart HTML page"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEAM_ID.com.app.baqalty"
+    ]
+  }
+}
