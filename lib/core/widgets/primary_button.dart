@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import '../theme/app_colors.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -23,7 +24,7 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
     this.margin,
     this.color,
-    this.borderRadius = 30,
+    this.borderRadius = 90,
     this.textStyle,
     this.width,
     this.height,
@@ -40,7 +41,7 @@ class PrimaryButton extends StatelessWidget {
     return Container(
       margin: margin ?? EdgeInsets.zero,
       width: width ?? double.infinity,
-      height: height ?? 56,
+      height: height ?? 7.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         color: color ?? AppColors.primary,

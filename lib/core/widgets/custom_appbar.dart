@@ -65,7 +65,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       scrolledUnderElevation: 0,
       title: _buildTitle(theme, defaultTitleColor),
-      leading: _buildActions(context, defaultIconColor),
+      leading: _buildLeading(context, defaultIconColor),
+      actions: actions,
     );
   }
 
@@ -110,11 +111,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  _buildActions(BuildContext context, Color defaultIconColor) {
-    if (actions != null) {
-      return actions;
-    }
-
+  Widget? _buildLeading(BuildContext context, Color defaultIconColor) {
     if (!showBackButton) {
       return null;
     }

@@ -1,48 +1,74 @@
 part of 'cart_cubit.dart';
 
-abstract class CartState extends Equatable {
+sealed class CartState extends Equatable {
   const CartState();
 
   @override
   List<Object> get props => [];
 }
 
-class CartInitial extends CartState {}
+final class CartInitial extends CartState {}
 
-class CartLoading extends CartState {}
+final class CartLoading extends CartState {}
 
-class CartLoaded extends CartState {
-  final List<CartItemModel> cartItems;
-  final double subTotal;
-  final double deliveryFee;
-  final double discount;
-  final double total;
-  final bool isCartSaved;
+final class CartItemAdded extends CartState {
+  final AddToCartResponseModel cartItem;
 
-  const CartLoaded({
-    required this.cartItems,
-    required this.subTotal,
-    required this.deliveryFee,
-    required this.discount,
-    required this.total,
-    required this.isCartSaved,
-  });
+  const CartItemAdded({required this.cartItem});
 
   @override
-  List<Object> get props => [
-    cartItems,
-    subTotal,
-    deliveryFee,
-    discount,
-    total,
-    isCartSaved,
-  ];
+  List<Object> get props => [cartItem];
 }
 
-class CartError extends CartState {
+final class CartLoaded extends CartState {
+  final CartDataModel cartData;
+
+  const CartLoaded({required this.cartData});
+
+  @override
+  List<Object> get props => [cartData];
+}
+
+final class CartUpdated extends CartState {
+  final CartDataModel cartData;
+
+  const CartUpdated({required this.cartData});
+
+  @override
+  List<Object> get props => [cartData];
+}
+
+final class CartItemRemoved extends CartState {
+  final CartDataModel cartData;
+
+  const CartItemRemoved({required this.cartData});
+
+  @override
+  List<Object> get props => [cartData];
+}
+
+final class CartCleared extends CartState {
   final String message;
 
-  const CartError(this.message);
+  const CartCleared({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class CartEmpty extends CartState {
+  final String message;
+
+  const CartEmpty({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class CartError extends CartState {
+  final String message;
+
+  const CartError({required this.message});
 
   @override
   List<Object> get props => [message];

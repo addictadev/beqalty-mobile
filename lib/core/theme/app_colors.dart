@@ -12,6 +12,7 @@ class AppColors {
   static const Color overlayGray = Color(0xFFF6F7FD);
   // Text Colors
   static const Color textPrimary = Color(0xFF1A1A1A);
+  static const Color grey = Color.fromARGB(255, 71, 70, 70);
   static const Color textSecondary = Color(0xFF6C757D);
   static const Color textLight = Color(0xFF9CA3AF);
   static const Color bgProfile = Color(0xFFE9E9FF);

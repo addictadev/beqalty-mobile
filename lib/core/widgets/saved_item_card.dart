@@ -4,6 +4,7 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
+import 'package:iconsax/iconsax.dart';
 
 class SavedItemCard extends StatelessWidget {
   final String productName;
@@ -65,6 +66,7 @@ class SavedItemCard extends StatelessWidget {
         child: Padding(
           padding: padding ?? EdgeInsets.all(3.w),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Image
               _buildProductImage(context),
@@ -75,8 +77,8 @@ class SavedItemCard extends StatelessWidget {
               Expanded(child: _buildProductInfo(context)),
 
               // // Action Buttons
-              // if (showFavoriteButton || showAddToCartButton)
-              //   _buildActionButtons(context),
+              if (showFavoriteButton )
+                _buildActionButtons(context),
             ],
           ),
         ),
@@ -162,5 +164,48 @@ class SavedItemCard extends StatelessWidget {
     );
   }
 
-
+  Widget _buildActionButtons(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Favorite Button
+        GestureDetector(
+          onTap: onFavorite,
+          child: Container(
+            padding: EdgeInsets.all(2.w),
+            decoration: BoxDecoration(
+              color: isFavorite ? AppColors.error.withOpacity(0.1) : AppColors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+            ),
+            child: Icon(
+              isFavorite ? Iconsax.heart5 : Iconsax.heart,
+              color: isFavorite ? AppColors.error : AppColors.textSecondary,
+              size: context.responsiveIconSize,
+            ),
+          ),
+        ),
+        
+        if (showAddToCartButton) ...[
+          SizedBox(height: 1.h),
+          
+          // Add to Cart Button
+          GestureDetector(
+            onTap: onAddToCart,
+            child: Container(
+              padding: EdgeInsets.all(2.w),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+              ),
+              child: Icon(
+                Iconsax.shopping_cart,
+                color: AppColors.primary,
+                size: context.responsiveIconSize,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
 }
