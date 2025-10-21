@@ -4,49 +4,47 @@ import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:baqalty/features/orders/business/models/order_model.dart';
+import 'package:baqalty/features/orders/business/cubit/orders_cubit.dart';
+import 'package:baqalty/features/orders/data/services/orders_service.dart';
 import 'package:baqalty/features/orders/presentation/widgets/order_card.dart';
 import 'package:baqalty/features/orders/presentation/view/track_order_screen.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/di/service_locator.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => OrdersCubit(ServiceLocator.get<OrdersService>())
+        ..getAllOrders(),
+      child: const OrdersScreenBody(),
+    );
+  }
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  List<OrderModel> _orders = [];
-  List<OrderModel> _filteredOrders = [];
-  bool _isLoading = true;
+class OrdersScreenBody extends StatefulWidget {
+  const OrdersScreenBody({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _loadOrders();
-  }
+  State<OrdersScreenBody> createState() => _OrdersScreenBodyState();
+}
+
+class _OrdersScreenBodyState extends State<OrdersScreenBody> {
+  final TextEditingController _searchController = TextEditingController();
+  List<OrderModel> _filteredOrders = [];
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _loadOrders() {
-    // Simulate loading orders
-    Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _orders = _getMockOrders();
-        _filteredOrders = _orders;
-        _isLoading = false;
-      });
-    });
   }
 
   void _onTrackOrder(OrderModel order) {
@@ -78,9 +76,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
             // Orders List
             Expanded(
-              child: _isLoading
-                  ? _buildLoadingState()
-                  : _buildOrdersList(context),
+              child: BlocBuilder<OrdersCubit, OrdersState>(
+                builder: (context, state) {
+                  if (state is OrdersLoading) {
+                    return _buildLoadingState();
+                  } else if (state is OrdersLoaded) {
+                    _filteredOrders = _convertToOrderModels(state.orders);
+                    return _buildOrdersList(context);
+                  } else if (state is OrdersError) {
+                    return _buildErrorState(context, state.message);
+                  }
+                  return _buildLoadingState();
+                },
+              ),
             ),
           ],
         ),
@@ -175,60 +183,64 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  List<OrderModel> _getMockOrders() {
-    return [
-      OrderModel(
-        id: '1',
-        orderNumber: '#BAQ10247',
-        orderDate: DateTime.now().subtract(const Duration(hours: 2)),
-        itemCount: 12,
-        status: OrderStatus.outForDelivery,
-        estimatedTime: '20 min',
-        totalAmount: 253.0,
-        items: [],
+  Widget _buildErrorState(BuildContext context, String message) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Iconsax.warning_2,
+            size: context.responsiveIconSize * 4,
+            color: AppColors.error,
+          ),
+
+          SizedBox(height: context.responsiveMargin * 2),
+
+          Text(
+            "error_loading_orders".tr(),
+            style: TextStyles.textViewBold18.copyWith(
+              color: AppColors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          SizedBox(height: context.responsiveMargin),
+
+          Text(
+            message,
+            style: TextStyles.textViewRegular14.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          SizedBox(height: context.responsiveMargin * 2),
+
+          ElevatedButton(
+            onPressed: () {
+              context.read<OrdersCubit>().getAllOrders();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+            ),
+            child: Text("retry".tr()),
+          ),
+        ],
       ),
-      OrderModel(
-        id: '2',
-        orderNumber: '#BAQ10246',
-        orderDate: DateTime.now().subtract(
-          const Duration(days: 1, hours: 18, minutes: 20),
-        ),
-        itemCount: 3,
-        status: OrderStatus.delivered,
-        totalAmount: 89.50,
-        items: [],
-      ),
-      OrderModel(
-        id: '3',
-        orderNumber: '#BAQ10245',
-        orderDate: DateTime.now().subtract(
-          const Duration(days: 1, hours: 18, minutes: 20),
-        ),
-        itemCount: 3,
-        status: OrderStatus.delivered,
-        totalAmount: 67.25,
-        items: [],
-      ),
-      OrderModel(
-        id: '4',
-        orderNumber: '#BAQ10244',
-        orderDate: DateTime.now().subtract(
-          const Duration(days: 1, hours: 18, minutes: 20),
-        ),
-        itemCount: 3,
-        status: OrderStatus.delivered,
-        totalAmount: 45.80,
-        items: [],
-      ),
-      OrderModel(
-        id: '5',
-        orderNumber: '#BAQ10243',
-        orderDate: DateTime.now().subtract(const Duration(days: 2, hours: 6)),
-        itemCount: 3,
-        status: OrderStatus.failed,
-        totalAmount: 32.15,
-        items: [],
-      ),
-    ];
+    );
   }
+
+  List<OrderModel> _convertToOrderModels(List<dynamic> ordersData) {
+    return ordersData.map((orderData) {
+      return OrderModel.fromOrderData(
+        id: orderData.id.toString(),
+        code: orderData.code,
+        status: orderData.status,
+        totalPrice: orderData.totalPrice,
+        itemsCount: orderData.itemsCount,
+      );
+    }).toList();
+  }
+
 }

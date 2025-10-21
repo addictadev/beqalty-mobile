@@ -32,6 +32,67 @@ class OrderModel extends Equatable {
     required this.items,
   });
 
+  // Factory constructor to create OrderModel from OrderDataModel
+  factory OrderModel.fromOrderData({
+    required String id,
+    required String code,
+    required String status,
+    required String totalPrice,
+    required int itemsCount,
+  }) {
+    return OrderModel(
+      id: id,
+      orderNumber: code,
+      orderDate: DateTime.now(), // We'll use current date since API doesn't provide date
+      itemCount: itemsCount,
+      status: _parseStatus(status),
+      totalAmount: double.tryParse(totalPrice) ?? 0.0,
+      items: [],
+    );
+  }
+
+  // Helper method to parse status string to OrderStatus enum
+  static OrderStatus _parseStatus(String status) {
+    switch (status.toLowerCase()) {
+      // Arabic statuses
+      case 'قيد الانتظار':
+        return OrderStatus.pending;
+      case 'تم التأكيد':
+      case 'مؤكد':
+        return OrderStatus.confirmed;
+      case 'جاري تجهيز الطلب':
+        return OrderStatus.preparing;
+      case 'في طريقه للتسليم':
+      case 'في الطريق':
+        return OrderStatus.outForDelivery;
+      case 'تم التسليم':
+        return OrderStatus.delivered;
+      case 'فشل':
+      case 'فشل التسليم':
+        return OrderStatus.failed;
+      case 'ملغي':
+      case 'تم الإلغاء':
+        return OrderStatus.cancelled;
+      // English statuses (fallback)
+      case 'pending':
+        return OrderStatus.pending;
+      case 'confirmed':
+        return OrderStatus.confirmed;
+      case 'preparing':
+        return OrderStatus.preparing;
+      case 'out_for_delivery':
+        return OrderStatus.outForDelivery;
+      case 'delivered':
+        return OrderStatus.delivered;
+      case 'failed':
+        return OrderStatus.failed;
+      case 'cancelled':
+        return OrderStatus.cancelled;
+      default:
+        return OrderStatus.pending;
+    }
+  }
+
   String get statusText {
     switch (status) {
       case OrderStatus.pending:
