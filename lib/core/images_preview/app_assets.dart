@@ -45,6 +45,8 @@ class AppAssets {
   static const String savedIcon = "$_iconsPath/saved.svg";
   static const String unSavedIcon = "$_iconsPath/unsave.svg";
   static const String replaceSvg = "$_iconsPath/repl.svg";
+  static const String ser = "$_iconsPath/sur.svg";
+  static const String seprice = "$_iconsPath/su.svg";
 
   // Product images (placeholder)
   static const String juhaynaMilk = "$_imagesPath/juhayna_milk.png";
@@ -71,4 +73,6 @@ class AppAssets {
   static const String walletBackground = "$_imagesPath/wallet_background.png";
   static const String noMony = "$_imagesPath/nomon.png";
   static const String rewardsBackground = "$_imagesPath/rew.png";
+  static const String deliveryPerson = "$_imagesPath/ddd.png";
+  static const String saveCart = "$_imagesPath/sav.png";
 }
