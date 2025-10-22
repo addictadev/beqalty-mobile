@@ -147,7 +147,7 @@ class OrderDetailsScreenBody extends StatelessWidget {
           
           SizedBox(height: context.responsiveMargin * 2),
           
-          // Rating Button (only for delivered orders that can be rated and haven't been rated)
+          // // Rating Button (only for delivered orders that can be rated and haven't been rated)
           if (_isDeliveredOrder(orderDetails.status) && 
               orderDetails.canRating && 
               !orderDetails.isRating)
@@ -576,7 +576,7 @@ class OrderDetailsScreenBody extends StatelessWidget {
         icon: Icon(
           Iconsax.star,
           color: Colors.white,
-          size: context.responsiveIconSize * 1.2,
+          size: context.responsiveIconSize * 1,
         ),
         label: Text(
           "rate_delivery".tr(),
@@ -628,7 +628,7 @@ class OrderDetailsScreenBody extends StatelessWidget {
                if (orderDetails.rating['comment'] == null)  Text(
                   "already_rated".tr().isEmpty ? "Already Rated" : "already_rated".tr(),
                   style: TextStyles.textViewBold16.copyWith(
-                    color: AppColors.success,
+                    color: AppColors.textPrimary,
                   ),
                 ),
               if (orderDetails.rating['comment'] != null)
