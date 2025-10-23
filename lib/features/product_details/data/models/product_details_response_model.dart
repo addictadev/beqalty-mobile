@@ -390,4 +390,11 @@ class RelatedProductModel {
       dicount.hashCode ^
       finalPrice.hashCode ^
       baseImage.hashCode;
+
+  // Helper getters for easier usage
+  double get basePriceDouble => double.tryParse(basePrice) ?? 0.0;
+  double get discountDouble => double.tryParse(dicount) ?? 0.0;
+  double get finalPriceDouble => double.tryParse(finalPrice) ?? 0.0;
+  bool get hasDiscount => discountDouble > 0;
+  double get discountPercentage => basePriceDouble > 0 ? (discountDouble / basePriceDouble) * 100 : 0;
 }

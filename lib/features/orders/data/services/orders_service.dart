@@ -16,4 +16,18 @@ class OrdersService {
       rethrow;
     }
   }
+
+  Future<ApiResponse<Map<String, dynamic>>> reorder(int orderId) async {
+    try {
+      final response = await DioHelper.post<Map<String, dynamic>>(
+        EndPoints.setOrderAsCart(orderId),
+        requiresAuth: true,
+        fromJson: (json) => json as Map<String, dynamic>,
+      );
+      
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

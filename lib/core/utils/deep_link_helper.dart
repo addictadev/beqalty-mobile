@@ -20,7 +20,7 @@ class DeepLinkHelper {
 
   /// Generates a web link that redirects to app or store
   static String generateWebLink(String sharedCartId) {
-    return 'https://baqalty-back.addictaco.website/shared-cart.html?id=$sharedCartId'; // Points to your server
+    return 'https://baqalty-back.addictaco.website/shared-cart-redirect.html?shared_cart_id=$sharedCartId'; // Points to your server
   }
 
   /// Shares cart via WhatsApp with deep link
@@ -68,9 +68,37 @@ $sharedCartUrl
     try {
       final uri = Uri.parse(link);
       
+      // Handle custom scheme deep links
       if (uri.scheme == appScheme) {
         if (uri.host == 'shared-cart') {
-          final sharedCartId = uri.queryParameters['id'];
+          // Try both 'id' and 'shared_cart_id' parameters
+          final sharedCartId = uri.queryParameters['id'] ?? uri.queryParameters['shared_cart_id'];
+          if (sharedCartId != null) {
+            return {
+              'type': 'shared-cart',
+              'id': sharedCartId,
+            };
+          }
+        }
+      }
+      
+      // Handle API URLs that need to be converted to redirect URLs
+      if (uri.scheme == 'https' && uri.host == 'baqalty-back.addictaco.website') {
+        if (uri.path == '/api/v1/cart') {
+          final sharedCartId = uri.queryParameters['shared_cart_id'];
+          if (sharedCartId != null) {
+            return {
+              'type': 'shared-cart',
+              'id': sharedCartId,
+            };
+          }
+        }
+      }
+      
+      // Handle redirect URLs
+      if (uri.scheme == 'https' && uri.host == 'baqalty-back.addictaco.website') {
+        if (uri.path == '/shared-cart-redirect.html' || uri.path == '/shared-cart.html') {
+          final sharedCartId = uri.queryParameters['shared_cart_id'] ?? uri.queryParameters['id'];
           if (sharedCartId != null) {
             return {
               'type': 'shared-cart',
@@ -83,6 +111,22 @@ $sharedCartUrl
       return null;
     } catch (e) {
       return null;
+    }
+  }
+
+  /// Converts API URL to redirect URL
+  static String convertApiUrlToRedirectUrl(String apiUrl) {
+    try {
+      final uri = Uri.parse(apiUrl);
+      if (uri.host == 'baqalty-back.addictaco.website' && uri.path == '/api/v1/cart') {
+        final sharedCartId = uri.queryParameters['shared_cart_id'];
+        if (sharedCartId != null) {
+          return generateWebLink(sharedCartId);
+        }
+      }
+      return apiUrl; // Return original if can't convert
+    } catch (e) {
+      return apiUrl; // Return original if error
     }
   }
 

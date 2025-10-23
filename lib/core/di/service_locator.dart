@@ -11,8 +11,11 @@ import '../../features/saved_carts/data/services/favorite_items_service_impl.dar
 import '../../features/saved_carts/data/services/saved_carts_service.dart';
 import '../../features/checkout/data/services/checkout_service.dart';
 import '../../features/orders/data/services/orders_service.dart';
+import '../../features/orders/data/services/order_rating_service.dart';
 import '../../features/orders/data/services/replacement_orders_service.dart';
 import '../../features/rewards/data/services/loyalty_service.dart';
+import '../../features/profile/data/services/notification_service.dart';
+import '../../features/wallet/data/services/wallet_service.dart';
 
 class ServiceLocator {
   static final GetIt _getIt = GetIt.instance;
@@ -27,8 +30,11 @@ class ServiceLocator {
     _initializeCheckoutService();
     _initializeOrdersService();
     _initializeOrderDetailsService();
+    _initializeOrderRatingService();
     _initializeReplacementOrdersService();
     _initializeLoyaltyService();
+    _initializeNotificationService();
+    _initializeWalletService();
   }
 
   static Future<void> _initializeSharedPreferencesService() async {
@@ -84,6 +90,12 @@ class ServiceLocator {
     );
   }
 
+  static void _initializeOrderRatingService() {
+    _getIt.registerLazySingleton<OrderRatingService>(
+      () => OrderRatingService(),
+    );
+  }
+
 
   static SharedPreferencesService get sharedPreferencesService {
     return _getIt<SharedPreferencesService>();
@@ -110,6 +122,18 @@ class ServiceLocator {
   static void _initializeLoyaltyService() {
     _getIt.registerLazySingleton<LoyaltyService>(
       () => LoyaltyServiceImpl(),
+    );
+  }
+
+  static void _initializeNotificationService() {
+    _getIt.registerLazySingleton<NotificationService>(
+      () => NotificationServiceImpl(),
+    );
+  }
+
+  static void _initializeWalletService() {
+    _getIt.registerLazySingleton<WalletService>(
+      () => WalletServiceImpl(),
     );
   }
 

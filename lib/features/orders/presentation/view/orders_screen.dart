@@ -1,5 +1,9 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/images_preview/custom_asset_img.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
+import 'package:baqalty/core/widgets/primary_button.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -14,24 +18,34 @@ import 'package:baqalty/features/orders/presentation/widgets/order_card.dart';
 import 'package:baqalty/features/orders/presentation/view/track_order_screen.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/di/service_locator.dart';
+import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sizer/sizer.dart';
 
 class OrdersScreen extends StatelessWidget {
-  const OrdersScreen({super.key});
+  final VoidCallback? onNavigateToCategories;
+  final VoidCallback? onNavigateToCart;
+  const OrdersScreen({super.key, this.onNavigateToCategories, this.onNavigateToCart});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => OrdersCubit(ServiceLocator.get<OrdersService>())
         ..getAllOrders(),
-      child: const OrdersScreenBody(),
+      child: OrdersScreenBody(
+        onNavigateToCategories: onNavigateToCategories,
+        onNavigateToCart: onNavigateToCart,
+      ),
     );
   }
 }
 
 class OrdersScreenBody extends StatefulWidget {
-  const OrdersScreenBody({super.key});
+  final VoidCallback? onNavigateToCategories;
+  final VoidCallback? onNavigateToCart;
+  
+  const OrdersScreenBody({super.key, this.onNavigateToCategories, this.onNavigateToCart});
 
   @override
   State<OrdersScreenBody> createState() => _OrdersScreenBodyState();
@@ -52,11 +66,135 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
   }
 
   void _onOrderAgain(OrderModel order) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Reordering from ${order.orderNumber}'),
-        backgroundColor: AppColors.success,
+    _showReorderDialog(order);
+  }
+
+  void _showReorderDialog(OrderModel order) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "reorder_dialog_title".tr(),
+            style: TextStyles.textViewBold16.copyWith(
+              color: AppColors.textPrimary,
+            ),
+          ),
+          content: Text(
+            "reorder_dialog_message".tr(),
+            style: TextStyles.textViewRegular14.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "cancel".tr(),
+                style: TextStyles.textViewMedium14.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleReorder(order);
+              },
+              child: Text(
+                "clear_basket".tr(),
+                style: TextStyles.textViewMedium14.copyWith(
+                  color: AppColors.error,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleReorder(OrderModel order) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+            ),
+          );
+        },
+      );
+
+      // Call the reorder API
+      final ordersService = ServiceLocator.get<OrdersService>();
+      final response = await ordersService.reorder(int.parse(order.id));
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      if (response.status && context.mounted) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message ?? 'Order added to cart successfully'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+
+        // Navigate to cart screen
+        _navigateToCartScreen();
+      } else {
+        // Show error message
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message ?? 'Failed to reorder'),
+              backgroundColor: AppColors.error,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Close loading dialog if still open
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  void _navigateToCartScreen() {
+    // Navigate back to main navigation with cart tab selected
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider<NavBarCubit>(
+              create: (context) {
+                final cubit = NavBarCubit();
+                // Set cart tab as active immediately
+                cubit.changeTab(1);
+                return cubit;
+              },
+            ),
+          ],
+          child: const MainNavigationScreen(),
+        ),
       ),
+      (route) => false,
     );
   }
 
@@ -71,8 +209,8 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
             // App Bar
             CustomAppBar(title: "my_orders".tr()),
 
-            // Search Bar
-            _buildSearchBar(context),
+            // Search Bar (only show when there are orders)
+            if (_filteredOrders.isNotEmpty) _buildSearchBar(context),
 
             // Orders List
             Expanded(
@@ -150,35 +288,52 @@ class _OrdersScreenBodyState extends State<OrdersScreenBody> {
 
   Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Iconsax.box_1,
-            size: context.responsiveIconSize * 4,
-            color: AppColors.textSecondary,
-          ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: context.responsivePadding * 2),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Empty orders illustration
+     CustomImageAsset(assetName: AppAssets.noOrders, width: 20.w, height: 20.w),
 
-          SizedBox(height: context.responsiveMargin * 2),
+            SizedBox(height: context.responsiveMargin * 3),
 
-          Text(
-            "no_orders_found".tr(),
-            style: TextStyles.textViewBold18.copyWith(
-              color: AppColors.textPrimary,
+            // Main heading
+            Text(
+              "no_orders_found".tr().isEmpty ? "لا توجد طلبات" : "no_orders_found".tr(),
+              style: TextStyles.textViewBold20.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: 18.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
 
-          SizedBox(height: context.responsiveMargin),
+            SizedBox(height: context.responsiveMargin),
 
-          Text(
-            "start_shopping_message".tr(),
-            style: TextStyles.textViewRegular14.copyWith(
-              color: AppColors.textSecondary,
+            // Description
+            Text(
+              "start_shopping_n".tr(),
+              style: TextStyles.textViewRegular16.copyWith(
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+
+            SizedBox(height: context.responsiveMargin * 3),
+
+            // Start shopping button
+            PrimaryButton(
+              onPressed: () {
+               Navigator.of(context).pop();
+             if (widget.onNavigateToCategories != null) {
+               widget.onNavigateToCategories!();
+             }
+              },
+              text: "browse_products".tr(),
+            ),
+          ],
+        ),
       ),
     );
   }
