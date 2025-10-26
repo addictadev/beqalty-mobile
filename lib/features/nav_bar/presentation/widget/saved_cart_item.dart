@@ -17,6 +17,7 @@ class SavedCartItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: context.responsiveWidth * 0.40,
         height: context.responsiveContainerHeight * 0.7,
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -56,7 +57,7 @@ class SavedCartItem extends StatelessWidget {
 
             // Title
             Text(
-              title.tr(),
+              title,
               style: TextStyles.textViewMedium14.copyWith(
                 color: AppColors.textPrimary,
               ),

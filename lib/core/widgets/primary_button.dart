@@ -41,7 +41,7 @@ class PrimaryButton extends StatelessWidget {
     return Container(
       margin: margin ?? EdgeInsets.zero,
       width: width ?? double.infinity,
-      height: height ?? 7.h,
+      height: height ?? 6.5.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         color: color ?? AppColors.primary,

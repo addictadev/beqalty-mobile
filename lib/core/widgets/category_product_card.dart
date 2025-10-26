@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -70,24 +71,10 @@ class CategoryProductCard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(3.w),
-                    child: CachedNetworkImage(
+                    child: CustomCachedImage(
                       imageUrl: product.baseImage,
                       fit: BoxFit.contain,
-                      placeholder: (context, url) => Container(
-                        color: AppColors.homeGradientWhite,
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: AppColors.homeGradientWhite,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: AppColors.textSecondary,
-                          size: 8.w,
-                        ),
-                      ),
-                    ),
+                    ),  
                   ),
                 ),
               ),

@@ -70,11 +70,21 @@ class EndPoints {
   // Orders Endpoints
   static const String orders = "orders";
   static String orderDetails(int orderId) => "orders/$orderId";
+  static const String orderRating = "orders/order-rating";
   static const String replacementOrders = "orders-replacement";
   static String selectReplacement(int orderId) => "orders/$orderId/select-replacement";
+  static String setOrderAsCart(int orderId) => "orders/$orderId/set-as-cart";
   static const String loyalty = "loyalty";
   static const String loyaltyRedeem = "loyalty/redeem";
   static const String pointsTransactions = "points/transactions";
+
+  // Notifications Endpoints
+  static const String notifications = "notifications";
+  static String markNotificationAsRead(int notificationId) => "notifications/$notificationId/read";
+  static const String markAllNotificationsAsRead = "notifications/read-all";
+
+  // Wallet Endpoints
+  static const String walletTransactions = "wallet/transactions";
 
   // Discount Endpoints
   static const String applyDiscount = "dicounts/apply";

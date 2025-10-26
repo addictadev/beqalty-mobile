@@ -581,7 +581,8 @@
   "search_orders": "Search Orders",
   "loading_orders": "Loading Orders...",
   "no_orders_found": "No Orders Found",
-  "start_shopping_message": "Start shopping now to see your orders here",
+  "start_shopping_n": "You haven’t placed any orders. Once you do, they’ll appear here for easy tracking.",
+  "start_shopping": "Start Shopping",
   "error_loading_orders": "Error Loading Orders",
   "retry": "Retry",
   "order_details": "Order Details",
@@ -682,7 +683,14 @@
   "already_rated": "Already Rated",
   "rating": "Rating",
   "comment": "Comment",
-  "go_to_home": "Go to Home",
   "your_order_from": "Your Order From",
-  "add_items": "Add Items"
+  "add_items": "Add Items",
+  "reorder_dialog_title": "There's already an open basket",
+  "reorder_dialog_message": "Are you sure you want to delete the old basket and create a new one?",
+  "clear_basket": "Clear basket",
+  "loading_saved_items": "Loading saved items...",
+  "no_default_address": "No warehouse available in this area",
+  "add_address_to_continue": "Please add an address to continue with your order",
+  "add_address": "Add Address"
+
 }

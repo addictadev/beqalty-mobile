@@ -1,9 +1,10 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/images_preview/custom_asset_img.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 
@@ -101,54 +102,25 @@ class _SaveCartDialogState extends State<SaveCartDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              Row(
-                children: [
-                  Icon(
-                    Iconsax.shopping_bag,
-                    color: AppColors.primary,
-                    size: 24.sp,
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      "save_cart".tr(),
-                      style: TextStyles.textViewBold18.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Icon(
-                      Icons.close,
-                      color: AppColors.textSecondary,
-                      size: 20.sp,
-                    ),
-                  ),
-                ],
-              ),
+           
 
               SizedBox(height: 20),
 
               // Description
-              Text(
-                "enter_cart_name_description".tr(),
-                style: TextStyles.textViewMedium14.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
+            Center(child: CustomImageAsset(assetName: AppAssets.saveCart,width: 20.w,height: 20.w,)),
 
               SizedBox(height: 20),
 
               // Name input field
               CustomTextFormField(
                 controller: _nameController,
+                label: "cart_name".tr(),
                 hint: "cart_name".tr(),
                 hintStyle: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14.sp,
                 ),
+                borderColor: AppColors.borderLight,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "please_enter_cart_name".tr();
@@ -160,33 +132,13 @@ class _SaveCartDialogState extends State<SaveCartDialog> {
                 },
                 textInputAction: TextInputAction.done,
               ),
-
               SizedBox(height: 24),
-
               // Buttons
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.borderLight),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: Text(
-                        "cancel".tr(),
-                        style: TextStyles.textViewMedium16.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
                     child: PrimaryButton(
+                      height: 5.5.h,
                       text: "save".tr(),
                       onPressed: _isLoading ? null : _handleSave,
                       color: AppColors.primary,

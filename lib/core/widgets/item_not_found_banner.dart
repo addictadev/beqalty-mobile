@@ -39,8 +39,8 @@ class ItemNotFoundBanner extends StatelessWidget {
       child: Row(
         children: [
           // Icon with refresh symbol
-     CustomSvgImage(assetName: AppAssets.replaceSvg  ),
-          SizedBox(width: context.responsivePadding),
+     CustomSvgImage(assetName: AppAssets.replaceSvg, color: AppColors.white, width: 9.w, height: 9.w),
+          SizedBox(width: 2.w),
           // Text content
           Expanded(
             child: Column(
@@ -50,16 +50,16 @@ class ItemNotFoundBanner extends StatelessWidget {
                   title ?? "your_item_not_found".tr(),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: .5.h),
                 Text(
                   subtitle ?? "please_replace_your_item".tr(),
                   style: TextStyle(
-                    color: Colors.grey[300],
-                    fontSize: 14,
+                    color: Colors.white,
+                    fontSize: 14.sp,
                   ),
                 ),
               ],

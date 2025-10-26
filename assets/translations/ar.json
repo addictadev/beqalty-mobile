@@ -521,7 +521,7 @@
   "item_added_to_cart": "تم إضافة العنصر إلى السلة",
   "no_results_found": "لم يتم العثور على نتائج!",
   "try_similar_word_or_something_more_general": "جرب كلمة مشابهة أو شيئاً أكثر عمومية.",
-  "your_item_not_found": "لم يتم العثور على عنصرك",
+  "your_item_not_found": "لم يعد المنتج متوافر بالمتجز",
   "please_replace_your_item": "يرجى استبدال عنصرك",
   "replace_item": "استبدال العنصر",
   "your_categories_not_found": "لم يتم العثور على فئاتك",
@@ -568,7 +568,7 @@
   "search_orders": "البحث في الطلبات",
   "loading_orders": "جاري تحميل الطلبات...",
   "no_orders_found": "لا توجد طلبات",
-  "start_shopping_message": "ابدأ التسوق الآن لرؤية طلباتك هنا",
+  "start_shopping_n": "لم تقم بتقديم أي طلبات. بمجرد قيامك بذلك، ستظهر هنا لتسهيل تتبعها",
   "error_loading_orders": "خطأ في تحميل الطلبات",
   "retry": "إعادة المحاولة",
   "order_details": "تفاصيل الطلب",
@@ -669,7 +669,13 @@
   "already_rated": "تم التقييم",
   "rating": "التقييم",
   "comment": "التعليق",
-  "go_to_home": "العودة للرئيسية",
   "your_order_from": "طلبك من",
-  "add_items": "إضافة عناصر"
+  "add_items": "إضافة عناصر",
+  "reorder_dialog_title": "يوجد سلة موجودة بالفعل",
+  "reorder_dialog_message": "هل أنت متأكد من أنك تريد حذف السلة القديمة وإنشاء سلة جديدة؟",
+  "clear_basket": "مسح السلة",
+  "loading_saved_items": "جاري تحميل العناصر المحفوظة...",
+  "no_default_address": "لا يوجد متجز متاج في هذه المنطقة",
+  "add_address_to_continue": "يرجى إضافة عنوان للاستمرار في الطلب"
+
 }

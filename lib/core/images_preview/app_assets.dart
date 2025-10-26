@@ -10,6 +10,7 @@ class AppAssets {
 
   static const String appIcon = "$_iconsPath/app_icon.png";
   static const String splashIcon = "$_imagesPath/splash_icon.svg";
+  static const String splashIconImage = "$_iconsPath/bb.png";
   static const String authBackground = "$_imagesPath/auth_background.png";
   static const String authLoginBackground = "$_imagesPath/auth_welcome.svg";
   static const String shoppingBag = "$_iconsPath/cart_icon.svg";

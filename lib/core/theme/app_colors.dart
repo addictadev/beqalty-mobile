@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Existing colors
-  static const Color primary = Color(0xFF2D3043);
+  // static const Color primary = Color(0xFF2D3043);
+  static const Color primary = Color(0xFFE71D35);
+
   static const Color primaryLight = Color(0xFF44AAFD);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
@@ -43,6 +45,7 @@ class AppColors {
   static const Color chatTimestamp = Color(0xFFA0A0A0);
   static const Color chatInputBackground = Color(0xFFFFFFFF);
   static const Color chatButtonBlue = Color(0xFF42A5F5);
+  static const Color blueColor = Color(0xFF2687D7);
   static const Color chatSpecialButton = Color(0xFFADD8E6);
   static const Color chatCircularButton = Color(0xFFE0E0E0);
   static const Color messagebackColor = Color(0xFF060C32);

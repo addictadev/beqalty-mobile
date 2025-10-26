@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -99,19 +100,11 @@ class SavedItemCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-        child: Image.network(
-          productImage,
+        child: CustomCachedImage(
+          imageUrl: productImage,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: AppColors.scaffoldBackground,
-              child: Icon(
-                Icons.image_not_supported,
-                color: AppColors.textSecondary,
-                size: context.responsiveIconSize,
-              ),
-            );
-          },
+          width: width,
+          height: height,
         ),
       ),
     );

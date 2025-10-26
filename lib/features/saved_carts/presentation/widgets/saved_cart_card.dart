@@ -6,17 +6,20 @@ import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/features/saved_carts/business/models/saved_cart_model.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:iconsax/iconsax.dart';
 
 class SavedCartCard extends StatelessWidget {
   final SavedCartModel savedCart;
   final VoidCallback? onCartDetails;
   final VoidCallback? onOrderAgain;
+  final VoidCallback? onDelete;
 
   const SavedCartCard({
     super.key,
     required this.savedCart,
     this.onCartDetails,
     this.onOrderAgain,
+    this.onDelete,
   });
 
   @override
@@ -37,10 +40,15 @@ class SavedCartCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: [
+          // Delete Icon in top-right corner
+      
+          // Main content
+       Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -51,6 +59,8 @@ class SavedCartCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Cart Icon
+                   
+       Row(children: [            
                     Container(
                       width: context.responsiveIconSize * 2,
                       height: context.responsiveIconSize * 2,
@@ -66,7 +76,25 @@ class SavedCartCard extends StatelessWidget {
                         color: AppColors.black,
                       ),
                     ),
-
+                    SizedBox(width: context.responsiveMargin),
+GestureDetector(
+              onTap: onDelete,
+              child: Container(
+                width: context.responsiveIconSize * 2,
+                height: context.responsiveIconSize * 2,
+                decoration: BoxDecoration(
+                  color: AppColors.error.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius * 0.8,
+                  ),
+                ),
+                child: Icon(
+                  Iconsax.trash,
+                  color: AppColors.error,
+                  size: context.responsiveIconSize * 0.9,
+                ),
+              ),
+            ),],),
                     SizedBox(height: context.responsiveMargin),
 
                     // Cart Name
@@ -147,8 +175,11 @@ class SavedCartCard extends StatelessWidget {
               ),
             ],
           ),
-        ],
-      ),
-    );
+              ],
+            ),
+          
+        
+      
+    ]));
   }
 }
