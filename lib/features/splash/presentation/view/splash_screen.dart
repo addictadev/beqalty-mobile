@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:baqalty/core/images_preview/custom_asset_img.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/features/splash/business/cubit/splash_cubit.dart';
@@ -152,16 +153,17 @@ class _SplashScreenBodyState extends State<SplashScreenBody>
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.primary,
         body: Center(
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: ScaleTransition(
               scale: _scaleAnimation,
-              child: CustomSvgImage(
-                assetName: AppAssets.splashIcon,
+              child: CustomImageAsset(
+                assetName: AppAssets.splashIconImage,
                 width: 200,
                 height: 200,
+                color: AppColors.white,
               ),
             ),
           ),

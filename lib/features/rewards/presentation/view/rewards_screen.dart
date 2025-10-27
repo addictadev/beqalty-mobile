@@ -1,12 +1,16 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/core/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
-import 'package:baqalty/features/rewards/business/models/reward_offer.dart';
-import 'package:baqalty/features/rewards/business/models/reward_history.dart';
-import 'package:baqalty/features/rewards/presentation/widgets/offer_list_item.dart';
-import 'package:baqalty/features/rewards/presentation/widgets/history_list_item.dart';
+import 'package:baqalty/features/rewards/business/cubit/loyalty_cubit.dart';
+import 'package:baqalty/features/rewards/business/cubit/loyalty_state.dart';
+import 'package:baqalty/features/rewards/data/services/loyalty_service.dart';
+import 'package:baqalty/core/di/service_locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 
@@ -18,89 +22,61 @@ class RewardsScreen extends StatefulWidget {
 }
 
 class _RewardsScreenState extends State<RewardsScreen> {
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => LoyaltyCubit(
+        ServiceLocator.get<LoyaltyService>(),
+      )..getLoyaltyData(),
+      child: const RewardsView(),
+    );
+  }
+}
+
+class RewardsView extends StatefulWidget {
+  const RewardsView({super.key});
+
+  @override
+  State<RewardsView> createState() => _RewardsViewState();
+}
+
+class _RewardsViewState extends State<RewardsView> {
   int _selectedTabIndex = 0;
-  final int _earnedPoints = 3222;
 
-  final List<RewardOffer> _offers = [
-    const RewardOffer(
-      id: '1',
-      title: 'Fruits Discount',
-      pointsRequired: 400,
-      description: '5% On Fruits',
-      iconPath: 'fruits',
-    ),
-    const RewardOffer(
-      id: '2',
-      title: 'Vegetables Discount',
-      pointsRequired: 300,
-      description: '10% On Vegetables',
-      iconPath: 'vegetables',
-    ),
-    const RewardOffer(
-      id: '3',
-      title: 'Bread Discount',
-      pointsRequired: 200,
-      description: '15% On Bread',
-      iconPath: 'bread',
-    ),
-    const RewardOffer(
-      id: '4',
-      title: 'Snacks Discount',
-      pointsRequired: 500,
-      description: '8% On Snacks',
-      iconPath: 'snacks',
-    ),
-  ];
 
-  final List<RewardHistory> _history = [
-    RewardHistory(
-      id: '1',
-      title: 'Earned Points',
-      description: 'Earned Points',
-      points: 450,
-      type: TransactionType.earned,
-      iconPath: 'gift',
-      date: DateTime(2024, 8, 1),
-    ),
-    RewardHistory(
-      id: '2',
-      title: 'Fruits Discount',
-      description: '5% On Fruits',
-      points: 550,
-      type: TransactionType.redeemed,
-      iconPath: 'fruits',
-      date: DateTime(2024, 7, 29),
-    ),
-    RewardHistory(
-      id: '3',
-      title: 'Chicken Discount',
-      description: '5% On chicken',
-      points: 850,
-      type: TransactionType.redeemed,
-      iconPath: 'chicken',
-      date: DateTime(2024, 7, 28),
-    ),
-    RewardHistory(
-      id: '4',
-      title: 'Earned Points',
-      description: 'Earned Points',
-      points: 700,
-      type: TransactionType.earned,
-      iconPath: 'gift',
-      date: DateTime(2024, 7, 25),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: Column(
-        children: [
-          _buildRewardsHeader(),
-
-          Expanded(child: _buildTabbedContent()),
-        ],
+      body: BlocListener<LoyaltyCubit, LoyaltyState>(
+        listener: (context, state) {
+          if (state is LoyaltyError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppAssets.rewardsBackground),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            children: [
+              _buildRewardsHeader(),
+              Expanded(child: _buildTabbedContent()),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -111,48 +87,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
       constraints: BoxConstraints(minHeight: 35.h, maxHeight: 40.h),
       child: Stack(
         children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(color: AppColors.primary),
-          ),
+   
 
-          Positioned(
-            top: -20,
-            right: -20,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.success.withValues(alpha: 0.3),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 40,
-            left: -30,
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.warning.withValues(alpha: 0.4),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 20,
-            right: 40,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primaryLight.withValues(alpha: 0.5),
-              ),
-            ),
-          ),
+         
+      
 
           SafeArea(
             child: Padding(
@@ -218,12 +156,38 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
                         SizedBox(height: context.responsiveMargin),
 
-                        Text(
-                          _earnedPoints.toString(),
-                          style: TextStyles.textViewBold27.copyWith(
-                            color: AppColors.white,
-                            fontSize: 32.sp,
-                          ),
+                        BlocBuilder<LoyaltyCubit, LoyaltyState>(
+                          builder: (context, state) {
+                            if (state is LoyaltyLoaded) {
+                              return Text(
+                                state.loyaltyData.balance.toString(),
+                                style: TextStyles.textViewBold27.copyWith(
+                                  color: AppColors.white,
+                                  fontSize: 32.sp,
+                                ),
+                              );
+                            } else if (state is LoyaltyTransactionsLoaded) {
+                              return Text(
+                                state.transactionsData.balance.toString(),
+                                style: TextStyles.textViewBold27.copyWith(
+                                  color: AppColors.white,
+                                  fontSize: 32.sp,
+                                ),
+                              );
+                            } else if (state is LoyaltyLoading) {
+                              return const CircularProgressIndicator(
+                                color: AppColors.white,
+                              );
+                            } else {
+                              return Text(
+                                '0',
+                                style: TextStyles.textViewBold27.copyWith(
+                                  color: AppColors.white,
+                                  fontSize: 32.sp,
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -292,6 +256,14 @@ class _RewardsScreenState extends State<RewardsScreen> {
           setState(() {
             _selectedTabIndex = index;
           });
+          // Load data based on selected tab
+          if (index == 0) {
+            // Load loyalty data for offers tab
+            context.read<LoyaltyCubit>().getLoyaltyData();
+          } else if (index == 1) {
+            // Load points transactions for history tab
+            context.read<LoyaltyCubit>().getPointsTransactions();
+          }
         },
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -341,14 +313,54 @@ class _RewardsScreenState extends State<RewardsScreen> {
         ),
 
         Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.only(bottom: context.responsivePadding),
-            itemCount: _offers.length,
-            itemBuilder: (context, index) {
-              return OfferListItem(
-                offer: _offers[index],
-                onGetPressed: () => _onOfferGetPressed(_offers[index]),
-              );
+          child: BlocBuilder<LoyaltyCubit, LoyaltyState>(
+            builder: (context, state) {
+              if (state is LoyaltyLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is LoyaltyError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
+                        style: TextStyles.textViewMedium16.copyWith(
+                          color: AppColors.error,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 2.h),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<LoyaltyCubit>().getLoyaltyData();
+                        },
+                        child: Text("retry".tr()),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is LoyaltyLoaded) {
+                if (state.loyaltyData.transactions.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "no_offers_available".tr(),
+                      style: TextStyles.textViewMedium16.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  );
+                }
+                
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: context.responsivePadding),
+                  itemCount: state.loyaltyData.transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = state.loyaltyData.transactions[index];
+                    return _buildLoyaltyOfferItem(transaction);
+                  },
+                );
+              }
+              return const SizedBox.shrink();
             },
           ),
         ),
@@ -372,14 +384,75 @@ class _RewardsScreenState extends State<RewardsScreen> {
         ),
 
         Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.only(bottom: context.responsivePadding),
-            itemCount: _history.length,
-            itemBuilder: (context, index) {
-              return HistoryListItem(
-                history: _history[index],
-                onTap: () => _onHistoryItemTapped(_history[index]),
-              );
+          child: BlocBuilder<LoyaltyCubit, LoyaltyState>(
+            builder: (context, state) {
+              if (state is LoyaltyLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is LoyaltyError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
+                        style: TextStyles.textViewMedium16.copyWith(
+                          color: AppColors.error,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 2.h),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<LoyaltyCubit>().getPointsTransactions();
+                        },
+                        child: Text("retry".tr()),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is LoyaltyTransactionsLoaded) {
+                if (state.transactionsData.transactions.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "no_transactions".tr(),
+                      style: TextStyles.textViewMedium16.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  );
+                }
+                
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: context.responsivePadding),
+                  itemCount: state.transactionsData.transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = state.transactionsData.transactions[index];
+                    return _buildPointsTransactionItem(transaction);
+                  },
+                );
+              } else if (state is LoyaltyLoaded) {
+                // Fallback to old loyalty data if points transactions not loaded
+                if (state.loyaltyData.transactions.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "no_transactions".tr(),
+                      style: TextStyles.textViewMedium16.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  );
+                }
+                
+                return ListView.builder(
+                  padding: EdgeInsets.only(bottom: context.responsivePadding),
+                  itemCount: state.loyaltyData.transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = state.loyaltyData.transactions[index];
+                    return _buildTransactionItem(transaction);
+                  },
+                );
+              }
+              return const SizedBox.shrink();
             },
           ),
         ),
@@ -387,21 +460,302 @@ class _RewardsScreenState extends State<RewardsScreen> {
     );
   }
 
-  void _onOfferGetPressed(RewardOffer offer) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${'redeeming'.tr()} ${offer.description}'),
-        backgroundColor: AppColors.success,
+  Widget _buildLoyaltyOfferItem(transaction) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: context.responsivePadding,
+        vertical: 0.5.h,
+      ),
+      padding: EdgeInsets.all(context.responsivePadding),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(2.w),
+            width: 12.w,
+            height: 12.w,
+            decoration: BoxDecoration(
+              color: AppColors.grey.withOpacity(0.05),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+            ),
+            child: CustomSvgImage(assetName: AppAssets.ser,width: 8.w,height: 8.w,)
+          ),
+          SizedBox(width: 3.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.locale.languageCode == 'ar' 
+                    ? transaction.titleAr 
+                    : transaction.titleEn,
+                  style: TextStyles.textViewBold14.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 0.5.h),
+             
+             Row(children: [     Text(
+                  '${transaction.pricePoints} ${"points".tr()}',
+                  style: TextStyles.textViewBold14.copyWith(
+                    color: AppColors.success,
+                  ),
+                ),  Text(
+                  ' --- ${transaction.value} ${"egp".tr()}',
+                  style: TextStyles.textViewBold14.copyWith(
+                    color: AppColors.success,
+                  ),
+                ),],)
+            
+            
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+         
+              PrimaryButton(
+                height: 4.5.h,
+                width: 20.w,
+                fontSize: 12.sp,
+                onPressed: transaction.isActive 
+                  ? () => _onLoyaltyOfferGetPressed(transaction)
+                  : null,
+              text: "get".tr(),
+                ),
+              
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  void _onHistoryItemTapped(RewardHistory history) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${'viewing'.tr()} ${history.description}'),
-        backgroundColor: AppColors.info,
+  void _onLoyaltyOfferGetPressed(transaction) async {
+    try {
+      await context.read<LoyaltyCubit>().redeemLoyaltyPoints(transaction.id);
+      
+      // Show success message after redemption
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("redeemed_successfully".tr()),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("error_occurred".tr()),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+
+  Widget _buildTransactionItem(transaction) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: context.responsivePadding,
+        vertical: 0.5.h,
+      ),
+      padding: EdgeInsets.all(context.responsivePadding),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 12.w,
+            height: 12.w,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.stars,
+              color: AppColors.primary,
+              size: 6.w,
+            ),
+          ),
+          SizedBox(width: 3.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.locale.languageCode == 'ar' 
+                    ? transaction.titleAr 
+                    : transaction.titleEn,
+                  style: TextStyles.textViewBold14.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 0.5.h),
+                Text(
+                  '${transaction.pricePoints} ${"points".tr()}',
+                  style: TextStyles.textViewMedium12.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                SizedBox(height: 0.5.h),
+                Text(
+                  '${transaction.value} ${"egp".tr()}',
+                  style: TextStyles.textViewBold12.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                _formatDate(transaction.createdAt),
+                style: TextStyles.textViewMedium12.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              SizedBox(height: 0.5.h),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 2.w,
+                  vertical: 0.5.h,
+                ),
+                decoration: BoxDecoration(
+                  color: transaction.isActive 
+                    ? AppColors.success.withOpacity(0.1)
+                    : AppColors.error.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+                ),
+                child: Text(
+                  transaction.isActive ? "active".tr() : "inactive".tr(),
+                  style: TextStyles.textViewMedium10.copyWith(
+                    color: transaction.isActive ? AppColors.success : AppColors.error,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildPointsTransactionItem(transaction) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: context.responsivePadding,
+        vertical: 0.5.h,
+      ),
+      padding: EdgeInsets.all(context.responsivePadding),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+               Container(
+            padding: EdgeInsets.all(2.w),
+            width: 12.w,
+            height: 12.w,
+            decoration: BoxDecoration(
+              color: AppColors.grey.withOpacity(0.05),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+            ),
+            child: CustomSvgImage(assetName: AppAssets.ser,width: 8.w,height: 8.w,)
+          ),
+          
+        
+          SizedBox(width: 3.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  transaction.reason,
+                  style: TextStyles.textViewBold14.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 0.5.h),
+                  Text(
+                _formatDate(transaction.createdAt),
+                style: TextStyles.textViewMedium12.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+                // SizedBox(height: 0.5.h),
+                // Text(
+                //   '${"request_type".tr()}: ${transaction.requestType}',
+                //   style: TextStyles.textViewMedium12.copyWith(
+                //     color: AppColors.textSecondary,
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+         
+          
+          Row(children: [    Icon(
+              transaction.type == 'earn' ? Icons.add : Icons.remove,
+              color: transaction.type == 'earn' ? AppColors.success : AppColors.error,
+              size: 5.w,
+            ),   Text(
+                  '${transaction.points} ${"points".tr()}',
+                  style: TextStyles.textViewBold14.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                    color: transaction.type == 'earn' ? AppColors.success : AppColors.error,
+                  ),
+                ),
+          ])
+           
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
 }

@@ -23,6 +23,7 @@ class AuthBackgroundWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.scaffoldBackground,
       body: Stack(
         children: [
@@ -31,20 +32,20 @@ class AuthBackgroundWidget extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: Container(
+            child: SizedBox(
               height: backgroundHeight,
               width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppAssets.authBackground),
-                  fit: backgroundFit,
-                  alignment: Alignment.bottomCenter,
-                  colorFilter: ColorFilter.mode(
-                    AppColors.backButtonColor,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   image: DecorationImage(
+              //     image: AssetImage(AppAssets.authBackground),
+              //     fit: backgroundFit,
+              //     alignment: Alignment.bottomCenter,
+              //     colorFilter: ColorFilter.mode(
+              //       AppColors.backButtonColor,
+              //       BlendMode.srcIn,
+              //     ),
+              //   ),
+              // ),
               // child: Container(
               //   decoration: BoxDecoration(
               //     gradient: LinearGradient(
@@ -63,6 +64,8 @@ class AuthBackgroundWidget extends StatelessWidget {
               // ),
             ),
           ),
+        
+        
           // Content section
           child,
         ],

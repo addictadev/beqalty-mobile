@@ -5,13 +5,13 @@ import 'package:baqalty/features/categories/business/cubit/category_cubit.dart';
 import 'package:baqalty/features/categories/data/models/categories_response_model.dart';
 import 'package:baqalty/core/widgets/custom_error_widget.dart';
 import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
+import 'package:baqalty/features/search/presentation/widgets/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/features/categories/presentation/widgets/debounced_search_field.dart';
-import 'package:baqalty/features/categories/presentation/widgets/no_categories_widget.dart';
 import 'package:baqalty/features/categories/presentation/view/categories_shimmer_view.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,11 +21,13 @@ import 'subcategory_products_screen.dart';
 class SubcategoryScreen extends StatelessWidget {
   final String categoryName;
   final String categoryId;
+  final String? sharedCartId;
 
   const SubcategoryScreen({
     super.key,
     required this.categoryName,
     required this.categoryId,
+    this.sharedCartId,
   });
 
   @override
@@ -35,6 +37,7 @@ class SubcategoryScreen extends StatelessWidget {
       child: SubcategoryScreenBody(
         categoryName: categoryName,
         categoryId: categoryId,
+        sharedCartId: sharedCartId,
       ),
     );
   }
@@ -43,11 +46,13 @@ class SubcategoryScreen extends StatelessWidget {
 class SubcategoryScreenBody extends StatefulWidget {
   final String categoryName;
   final String categoryId;
+  final String? sharedCartId;
 
   const SubcategoryScreenBody({
     super.key,
     required this.categoryName,
     required this.categoryId,
+    this.sharedCartId,
   });
 
   @override
@@ -246,10 +251,10 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
     SubCategoryLoaded state,
   ) {
     if (state.allSubcategories.isEmpty) {
-      return  NoCategoriesWidget(
-          isSearchResult: state.searchQuery.isNotEmpty,
+      return  BuildEmptyState(context,isSearchResult: state.searchQuery.isNotEmpty);
+         
         
-      );
+      
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -434,6 +439,7 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
         subcategoryName: subcategory.catName,
         categoryName: widget.categoryName,
         subcategoryId: subcategory.catId.toString(),
+        sharedCartId: widget.sharedCartId,
       ),
     );
   }

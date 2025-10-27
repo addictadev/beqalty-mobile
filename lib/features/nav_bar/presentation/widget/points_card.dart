@@ -100,8 +100,8 @@ class PointsCard extends StatelessWidget {
       onTap: points > 0 ? onRedeemTap : null,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: context.responsivePadding * 1.2,
-          vertical: context.responsiveMargin * 1.5,
+          horizontal: context.responsivePadding * 1.7,
+          vertical: context.responsiveMargin * 1.2,
         ),
         decoration: BoxDecoration(
           color: points > 0 ? AppColors.primary : AppColors.textSecondary,

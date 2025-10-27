@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(AppAssets.onboardingPattern),
+            image: AssetImage(AppAssets.onboardingPattern,),
             fit: BoxFit.cover,
           ),
         ),
@@ -128,6 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Center(
       child: CustomSvgImage(
         assetName: AppAssets.splashIcon,
+        color: AppColors.white,
         width: 200,
         height: 200,
       ),
