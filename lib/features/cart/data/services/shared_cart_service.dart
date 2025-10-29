@@ -12,6 +12,7 @@ class SharedCartServiceImpl implements SharedCartService {
     try {
       final response = await DioHelper.get<Map<String, dynamic>>(
         EndPoints.getSharedCart(sharedCartId),
+        requiresAuth: true,
       );
 
       final responseModel = CartResponseModel.fromJson(response.data!);

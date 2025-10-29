@@ -383,27 +383,27 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                     height: 1.5,
                   ),
                 ),
-                SizedBox(height: 1.h),
-                GestureDetector(
-                  onTap: () => _viewTopic(item),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 4.w,
-                      vertical: 3.w,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.bgProfile,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      "view_topic".tr(),
-                      style: TextStyles.textViewMedium14.copyWith(
-                        color: AppColors.primary,
-                        fontSize: FontSizes.s14,
-                      ),
-                    ),
-                  ),
-                ),
+                // SizedBox(height: 1.h),
+                // GestureDetector(
+                //   onTap: () => _viewTopic(item),
+                //   child: Container(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 4.w,
+                //       vertical: 3.w,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: AppColors.bgProfile,
+                //       borderRadius: BorderRadius.circular(20),
+                //     ),
+                //     child: Text(
+                //       "view_topic".tr(),
+                //       style: TextStyles.textViewMedium14.copyWith(
+                //         color: AppColors.primary,
+                //         fontSize: FontSizes.s14,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

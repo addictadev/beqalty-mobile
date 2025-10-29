@@ -72,6 +72,7 @@ class HomeDataModel {
   final WarehouseInfoModel warehouse;
   final int merchantReplacementOrdersCount;
   final WalletStatusModel walletStatus;
+  final List<SavedCartModel> savedCarts;
 
   HomeDataModel({
     required this.advertisements,
@@ -81,6 +82,7 @@ class HomeDataModel {
     required this.warehouse,
     required this.merchantReplacementOrdersCount,
     required this.walletStatus,
+    required this.savedCarts,
   });
 
   /// Creates a HomeDataModel from JSON data
@@ -109,6 +111,9 @@ class HomeDataModel {
       walletStatus: WalletStatusModel.fromJson(
         json['wallet_status'] as Map<String, dynamic>,
       ),
+      savedCarts: (json['saved_carts'] as List<dynamic>?)
+          ?.map((item) => SavedCartModel.fromJson(item as Map<String, dynamic>))
+          .toList() ?? [],
     );
   }
 
@@ -124,12 +129,13 @@ class HomeDataModel {
       'warehouse': warehouse.toJson(),
       'merchant_replacement_orders_count': merchantReplacementOrdersCount,
       'wallet_status': walletStatus.toJson(),
+      'saved_carts': savedCarts.map((item) => item.toJson()).toList(),
     };
   }
 
   @override
   String toString() {
-    return 'HomeDataModel(advertisements: $advertisements, categories: $categories, points: $points, discountedProducts: $discountedProducts, warehouse: $warehouse, merchantReplacementOrdersCount: $merchantReplacementOrdersCount, walletStatus: $walletStatus)';
+    return 'HomeDataModel(advertisements: $advertisements, categories: $categories, points: $points, discountedProducts: $discountedProducts, warehouse: $warehouse, merchantReplacementOrdersCount: $merchantReplacementOrdersCount, walletStatus: $walletStatus, savedCarts: $savedCarts)';
   }
 
   @override
@@ -143,7 +149,8 @@ class HomeDataModel {
         other.warehouse == warehouse &&
         other.merchantReplacementOrdersCount ==
             merchantReplacementOrdersCount &&
-        other.walletStatus == walletStatus;
+        other.walletStatus == walletStatus &&
+        other.savedCarts == savedCarts;
   }
 
   @override
@@ -154,7 +161,8 @@ class HomeDataModel {
       discountedProducts.hashCode ^
       warehouse.hashCode ^
       merchantReplacementOrdersCount.hashCode ^
-      walletStatus.hashCode;
+      walletStatus.hashCode ^
+      savedCarts.hashCode;
 }
 
 /// Model for advertisement data
@@ -238,13 +246,13 @@ class AdvertisementModel {
 class CategoryModel {
   final int catId;
   final String catName;
-  final String catImage;
+  final String? catImage;
   final String? catDescription;
 
   CategoryModel({
     required this.catId,
     required this.catName,
-    required this.catImage,
+    this.catImage,
     required this.catDescription,
   });
 
@@ -253,7 +261,7 @@ class CategoryModel {
     return CategoryModel(
       catId: json['cat_id'] as int,
       catName: json['cat_name'] as String,
-      catImage: json['cat_image'] as String,
+      catImage: json['cat_image'] as String?,
       catDescription: json['cat_description'] as String?,
     );
   }
@@ -418,12 +426,12 @@ class ProductWarehouseModel {
 class WarehouseInfoModel {
   final bool available;
   final String message;
-  final WarehouseModel warehouse;
+  final WarehouseModel? warehouse;
 
   WarehouseInfoModel({
     required this.available,
     required this.message,
-    required this.warehouse,
+    this.warehouse,
   });
 
   /// Creates a WarehouseInfoModel from JSON data
@@ -431,9 +439,9 @@ class WarehouseInfoModel {
     return WarehouseInfoModel(
       available: json['available'] as bool,
       message: json['message'] as String,
-      warehouse: WarehouseModel.fromJson(
-        json['warehouse'] as Map<String, dynamic>,
-      ),
+      warehouse: json['warehouse'] != null 
+        ? WarehouseModel.fromJson(json['warehouse'] as Map<String, dynamic>)
+        : null,
     );
   }
 
@@ -442,7 +450,7 @@ class WarehouseInfoModel {
     return {
       'available': available,
       'message': message,
-      'warehouse': warehouse.toJson(),
+      'warehouse': warehouse?.toJson(),
     };
   }
 
@@ -462,7 +470,7 @@ class WarehouseInfoModel {
 
   @override
   int get hashCode =>
-      available.hashCode ^ message.hashCode ^ warehouse.hashCode;
+      available.hashCode ^ message.hashCode ^ (warehouse?.hashCode ?? 0);
 }
 
 /// Model for warehouse details
@@ -601,4 +609,86 @@ class WalletStatusModel {
 
   @override
   int get hashCode => canOrder.hashCode ^ message.hashCode;
+}
+
+/// Model for saved cart data
+/// Contains saved cart information from home API
+class SavedCartModel {
+  final int id;
+  final int userId;
+  final String cartType;
+  final String name;
+  final int isActive;
+  final String createdAt;
+  final String updatedAt;
+  final List<dynamic> items;
+
+  SavedCartModel({
+    required this.id,
+    required this.userId,
+    required this.cartType,
+    required this.name,
+    required this.isActive,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.items,
+  });
+
+  /// Creates a SavedCartModel from JSON data
+  factory SavedCartModel.fromJson(Map<String, dynamic> json) {
+    return SavedCartModel(
+      id: json['id'] as int,
+      userId: json['user_id'] as int,
+      cartType: json['cart_type'] as String,
+      name: json['name'] as String,
+      isActive: json['is_active'] as int,
+      createdAt: json['created_at'] as String,
+      updatedAt: json['updated_at'] as String,
+      items: json['items'] as List<dynamic>,
+    );
+  }
+
+  /// Converts SavedCartModel to JSON data
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user_id': userId,
+      'cart_type': cartType,
+      'name': name,
+      'is_active': isActive,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'items': items,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'SavedCartModel(id: $id, userId: $userId, cartType: $cartType, name: $name, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt, items: $items)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is SavedCartModel &&
+        other.id == id &&
+        other.userId == userId &&
+        other.cartType == cartType &&
+        other.name == name &&
+        other.isActive == isActive &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt &&
+        other.items == items;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      userId.hashCode ^
+      cartType.hashCode ^
+      name.hashCode ^
+      isActive.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      items.hashCode;
 }

@@ -13,6 +13,7 @@ import 'package:baqalty/features/auth/presentation/view/create_new_password_scre
 import 'package:baqalty/features/auth/presentation/view/login_screen.dart';
 import 'package:baqalty/features/auth/presentation/view/otp_verification_screen.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
+import 'package:baqalty/features/cart/presentation/view/shared_cart_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -444,7 +445,18 @@ class AuthCubit extends Cubit<AuthState> {
           response.data!.data.user.email,
         );
         SharedPrefsHelper.setLoginState(true);
-        NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+        
+        // Check if there's a pending shared cart ID
+        final pendingCartId = SharedPrefsHelper.getString('pending_shared_cart_id');
+        if (pendingCartId != null && pendingCartId.isNotEmpty) {
+          // Clear the pending cart ID
+          await SharedPrefsHelper.remove('pending_shared_cart_id');
+          // Navigate to shared cart instead of main screen
+          NavigationManager.navigateToAndFinish(SharedCartScreen(sharedCartId: pendingCartId));
+        } else {
+          // Normal navigation to main screen
+          NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+        }
       } else {
         emit(VerifyRegisterOtpErrorState(message: response.message!));
         ToastHelper.showErrorToast(response.message!);
@@ -595,7 +607,18 @@ class AuthCubit extends Cubit<AuthState> {
           response.data!.data.user.email,
         );
         SharedPrefsHelper.setLoginState(true);
-        NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+        
+        // Check if there's a pending shared cart ID
+        final pendingCartId = SharedPrefsHelper.getString('pending_shared_cart_id');
+        if (pendingCartId != null && pendingCartId.isNotEmpty) {
+          // Clear the pending cart ID
+          await SharedPrefsHelper.remove('pending_shared_cart_id');
+          // Navigate to shared cart instead of main screen
+          NavigationManager.navigateToAndFinish(SharedCartScreen(sharedCartId: pendingCartId));
+        } else {
+          // Normal navigation to main screen
+          NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+        }
       } else {
         emit(LoginErrorState(message: response.message!));
         ToastHelper.showErrorToast(response.message!);
@@ -675,7 +698,11 @@ class AuthCubit extends Cubit<AuthState> {
           response.data!.data.avatar ?? '',
         );
 
-        NavigationManager.pop();
+        // Refresh user data to update UI immediately
+        await getUser();
+
+        // Navigate to main navigation screen after successful profile update
+        NavigationManager.navigateToAndFinish(const MainNavigationScreen());
       } else {
         emit(UpdateProfileErrorState(message: response.message!));
         ToastHelper.showErrorToast(response.message!);

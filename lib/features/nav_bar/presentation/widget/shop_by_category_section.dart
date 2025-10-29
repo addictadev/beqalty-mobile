@@ -3,6 +3,7 @@ import 'package:baqalty/features/nav_bar/data/models/home_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
+import 'package:baqalty/core/widgets/item_not_found_banner.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 import 'category_card.dart';
@@ -24,7 +25,6 @@ class ShopByCategorySection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(context.responsivePadding),
       margin: EdgeInsets.symmetric(
-        horizontal: context.responsivePadding,
         vertical: context.responsivePadding * 0.5,
       ),
       decoration: BoxDecoration(
@@ -71,14 +71,14 @@ class ShopByCategorySection extends StatelessWidget {
 
   Widget _buildCategoryGrid() {
     if (categories.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(2.h),
-          child: Text(
-            "no_categories_available".tr(),
-            style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-          ),
-        ),
+      return ItemNotFoundBanner(
+        title: "your_categories_not_found".tr(),
+        subtitle: "please_refresh_to_load_categories".tr(),
+        buttonText: "refresh_categories".tr(),
+        onReplacePressed: () {
+          // You can add refresh logic here
+          // For example, trigger a refresh of home data
+        },
       );
     }
 

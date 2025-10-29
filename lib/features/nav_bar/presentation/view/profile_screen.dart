@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:baqalty/core/constants/app_constants.dart';
 import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/utils/shared_prefs_helper.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit/nav_bar_cubit.dart';
 import 'package:baqalty/features/orders/presentation/view/orders_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_carts_screen.dart';
 import 'package:baqalty/features/profile/presentation/view/my_account_screen.dart';
@@ -9,8 +11,12 @@ import 'package:baqalty/features/profile/presentation/view/settings_screen.dart'
 import 'package:baqalty/features/profile/presentation/view/help_center_screen.dart';
 import 'package:baqalty/features/rewards/presentation/view/rewards_screen.dart';
 import 'package:baqalty/features/saved_carts/presentation/view/saved_items_screen.dart';
+import 'package:baqalty/features/saved_carts/business/cubit/favorite_items_cubit.dart';
+import 'package:baqalty/features/saved_carts/data/services/favorite_items_service.dart';
+import 'package:baqalty/core/di/service_locator.dart';
 import 'package:baqalty/features/wallet/presentation/view/my_wallet_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
@@ -20,8 +26,41 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../profile_widgets/profile_menu_item.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserver, RouteAware {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // Refresh when app comes back to foreground
+      setState(() {});
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when returning to this screen from another screen
+    super.didPopNext();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,35 +211,55 @@ class ProfileScreen extends StatelessWidget {
                             iconPath: AppAssets.profileWallet,
                             title: "my_wallet".tr(),
                             onTap: () {
-                              NavigationManager.navigateTo(MyWalletScreen());
+                             NavigationManager.navigateTo(MyWalletScreen());
                             },
                           ),
-                          ProfileMenuItem(
-                            iconPath: AppAssets.profileHeart,
-                            title: "my_rewards_points".tr(),
-                            onTap: () {
-                              NavigationManager.navigateTo(RewardsScreen());
-                            },
-                          ),
+                      
                           ProfileMenuItem(
                             iconPath: AppAssets.profileOrders,
                             title: "orders".tr(),
                             onTap: () {
-                              NavigationManager.navigateTo(OrdersScreen());
+                             final navBarCubit = context.read<NavBarCubit>();
+                              NavigationManager.navigateTo(
+                                OrdersScreen(onNavigateToCategories: () {
+                                navBarCubit.changeTab(3);
+                              },
+                               onNavigateToCart: () {
+                                navBarCubit.changeTab(1);
+                              }));
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileSavedCarts,
                             title: "saved_carts".tr(),
                             onTap: () {
-                              NavigationManager.navigateTo(SavedCartsScreen());
+                             NavigationManager.navigateTo(SavedCartsScreen());
+                            },
+                          ),
+                              ProfileMenuItem(
+                            iconPath: AppAssets.profileHeart,
+                            title: "my_rewards_points".tr(),
+                            onTap: () {
+                             NavigationManager.navigateTo(RewardsScreen());
                             },
                           ),
                           ProfileMenuItem(
                             iconPath: AppAssets.profileHeart,
                             title: "saved_items".tr(),
                             onTap: () {
-                              NavigationManager.navigateTo(SavedItemsScreen());
+                              NavigationManager.navigateTo(
+                                BlocProvider<FavoriteItemsCubit>(
+                                  create: (context) => FavoriteItemsCubit(
+                                    ServiceLocator.get<FavoriteItemsService>(),
+                                  ),
+                                  child: SavedItemsScreen(
+                                    onNavigateToCategories: () {
+                                      final navBarCubit = context.read<NavBarCubit>();
+                                      navBarCubit.changeTab(3);
+                                    },
+                                  ),
+                                ),
+                              );
                             },
                           ),
                           ProfileMenuItem(

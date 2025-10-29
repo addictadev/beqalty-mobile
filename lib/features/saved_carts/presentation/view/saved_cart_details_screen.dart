@@ -280,7 +280,7 @@ class _SavedCartDetailsScreenBodyState extends State<SavedCartDetailsScreenBody>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Shopping bag icon with custom styling
-              CustomImageAsset(assetName: AppAssets.emptyCart, width: 25.w, height: 25.w),
+              CustomImageAsset(assetName: AppAssets.emptyCart, width: 25.w, height: 25.w,color: AppColors.primary),
               SizedBox(height: context.responsiveMargin * 2),
               
               // Main heading
@@ -313,7 +313,6 @@ class _SavedCartDetailsScreenBodyState extends State<SavedCartDetailsScreenBody>
                 },
                 width: 90.w,
                 borderRadius: 20.w,
-                height: 7.h,
               ),
             ],
           ),

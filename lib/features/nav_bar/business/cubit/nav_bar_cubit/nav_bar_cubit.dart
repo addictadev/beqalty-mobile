@@ -21,9 +21,9 @@ class NavBarCubit extends Cubit<NavBarState> {
       ),
       NavItemModel(
         index: 1,
-        icon: AppAssets.orderIcon,
-        activeIcon: AppAssets.orderIcon,
-        label: 'orders',
+        icon: AppAssets.shoppingBag,
+        activeIcon: AppAssets.shoppingBag,
+        label: 'my_cart',
         isActive: false,
       ),
       NavItemModel(

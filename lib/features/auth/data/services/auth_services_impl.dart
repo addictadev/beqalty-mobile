@@ -220,7 +220,7 @@ class AuthServicesImpl implements AuthService {
         if (await imageFile.exists()) {
           formData.files.add(
             MapEntry(
-              'image',
+              'avatar',
               await MultipartFile.fromFile(
                 image.path,
                 filename: 'profile_image.jpg',

@@ -314,8 +314,8 @@ border: Border.all(color: AppColors.error),
     final isSelected = _isLocallySelected(order.id, item.orderProductId, replacement.replacementId);
     
     return Container(
-      margin: EdgeInsets.only(bottom: 0.5.h),
-      padding: EdgeInsets.all(context.responsivePadding),
+      margin: EdgeInsets.only(top: 1.h),
+      padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
@@ -422,7 +422,7 @@ border: Border.all(color: AppColors.error),
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("replacement_processed".tr()),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.success,
       ),
     );
   }
@@ -477,7 +477,7 @@ border: Border.all(color: AppColors.error),
               },
               child: Text(
                 "confirm".tr(),
-                style: const TextStyle(color: AppColors.error),
+                style: const TextStyle(color: AppColors.primary),
               ),
             ),
           ],

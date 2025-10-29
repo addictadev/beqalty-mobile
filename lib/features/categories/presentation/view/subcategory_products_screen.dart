@@ -2,28 +2,31 @@ import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
-import 'package:baqalty/features/product_details/presentation/view/product_details_screen.dart'
-    show ProductDetailsScreen;
+import 'package:baqalty/features/search/presentation/widgets/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/widgets/saved_item_card.dart';
+import 'package:sizer/sizer.dart';
 import '../../../../core/widgets/custom_error_widget.dart';
 import '../../business/cubit/subcategory_products_cubit.dart';
+import '../widgets/category_grid_view.dart';
+
 
 class SubcategoryProductsScreen extends StatefulWidget {
   final String subcategoryName;
   final String categoryName;
   final String subcategoryId;
+  final String? sharedCartId;
 
   const SubcategoryProductsScreen({
     super.key,
     required this.subcategoryName,
     required this.categoryName,
     required this.subcategoryId,
+    this.sharedCartId,
   });
 
   @override
@@ -35,12 +38,14 @@ class SubcategoryProductsScreenBody extends StatefulWidget {
   final String subcategoryName;
   final String categoryName;
   final String subcategoryId;
+  final String? sharedCartId;
 
   const SubcategoryProductsScreenBody({
     super.key,
     required this.subcategoryName,
     required this.categoryName,
     required this.subcategoryId,
+    this.sharedCartId,
   });
 
   @override
@@ -58,6 +63,7 @@ class _SubcategoryProductsScreenState extends State<SubcategoryProductsScreen> {
         subcategoryName: widget.subcategoryName,
         categoryName: widget.categoryName,
         subcategoryId: widget.subcategoryId,
+        sharedCartId: widget.sharedCartId,
       ),
     );
   }
@@ -67,8 +73,6 @@ class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScree
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   late AnimationController _animationController;
-  late List<AnimationController> _itemAnimationControllers;
-  late List<Animation<double>> _itemAnimations;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -78,21 +82,6 @@ class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScree
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-
-    _itemAnimationControllers = List.generate(
-      20, // Increased for more products
-      (index) => AnimationController(
-        duration: const Duration(milliseconds: 500),
-        vsync: this,
-      ),
-    );
-
-    _itemAnimations = _itemAnimationControllers.map((controller) {
-      return Tween<double>(
-        begin: 0.0,
-        end: 1.0,
-      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
-    }).toList();
 
     _startAnimations();
     _setupScrollListener();
@@ -110,14 +99,6 @@ class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScree
 
   void _startAnimations() {
     _animationController.forward();
-
-    for (int i = 0; i < _itemAnimationControllers.length; i++) {
-      Future.delayed(Duration(milliseconds: 60 * i), () {
-        if (mounted) {
-          _itemAnimationControllers[i].forward();
-        }
-      });
-    }
   }
 
   @override
@@ -125,9 +106,6 @@ class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScree
     _searchController.dispose();
     _scrollController.dispose();
     _animationController.dispose();
-    for (var controller in _itemAnimationControllers) {
-      controller.dispose();
-    }
     super.dispose();
   }
 
@@ -181,7 +159,7 @@ class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScree
           return _buildErrorState(context, state.message);
         } else if (state is SubcategoryProductsLoaded) {
           if (state.products.isEmpty) {
-            return _buildEmptyState(context);
+            return BuildEmptyState(context,isSearchResult: state.searchQuery.isNotEmpty);
           }
           return _buildProductsListView(context, state);
         }
@@ -227,118 +205,22 @@ class _SubcategoryProductsScreenBodyState extends State<SubcategoryProductsScree
       onRefresh: () async {
         await context.read<SubcategoryProductsCubit>().refreshProducts();
       },
-      child: Padding(
-        padding: EdgeInsets.all(context.responsivePadding),
-        child: ListView.builder(
-          controller: _scrollController,
-          physics: const BouncingScrollPhysics(),
-          itemCount: state.products.length + (state.hasMoreProducts ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index >= state.products.length) {
-              // Loading indicator for pagination
-              return Padding(
-                padding: EdgeInsets.all(context.responsiveMargin),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primary,
-                  ),
-                ),
-              );
-            }
-
-            final product = state.products[index];
-            final animationIndex = index % _itemAnimations.length;
-            
-            return AnimatedBuilder(
-              animation: _itemAnimations[animationIndex],
-              builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(0, 30 * (1 - _itemAnimations[animationIndex].value)),
-                  child: Opacity(
-                    opacity: _itemAnimations[animationIndex].value.clamp(0.0, 1.0),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: context.responsiveMargin),
-                      child: SavedItemCard(
-                        productName: product.name,
-                        productCategory: widget.subcategoryName,
-                        productPrice: product.finalPriceDouble,
-                        productImage: product.baseImage,
-                        showFavoriteButton: false,
-                        showAddToCartButton: false,
-                        onTap: () {
-                          if (animationIndex < _itemAnimationControllers.length) {
-                            _itemAnimationControllers[animationIndex].reverse().then((_) {
-                              _itemAnimationControllers[animationIndex].forward();
-                            });
-                          }
-
-                          NavigationManager.navigateTo(
-                            ProductDetailsScreen(
-                              productName: product.name,
-                              productImage: product.baseImage,
-                              productPrice: product.finalPriceDouble,
-                              productCategory: widget.subcategoryName,
-                            ),
-                          );
-                        },
-                        onFavorite: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${product.name} added to favorites',
-                              ),
-                              backgroundColor: AppColors.success,
-                            ),
-                          );
-                        },
-                        onAddToCart: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${product.name} added to cart'),
-                              backgroundColor: AppColors.primary,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
+      child: CategoryGridView(
+        crossAxisCount: 2,
+        childAspectRatio: 0.9,
+        // crossAxisSpacing: 2.w,
+        mainAxisSpacing: 2.w,
+        products: state.products,
+        onLoadMore: state.hasMoreProducts ? () {
+          context.read<SubcategoryProductsCubit>().loadMoreProducts();
+        } : null,
+        isLoadingMore: false, // You might want to add this to the state
+        sharedCartId: widget.sharedCartId,
+        showHeader: true,
+        headerText: widget.subcategoryName,
       ),
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Iconsax.shopping_bag,
-            size: context.responsiveIconSize * 4,
-            color: AppColors.textSecondary,
-          ),
-          SizedBox(height: context.responsiveMargin * 2),
-          Text(
-            "no_products_found".tr(),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: context.responsiveMargin),
-          Text(
-            "try_different_subcategory".tr(),
-            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+
 }

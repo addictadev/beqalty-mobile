@@ -1,5 +1,7 @@
 import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/navigation_services/navigation_manager.dart';
+import 'package:baqalty/features/profile/presentation/view/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -49,7 +51,12 @@ class HomeHeader extends StatelessWidget {
                 children: [
                   _buildGreetingSection(),
 
+                  Row(children: [
+                SizedBox(width: context.responsiveMargin),
+                  _buildCartIcon(context),
+                  SizedBox(width: context.responsiveMargin),
                   _buildNotificationIcon(context),
+                  ],)
                 ],
               ),
 
@@ -91,6 +98,36 @@ class HomeHeader extends StatelessWidget {
 
   Widget _buildNotificationIcon(BuildContext context) {
     return GestureDetector(
+      onTap: (){
+        NavigationManager.navigateTo(NotificationsScreen());
+      },
+      child: Container(
+        width: context.responsiveButtonHeight / 2.5,
+        height: context.responsiveButtonHeight / 2.5,
+        decoration: BoxDecoration(
+          color: AppColors.white.withValues(alpha: 0.2),
+          shape: BoxShape.circle,
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Icon(
+                Iconsax.notification,
+                color: AppColors.white,
+            
+              ),
+            ),
+
+     
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildCartIcon(BuildContext context) {
+    return GestureDetector(
       onTap: onNotificationTap,
       child: Container(
         width: context.responsiveButtonHeight / 2.5,
@@ -116,7 +153,7 @@ class HomeHeader extends StatelessWidget {
                 width: context.responsiveIconSize / 4,
                 height: context.responsiveIconSize / 4,
                 decoration: BoxDecoration(
-                  color: AppColors.error,
+                  color: AppColors.blueColor,
                   shape: BoxShape.circle,
                 ),
               ),

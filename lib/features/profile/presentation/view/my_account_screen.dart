@@ -59,7 +59,12 @@ class _MyAccountScreenBodyState extends State<MyAccountScreenBody> {
       ),
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is UpdateProfileSuccessState) {}
+          if (state is UpdateProfileSuccessState) {
+            // Refresh the UI to show updated avatar immediately
+            setState(() {
+              _selectedImage = null; // Clear selected image to show updated avatar
+            });
+          }
         },
         child: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {

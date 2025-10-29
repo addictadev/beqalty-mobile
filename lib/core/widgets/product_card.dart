@@ -1,3 +1,4 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -75,14 +76,7 @@ class ProductCard extends StatelessWidget {
                           child: CircularProgressIndicator(),
                         ),
                       ),
-                      errorWidget: (context, url, error) => Container(
-                        color: AppColors.homeGradientWhite,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: AppColors.textSecondary,
-                          size: 8.w,
-                        ),
-                      ),
+                      errorWidget: (context, url, error) => Image.asset(AppAssets.appIcon,width: 15.w,height: 18.w,color: AppColors.textSecondary,),
                     ),
                   ),
                 ),

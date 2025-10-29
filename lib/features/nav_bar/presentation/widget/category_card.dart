@@ -9,7 +9,7 @@ class CategoryCard extends StatelessWidget {
   final Color backgroundColor;
   final Color iconColor;
   final VoidCallback? onTap;
-  final String imageUrl;
+  final String? imageUrl;
 
   const CategoryCard({
     super.key,
@@ -17,7 +17,7 @@ class CategoryCard extends StatelessWidget {
     required this.backgroundColor,
     required this.iconColor,
     this.onTap,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   @override
@@ -54,7 +54,7 @@ class CategoryCard extends StatelessWidget {
               ),
               child: Center(
                 child: CustomCachedImage(
-                  imageUrl: imageUrl,
+                  imageUrl: imageUrl ?? '',
                   width: 40,
                   height: 40,
                 ),

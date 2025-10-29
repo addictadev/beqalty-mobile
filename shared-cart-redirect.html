@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بقالتي - سلة مشتركة</title>
+    <meta name="description" content="تحقق من هذه السلة التي شاركتها معك!">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="بقالتي - سلة مشتركة">
+    <meta property="og:description" content="تحقق من هذه السلة التي شاركتها معك!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="https://baqalty-back.addictaco.website/storage/logo.png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="بقالتي - سلة مشتركة">
+    <meta name="twitter:description" content="تحقق من هذه السلة التي شاركتها معك!">
+    <meta name="twitter:image" content="https://baqalty-back.addictaco.website/storage/logo.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e9ecef;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">ب</div>
+        <h1>بقالتي</h1>
+        <p>تحقق من هذه السلة التي شاركتها معك!</p>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <span style="margin-right: 10px;">جاري التحميل...</span>
+        </div>
+        
+        <div id="error" class="error hidden">
+            <strong>خطأ!</strong> لا يمكن فتح السلة المشتركة. تأكد من أن الرابط صحيح.
+        </div>
+        
+        <div id="success" class="success hidden">
+            <strong>تم!</strong> سيتم فتح التطبيق الآن...
+        </div>
+        
+        <div id="buttons" class="buttons hidden">
+            <a href="#" id="openApp" class="btn btn-primary">فتح في التطبيق</a>
+            <a href="#" id="downloadApp" class="btn btn-secondary">تحميل التطبيق</a>
+        </div>
+    </div>
+
+    <script>
+        // Extract shared cart ID from URL
+        function getSharedCartId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('shared_cart_id');
+        }
+        
+        // Deep link URLs
+        const APP_SCHEME = 'baqalty://shared-cart';
+        const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.app.baqalty';
+        const APP_STORE_URL = 'https://apps.apple.com/app/baqalty/id123456789';
+        
+        // Detect platform
+        function detectPlatform() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('android')) {
+                return 'android';
+            } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+                return 'ios';
+            }
+            return 'unknown';
+        }
+        
+        // Try to open app
+        function tryOpenApp() {
+            const sharedCartId = getSharedCartId();
+            if (!sharedCartId) {
+                showError();
+                return;
+            }
+            
+            const deepLink = `${APP_SCHEME}?id=${sharedCartId}`;
+            const platform = detectPlatform();
+            
+            // Try to open the app
+            const startTime = Date.now();
+            const timeout = 3000; // 3 seconds
+            
+            // Create invisible iframe to attempt deep link
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = deepLink;
+            document.body.appendChild(iframe);
+            
+            // Set up timeout
+            const timer = setTimeout(() => {
+                // If we're still here after timeout, app probably didn't open
+                document.body.removeChild(iframe);
+                showDownloadOptions(platform);
+            }, timeout);
+            
+            // Listen for page visibility change (indicates app opened)
+            const handleVisibilityChange = () => {
+                if (document.hidden) {
+                    clearTimeout(timer);
+                    document.body.removeChild(iframe);
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    showSuccess();
+                }
+            };
+            
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            
+            // Also try direct window.location as fallback
+            setTimeout(() => {
+                try {
+                    window.location.href = deepLink;
+                } catch (e) {
+                    console.log('Direct deep link failed:', e);
+                }
+            }, 100);
+        }
+        
+        // Show download options
+        function showDownloadOptions(platform) {
+            const downloadBtn = document.getElementById('downloadApp');
+            const openAppBtn = document.getElementById('openApp');
+            
+            if (platform === 'android') {
+                downloadBtn.href = PLAY_STORE_URL;
+                downloadBtn.textContent = 'تحميل من Google Play';
+            } else if (platform === 'ios') {
+                downloadBtn.href = APP_STORE_URL;
+                downloadBtn.textContent = 'تحميل من App Store';
+            } else {
+                downloadBtn.href = PLAY_STORE_URL;
+                downloadBtn.textContent = 'تحميل التطبيق';
+            }
+            
+            // Set up open app button
+            openAppBtn.onclick = () => {
+                const sharedCartId = getSharedCartId();
+                if (sharedCartId) {
+                    const deepLink = `${APP_SCHEME}?id=${sharedCartId}`;
+                    window.location.href = deepLink;
+                }
+            };
+            
+            showButtons();
+        }
+        
+        // Show success message
+        function showSuccess() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
+        }
+        
+        // Show error message
+        function showError() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+            showButtons();
+        }
+        
+        // Show buttons
+        function showButtons() {
+            document.getElementById('buttons').classList.remove('hidden');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start the process
+            setTimeout(tryOpenApp, 1000);
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // Page became visible again, user probably came back from app
+                console.log('User returned to page');
+            }
+        });
+    </script>
+</body>
+</html>

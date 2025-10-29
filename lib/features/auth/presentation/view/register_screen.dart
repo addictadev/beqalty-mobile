@@ -182,7 +182,7 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
 
                           _buildNextButton(),
 
-                          SizedBox(height: 40),
+                          SizedBox(height: 15.h),
                         ],
                       ),
                     ),

@@ -22,6 +22,7 @@ class CartCubit extends Cubit<CartState> {
     required int productId,
     required int quantity,
     required int warehouseId,
+    int? sharedCartId,
   }) async {
     try {
       log('CartCubit: Starting addToCart with productId: $productId, quantity: $quantity');
@@ -32,6 +33,7 @@ class CartCubit extends Cubit<CartState> {
         productId: productId,
         quantity: quantity,
         warehouseId: warehouseId,
+        sharedCartId: sharedCartId,
       );
 
       final response = await _cartService.addToCart(request);
@@ -85,9 +87,10 @@ class CartCubit extends Cubit<CartState> {
     required int productId,
     required int currentQuantity,
     required int newQuantity,
+    int? sharedCartId,
   }) async {
     try {
-      log('CartCubit: Starting updateCartItem with cartItemId: $cartItemId, currentQuantity: $currentQuantity, newQuantity: $newQuantity');
+      log('CartCubit: Starting updateCartItem with cartItemId: $cartItemId, currentQuantity: $currentQuantity, newQuantity: $newQuantity, sharedCartId: $sharedCartId');
       emit(CartLoading());
       log('CartCubit: Emitted CartLoading state');
 
@@ -100,6 +103,7 @@ class CartCubit extends Cubit<CartState> {
           productId: productId,
           quantity: quantityDifference,
           warehouseId: 1, // Default warehouse ID - you might want to get this from user location or settings
+          sharedCartId: sharedCartId,
         );
 
         final response = await _cartService.addToCart(request);
@@ -117,6 +121,7 @@ class CartCubit extends Cubit<CartState> {
         final request = CartMinusRequestModel(
           productId: productId,
           quantity: quantityDifference.abs(),
+          sharedCartId: sharedCartId,
         );
 
         final response = await _cartService.cartMinus(request);
@@ -170,6 +175,7 @@ class CartCubit extends Cubit<CartState> {
   Future<void> cartMinus({
     required int productId,
     required int quantity,
+    int? sharedCartId,
   }) async {
     try {
       log('CartCubit: Starting cartMinus with productId: $productId, quantity: $quantity');
@@ -179,6 +185,7 @@ class CartCubit extends Cubit<CartState> {
       final request = CartMinusRequestModel(
         productId: productId,
         quantity: quantity,
+        sharedCartId: sharedCartId,
       );
 
       final response = await _cartService.cartMinus(request);
@@ -201,6 +208,7 @@ class CartCubit extends Cubit<CartState> {
   /// Removes item completely from cart using product_id
   Future<void> removeItem({
     required int productId,
+    int? sharedCartId,
   }) async {
     try {
       log('CartCubit: Starting removeItem with productId: $productId');
@@ -209,6 +217,7 @@ class CartCubit extends Cubit<CartState> {
 
       final request = RemoveItemRequestModel(
         productId: productId,
+        sharedCartId: sharedCartId,
       );
 
       final response = await _cartService.removeItem(request);

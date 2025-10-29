@@ -379,7 +379,7 @@ class _SharedCartScreenBodyState extends State<SharedCartScreenBody> with Widget
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Shopping bag icon with custom styling
-              CustomImageAsset(assetName: AppAssets.emptyCart, width: 25.w, height: 25.w),
+              CustomImageAsset(assetName: AppAssets.emptyCart, width: 25.w, height: 25.w,color: AppColors.primary),
               SizedBox(height: 2.h),
               
               // Main heading
@@ -413,7 +413,6 @@ class _SharedCartScreenBodyState extends State<SharedCartScreenBody> with Widget
                 },
                 width: 90.w,
                 borderRadius: 20.w,
-                height: 7.h,
               ),
             ],
           ),

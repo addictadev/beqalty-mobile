@@ -4,6 +4,7 @@ import 'package:baqalty/core/widgets/force_update_manager.dart';
 import 'package:baqalty/core/widgets/custom_update_dialog.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/main_navigation_screen.dart';
 import 'package:baqalty/features/onboarding/presentation/view/onboarding_screen.dart';
+import 'package:baqalty/features/cart/presentation/view/shared_cart_screen.dart';
 import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'dart:developer';
 import 'splash_state.dart';
@@ -65,10 +66,23 @@ class SplashCubit extends Cubit<SplashState> {
     }
   }
 
-  void navigateToMain() {
+  void navigateToMain() async {
     try {
       log('🚀 Navigating to MainNavigationScreen');
-      NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+      
+      // Check if there's a pending shared cart ID
+      final pendingCartId = SharedPrefsHelper.getString('pending_shared_cart_id');
+      if (pendingCartId != null && pendingCartId.isNotEmpty) {
+        log('🛒 Found pending shared cart ID: $pendingCartId');
+        // Clear the pending cart ID
+        await SharedPrefsHelper.remove('pending_shared_cart_id');
+        // Navigate to shared cart instead of main screen
+        NavigationManager.navigateToAndFinish(SharedCartScreen(sharedCartId: pendingCartId));
+      } else {
+        // Normal navigation to main screen
+        NavigationManager.navigateToAndFinish(const MainNavigationScreen());
+      }
+      
       emit(SplashNavigationCompleted());
     } catch (e) {
       log('❌ Error navigating to main screen: $e');
@@ -76,10 +90,22 @@ class SplashCubit extends Cubit<SplashState> {
     }
   }
 
-  void navigateToOnboarding() {
+  void navigateToOnboarding() async {
     try {
       log('🚀 Navigating to OnboardingScreen');
-      NavigationManager.navigateToAndFinish(const OnboardingScreen());
+      
+      // Check if there's a pending shared cart ID
+      final pendingCartId = SharedPrefsHelper.getString('pending_shared_cart_id');
+      if (pendingCartId != null && pendingCartId.isNotEmpty) {
+        log('🛒 Found pending shared cart ID for non-logged in user: $pendingCartId');
+        // Keep the pending cart ID for after login
+        // Navigate to onboarding normally
+        NavigationManager.navigateToAndFinish(const OnboardingScreen());
+      } else {
+        // Normal navigation to onboarding screen
+        NavigationManager.navigateToAndFinish(const OnboardingScreen());
+      }
+      
       emit(SplashNavigationCompleted());
     } catch (e) {
       log('❌ Error navigating to onboarding screen: $e');

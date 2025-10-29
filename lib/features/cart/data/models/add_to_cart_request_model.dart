@@ -2,19 +2,27 @@ class AddToCartRequestModel {
   final int productId;
   final int quantity;
   final int warehouseId;
+  final int? sharedCartId;
 
   AddToCartRequestModel({
     required this.productId,
     required this.quantity,
     required this.warehouseId,
+    this.sharedCartId,
   });
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> data = {
       'product_id': productId,
       'quantity': quantity,
       'warehouse_id': warehouseId,
     };
+    
+    if (sharedCartId != null) {
+      data['shared_cart_id'] = sharedCartId;
+    }
+    
+    return data;
   }
 
   @override

@@ -22,7 +22,7 @@ class ApplyDiscountResponseModel extends Equatable {
       success: json['success'] as bool,
       message: json['message'] as String,
       discountId: json['discount_id'] as int?,
-      discountAmount: json['discount_amount'] as String?,
+      discountAmount: json['discount_amount']?.toString(),
       newShippingCost: json['new_shipping_cost'] != null 
           ? (json['new_shipping_cost'] as num).toDouble() 
           : null,

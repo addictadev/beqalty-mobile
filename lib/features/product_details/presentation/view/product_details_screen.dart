@@ -1,4 +1,9 @@
+import 'package:baqalty/core/images_preview/app_assets.dart';
+import 'package:baqalty/core/images_preview/custom_asset_img.dart';
+import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:baqalty/core/widgets/category_product_card.dart';
 import 'package:baqalty/core/widgets/custom_appbar.dart' show CustomAppBar;
+import 'package:baqalty/features/categories/presentation/widgets/category_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -16,13 +21,18 @@ import '../../data/models/product_details_response_model.dart';
 import '../../data/services/product_details_service.dart';
 import '../../../cart/business/cubit/cart_cubit.dart';
 import '../../../cart/data/services/cart_service.dart';
+import '../../../saved_carts/data/services/saved_carts_service.dart';
+import '../../../saved_carts/data/models/saved_carts_response_model.dart';
+import '../../../saved_carts/data/models/saved_cart_item_action_request_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final int productId;
+  final String? sharedCartId;
 
   const ProductDetailsScreen({
     super.key,
     required this.productId,
+    this.sharedCartId,
   });
 
   @override
@@ -34,6 +44,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String? selectedSize;
   String? selectedFlavor;
   int currentImageIndex = 0;
+  
+  // Saved carts state
+  List<SavedCartDataModel> savedCarts = [];
+  bool isLoadingSavedCarts = false;
+  int? selectedSavedCartId;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch saved carts when screen loads
+    _fetchSavedCarts();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh saved carts when returning to screen
+    _fetchSavedCarts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +74,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ],
       child: BlocConsumer<CartCubit, CartState>(
           listener: (context, cartState) {
-            print('CartState changed: $cartState');
             if (cartState is CartItemAdded) {
-              print('Showing success toast with message: ${cartState.cartItem.message}');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(cartState.cartItem.message),
@@ -56,7 +83,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               );
             } else if (cartState is CartError) {
-              print('Showing error toast with message: ${cartState.message}');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(cartState.message),
@@ -69,7 +95,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             // We don't need to rebuild UI based on cart state, just listen for changes
             return BlocConsumer<ProductDetailsCubit, ProductDetailsState>(
               listener: (context, state) {
-                print('🔊 BlocListener received state: ${state.runtimeType}');
                 if (state is ProductDetailsError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -85,7 +110,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   );
                 } else if (state is ProductLiked) {
-                  print('🎉 Showing liked success message');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('product_liked_successfully'.tr()),
@@ -94,7 +118,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   );
                 } else if (state is ProductUnliked) {
-                  print('🎉 Showing unliked success message');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('product_unliked_successfully'.tr()),
@@ -105,18 +128,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 }
               },
               builder: (context, state) {
-                print('🔄 BlocBuilder rebuilding with state: ${state.runtimeType}');
                 if (state is ProductDetailsLoaded) {
-                  print('✅ ProductDetailsLoaded - isLiked: ${state.productDetails.isLiked}');
                 } else if (state is ProductLiked) {
-                  print('❤️ ProductLiked - isLiked: ${state.productDetails.isLiked}');
                 } else if (state is ProductUnliked) {
-                  print('💔 ProductUnliked - isLiked: ${state.productDetails.isLiked}');
                 }
                 
                 // Trigger API call when state is initial
                 if (state is ProductDetailsInitial) {
-                  print('🔄 UI: ProductDetailsInitial detected, calling getProductDetails for productId: ${widget.productId}');
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     context.read<ProductDetailsCubit>().getProductDetails(widget.productId);
                   });
@@ -222,13 +240,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return AuthBackgroundWidget(
       child: Column(
         children: [
-          CustomAppBar(title: "product_details".tr(), onBackPressed: () => Navigator.of(context).pop()),
+          CustomAppBar(
+            title: "product_details".tr(), 
+            onBackPressed: () => Navigator.of(context).pop(),
+            actions: [
+           if(widget.sharedCartId == null)   IconButton(
+                onPressed: () => _showSavedCartDialog(context),
+                icon: CustomSvgImage(
+                  assetName: AppAssets.unSavedIcon,
+                  width: context.responsiveIconSize * 2,
+                  height: context.responsiveIconSize * 2,
+                ),
+              ),
+            ],
+          ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   _buildProductImage(context, productDetails),
-                  _buildPaginationDots(context, productDetails.images),
                   _buildProductInfo(context, productDetails),
                   _buildBottomSection(context, productDetails),
                   _buildMoreLikeThisSection(context, productDetails.relatedProducts),
@@ -283,6 +313,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           // Favorite Button positioned at top right
+       
+       if(widget.sharedCartId == null) 
           Positioned(
             top: context.responsiveMargin,
             right: context.responsivePadding,
@@ -311,28 +343,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
           ),
-          // Image counter (if multiple images)
-          if (productDetails.images.length > 1)
-            Positioned(
-              top: context.responsiveMargin,
-              left: context.responsivePadding,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 2.w,
-                  vertical: 1.w,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-                ),
-                child: Text(
-                  '${currentImageIndex + 1}/${productDetails.images.length}',
-                  style: TextStyles.textViewRegular12.copyWith(
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-            ),
+      Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: _buildPaginationDots(context, productDetails.images)),
+       
         ],
       ),
     );
@@ -346,12 +362,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       children: List.generate(
         images.length,
         (index) => Container(
-          margin: EdgeInsets.symmetric(horizontal: 1.w),
-          width: 2.w,
-          height: 2.w,
+          margin: EdgeInsets.symmetric(horizontal: .5.w),
+          width: index == currentImageIndex ? 5.w : 1.5.w,
+          height: 1.5.w,
           decoration: BoxDecoration(
-            color: index == 0 ? AppColors.primary : AppColors.grey,
-            shape: BoxShape.circle,
+            color: index == currentImageIndex ? AppColors.primary : AppColors.grey.withOpacity(.4),
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(30.w),
           ),
         ),
       ),
@@ -359,10 +376,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildProductInfo(BuildContext context, ProductDetailsDataModel productDetails) {
+    // Check if there's a discount
+    final double basePrice = _extractPrice(productDetails.basePrice);
+    final double finalPrice = _extractPrice(productDetails.finalPrice);
+    final bool hasDiscount = basePrice > finalPrice;
+    
     return Container(
       width: context.responsiveWidth,
       padding: EdgeInsets.all(3.w),
-      margin: EdgeInsets.all(3.w),
+      margin: EdgeInsets.symmetric(horizontal: 3.w),
    
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,6 +402,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
           ],
+          // SizedBox(height: context.responsiveMargin),
+          // Price display
+          // _buildPriceDisplay(context, productDetails, hasDiscount),
         ],
       ),
     );
@@ -543,24 +568,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       child: Row(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-            Text(
-                '${totalPrice.toStringAsFixed(2)} ${productDetails.finalPrice.split(' ').length > 1 ? productDetails.finalPrice.split(' ').last : ''}',
-                style: TextStyles.textViewBold18.copyWith(
-                  color: Colors.green,
-                ),
-              ),
-               Text(
-                "egp".tr(),
-                style: TextStyles.textViewBold16.copyWith(
-                  color: Colors.green,
-                ),
-              ),
-             
-            ],
-          ),
+          _buildTotalPriceDisplay(context, productDetails, totalPrice),
           const Spacer(),
           SizedBox(
             width: 45.w,
@@ -604,13 +612,107 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return double.tryParse(cleanPrice.replaceAll(',', '.')) ?? 0.0;
   }
 
+  /// Builds price display widget with discount handling
+  Widget _buildPriceDisplay(BuildContext context, ProductDetailsDataModel productDetails, bool hasDiscount) {
+    if (hasDiscount) {
+      // Show both original price (crossed out) and final price
+      return Row(
+        children: [
+          // Original price (crossed out)
+          Text(
+            '${productDetails.basePrice} ${"egp".tr()}',
+            style: TextStyles.textViewMedium16.copyWith(
+              color: AppColors.textSecondary,
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+          SizedBox(width: 2.w),
+          // Final price (highlighted)
+          Text(
+            '${productDetails.finalPrice} ${"egp".tr()}',
+            style: TextStyles.textViewBold18.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+          SizedBox(width: 2.w),
+          // Discount badge
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+            decoration: BoxDecoration(
+              color: AppColors.error,
+              borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+            ),
+            child: Text(
+              '-${productDetails.dicount} ${"egp".tr()}',
+              style: TextStyles.textViewMedium12.copyWith(
+                color: AppColors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Show only final price
+      return Text(
+        '${productDetails.finalPrice} ${"egp".tr()}',
+        style: TextStyles.textViewBold18.copyWith(
+          color: AppColors.textPrimary,
+        ),
+      );
+    }
+  }
+
+  /// Builds total price display for action buttons section
+  Widget _buildTotalPriceDisplay(BuildContext context, ProductDetailsDataModel productDetails, double totalPrice) {
+    // Check if there's a discount
+    final double basePrice = _extractPrice(productDetails.basePrice);
+    final double finalPrice = _extractPrice(productDetails.finalPrice);
+    final bool hasDiscount = basePrice > finalPrice;
+    
+    if (hasDiscount) {
+      // Calculate total original price and total final price
+      final double totalOriginalPrice = basePrice * quantity;
+      
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Original total price (crossed out)
+          Text(
+            '${totalOriginalPrice.toStringAsFixed(2)} ${"egp".tr()}',
+            style: TextStyles.textViewMedium14.copyWith(
+              color: AppColors.textSecondary,
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+          SizedBox(height: 0.2.h),
+          // Final total price (highlighted)
+          Text(
+            '${totalPrice.toStringAsFixed(2)} ${"egp".tr()}',
+            style: TextStyles.textViewBold18.copyWith(
+              color: Colors.green,
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Show only final total price
+      return Text(
+        '${totalPrice.toStringAsFixed(2)} ${"egp".tr()}',
+        style: TextStyles.textViewBold18.copyWith(
+          color: Colors.green,
+        ),
+      );
+    }
+  }
+
   void _handlePlaceOrder(CartCubit cartCubit, ProductDetailsDataModel productDetails, int quantity, double totalPrice) {
-    print('_handlePlaceOrder called with productId: ${productDetails.id}, quantity: $quantity');
     // Add item to cart using the CartCubit
     cartCubit.addToCart(
       productId: productDetails.id,
       quantity: quantity,
       warehouseId: 1, // Default warehouse ID - you might want to get this from user location or settings
+      sharedCartId: widget.sharedCartId != null ? int.tryParse(widget.sharedCartId!) : null,
     );
   }
 
@@ -632,117 +734,120 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SizedBox(height: 2.h),
           SizedBox(
-            height: 24.h,
+            height: 20.h,
             child: ListView.builder(
               padding: EdgeInsets.zero,
               scrollDirection: Axis.horizontal,
               itemCount: relatedProducts.length,
               itemBuilder: (context, index) {
-                final product = relatedProducts[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider<ProductDetailsCubit>(
-                              create: (context) => ProductDetailsCubit(
-                                ServiceLocator.get<ProductDetailsService>(),
-                              ),
-                            ),
-                            BlocProvider<CartCubit>(
-                              create: (context) => CartCubit(ServiceLocator.get<CartService>()),
-                            ),
-                          ],
-                          child: ProductDetailsScreen(productId: product.id),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: 45.w,
-                    margin: EdgeInsets.only(left: 3.w),
-                    padding: EdgeInsets.all(3.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(3.w),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Product Image Container
-                        Expanded(
-                          flex: 5,
-                          child: 
-                          Center(
-                            child: Container(
-                            margin: EdgeInsets.only(bottom: 1.h),
-                            decoration: BoxDecoration(
-                              color: AppColors.homeGradientWhite,
-                              borderRadius: BorderRadius.circular(3.w),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(3.w),
-                              child: CachedNetworkImage(
-                                imageUrl: product.baseImage,
-                                fit: BoxFit.contain,
-                                placeholder: (context, url) => Container(
-                                  color: AppColors.homeGradientWhite,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  color: AppColors.homeGradientWhite,
-                                  child: Icon(
-                                    Icons.image_not_supported,
-                                    color: AppColors.textSecondary,
-                                    size: 8.w,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )),
-                        ),
-                        // Product Info
-                        Expanded(
-                          flex: 2,
-                          child:  Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    product.name,
-                                    style: TextStyles.textViewMedium16.copyWith(
-                                      color: AppColors.textPrimary,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
+                return CategoryProductCard(product: relatedProducts[index], categoryName: "");
+                
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.of(context).pushReplacement(
+                //       MaterialPageRoute(
+                //         builder: (context) => MultiBlocProvider(
+                //           providers: [
+                //             BlocProvider<ProductDetailsCubit>(
+                //               create: (context) => ProductDetailsCubit(
+                //                 ServiceLocator.get<ProductDetailsService>(),
+                //               ),
+                //             ),
+                //             BlocProvider<CartCubit>(
+                //               create: (context) => CartCubit(ServiceLocator.get<CartService>()),
+                //             ),
+                //           ],
+                //           child: ProductDetailsScreen(productId: product.id),
+                //         ),
+                //       ),
+                //     );
+                //   },
+                //   child: Container(
+                //     width: 45.w,
+                //     margin: EdgeInsets.only(left: 3.w),
+                //     padding: EdgeInsets.all(3.w),
+                //     decoration: BoxDecoration(
+                //       color: AppColors.white,
+                //       borderRadius: BorderRadius.circular(3.w),
+                //       boxShadow: [
+                //         BoxShadow(
+                //           color: Colors.black.withOpacity(0.05),
+                //           blurRadius: 8,
+                //           offset: const Offset(0, 2),
+                //         ),
+                //       ],
+                //     ),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         // Product Image Container
+                //         Expanded(
+                //           flex: 5,
+                //           child: 
+                //           Center(
+                //             child: Container(
+                //             margin: EdgeInsets.only(bottom: 1.h),
+                //             decoration: BoxDecoration(
+                //               color: AppColors.homeGradientWhite,
+                //               borderRadius: BorderRadius.circular(3.w),
+                //             ),
+                //             child: ClipRRect(
+                //               borderRadius: BorderRadius.circular(3.w),
+                //               child: CachedNetworkImage(
+                //                 imageUrl: product.baseImage,
+                //                 fit: BoxFit.contain,
+                //                 placeholder: (context, url) => Container(
+                //                   color: AppColors.homeGradientWhite,
+                //                   child: const Center(
+                //                     child: CircularProgressIndicator(),
+                //                   ),
+                //                 ),
+                //                 errorWidget: (context, url, error) => Container(
+                //                   color: AppColors.homeGradientWhite,
+                //                   child: Icon(
+                //                     Icons.image_not_supported,
+                //                     color: AppColors.textSecondary,
+                //                     size: 8.w,
+                //                   ),
+                //                 ),
+                //               ),
+                //             ),
+                //           )),
+                //         ),
+                //         // Product Info
+                //         Expanded(
+                //           flex: 2,
+                //           child:  Column(
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               mainAxisAlignment: MainAxisAlignment.start,
+                //               children: [
+                //                 Expanded(
+                //                   child: Text(
+                //                     product.name,
+                //                     style: TextStyles.textViewMedium16.copyWith(
+                //                       color: AppColors.textPrimary,
+                //                     ),
+                //                     maxLines: 2,
+                //                     overflow: TextOverflow.ellipsis,
+                //                   ),
+                //                 ),
                           
-                                Text(
-                                  '${product.finalPrice} ${"egp".tr()}',
-                                  style: TextStyles.textViewBold16.copyWith(
-                                    color: AppColors.textPrimary,
-                                  ),
-                                ),
-                              ],
+                //                 Text(
+                //                   '${product.finalPrice} ${"egp".tr()}',
+                //                   style: TextStyles.textViewBold16.copyWith(
+                //                     color: AppColors.textPrimary,
+                //                   ),
+                //                 ),
+                //               ],
                             
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // );
+          
+          
               },
             ),
           ),
@@ -750,6 +855,168 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
     );
   }
+
+  Future<void> _fetchSavedCarts() async {
+    setState(() {
+      isLoadingSavedCarts = true;
+    });
+
+    try {
+      final savedCartsService = ServiceLocator.get<SavedCartsService>();
+      final response = await savedCartsService.getAllSavedCarts();
+      
+      setState(() {
+        savedCarts = response.data;
+        isLoadingSavedCarts = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingSavedCarts = false;
+      });
+      debugPrint('Error fetching saved carts: $e');
+    }
+  }
+
+  Future<void> _addProductToSavedCart(int cartId, int productId, int quantity) async {
+    try {
+      final savedCartsService = ServiceLocator.get<SavedCartsService>();
+      
+      // Use default warehouse_id since it's not available in the saved cart items
+      final warehouseId = 1; // Default warehouse ID
+      
+      final request = SavedCartItemActionRequestModel(
+        productId: productId,
+        quantity: quantity,
+        warehouseId: warehouseId,
+      );
+      
+      await savedCartsService.plusItemFromSavedCart(
+        cartId: cartId,
+        request: request,
+      );
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("product_added_to_saved_cart".tr()),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error adding product to saved cart: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("error_adding_product".tr()),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showSavedCartDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(4.w),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+          
+              content: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 80.w,
+                  maxHeight: 45.h,
+                ),
+             
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                   Center(child: CustomImageAsset(assetName:AppAssets.saveCart,width: 18.w,height: 18.w,)),
+                    SizedBox(height: 1.w),
+                    Text(
+                "add_to_saved_cart".tr(),
+                style: TextStyles.textViewBold16.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 2.w),
+                  if (isLoadingSavedCarts)
+                    const CircularProgressIndicator()
+                  else if (savedCarts.isEmpty)
+                    Column(
+                      children: [
+                        Text(
+                          "no_saved_carts_available".tr(),
+                          style: TextStyles.textViewMedium14.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+             
+                      ],
+                    )
+                  else
+                    DropdownButtonFormField<int>(
+                      decoration: 
+                      InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.borderLight),
+                          borderRadius: BorderRadius.circular(90),
+                        ),
+                        
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                      hint: Text("choose_saved_cart".tr()),
+                      value: selectedSavedCartId,
+                      items: savedCarts.map((cart) {
+                        return DropdownMenuItem(
+                          value: cart.id,
+                          child: Text(cart.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedSavedCartId = value;
+                        });
+                      },
+                    ),
+                         PrimaryButton(
+                          margin: EdgeInsets.only(top: 4.w),
+                          width: 80.w,
+                          height: 5.5.h,
+                  text: "save".tr(),
+                  onPressed: selectedSavedCartId != null ? () async {
+                    Navigator.of(context).pop();
+                    await _addProductToSavedCart(
+                      selectedSavedCartId!,
+                      widget.productId,
+                      quantity,
+                    );
+                    setState(() {
+                      selectedSavedCartId = null;
+                    });
+                  } : null,
+                
+              
+                ),
+              
+                  ],
+                ),
+              ),
+             );
+          },
+        );
+      },
+    );
+  }
+
+
 }
 
 /// Full-screen image gallery for product images

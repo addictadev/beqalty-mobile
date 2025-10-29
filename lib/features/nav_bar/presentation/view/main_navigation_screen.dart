@@ -1,6 +1,7 @@
 import 'package:baqalty/core/utils/styles/font_utils.dart' show FontSizes;
 import 'package:baqalty/core/widgets/exit_popup.dart';
 import 'package:baqalty/features/nav_bar/business/cubit/nav_bar_cubit/nav_bar_cubit.dart';
+import 'package:baqalty/features/nav_bar/business/cubit/home_cubit/home_cubit.dart';
 import 'package:baqalty/features/nav_bar/business/models/nav_item_model.dart';
 import 'package:baqalty/features/nav_bar/presentation/view/home_view.dart'
     show HomeView;
@@ -10,6 +11,7 @@ import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:sizer/sizer.dart';
 import '../../../../core/images_preview/custom_svg_img.dart';
 import 'profile_screen.dart';
 import '../../../cart/presentation/view/cart_screen.dart';
@@ -28,9 +30,14 @@ class MainNavigationScreen extends StatelessWidget {
   }
 }
 
-class MainNavigationScreenBody extends StatelessWidget {
+class MainNavigationScreenBody extends StatefulWidget {
   const MainNavigationScreenBody({super.key});
 
+  @override
+  State<MainNavigationScreenBody> createState() => _MainNavigationScreenBodyState();
+}
+
+class _MainNavigationScreenBodyState extends State<MainNavigationScreenBody> {
   static const List<Widget> _screens = [
     HomeView(),
     CartScreen(),
@@ -39,12 +46,19 @@ class MainNavigationScreenBody extends StatelessWidget {
     ProfileScreen(),
   ];
 
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavBarCubit, NavBarState>(
-      builder: (context, state) {
+    return BlocListener<NavBarCubit, NavBarState>(
+      listener: (context, state) {
         if (state is NavBarLoaded) {
-          return PopScope(
+          // Only track tab changes, don't auto-refresh
+        }
+      },
+      child: BlocBuilder<NavBarCubit, NavBarState>(
+        builder: (context, state) {
+          if (state is NavBarLoaded) {
+            return PopScope(
             canPop: false,
             onPopInvoked: (didPop) async {
               if (didPop) return;
@@ -62,14 +76,15 @@ class MainNavigationScreenBody extends StatelessWidget {
               bottomNavigationBar: _buildBottomNavigationBar(context, state),
             ),
           );
-        }
+          }
 
-        // Loading state
-        return const Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: Center(child: CircularProgressIndicator()),
-        );
-      },
+          // Loading state
+          return const Scaffold(
+            backgroundColor: AppColors.scaffoldBackground,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        },
+      ),
     );
   }
 
@@ -112,9 +127,9 @@ class MainNavigationScreenBody extends StatelessWidget {
         context.read<NavBarCubit>().changeTab(navItem.index);
       },
       child: Container(
+        width: 16.w,
         padding: EdgeInsets.symmetric(
-          horizontal: context.responsiveMargin * 1.5,
-          vertical: context.responsiveMargin * 0.1,
+          vertical: context.responsiveMargin * 0.0,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -122,7 +137,8 @@ class MainNavigationScreenBody extends StatelessWidget {
             CustomSvgImage(
               assetName: navItem.isActive ? navItem.activeIcon : navItem.icon,
               color: navItem.isActive
-                  ? AppColors.black
+                  ? AppColors.
+                  primary
                   : AppColors.textSecondary,
               width: context.responsiveIconSize,
               height: context.responsiveIconSize,
@@ -131,9 +147,10 @@ class MainNavigationScreenBody extends StatelessWidget {
             SizedBox(height: context.responsiveMargin * 0.4),
             Text(
               navItem.label.tr(),
+              textAlign: TextAlign.center,
               style: TextStyles.textViewMedium12.copyWith(
                 color: navItem.isActive
-                    ? AppColors.black
+                    ? AppColors.primary
                     : AppColors.textSecondary,
                 fontSize: FontSizes.s12,
                 fontWeight: navItem.isActive

@@ -1,8 +1,8 @@
+import 'package:baqalty/core/widgets/custom_appbar.dart';
 import 'package:baqalty/core/widgets/custom_error_widget.dart';
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart';
 import 'package:baqalty/features/categories/business/cubit/category_cubit.dart';
 import 'package:baqalty/features/categories/data/models/categories_response_model.dart';
-import 'package:baqalty/features/categories/presentation/widgets/no_categories_widget.dart';
 import 'package:baqalty/features/categories/presentation/widgets/debounced_search_field.dart';
 import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
@@ -16,23 +16,28 @@ import 'package:baqalty/core/navigation_services/navigation_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
+import '../../../search/presentation/widgets/empty_list.dart' show BuildEmptyState;
 import 'subcategory_screen.dart';
 import 'categories_shimmer_view.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  final String? sharedCartId;
+  
+  const CategoriesScreen({super.key, this.sharedCartId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CategoryCubit(),
-      child: const CategoriesScreenBody(),
+      child: CategoriesScreenBody(sharedCartId: sharedCartId),
     );
   }
 }
 
 class CategoriesScreenBody extends StatefulWidget {
-  const CategoriesScreenBody({super.key});
+  final String? sharedCartId;
+  
+  const CategoriesScreenBody({super.key, this.sharedCartId});
 
   @override
   State<CategoriesScreenBody> createState() => _CategoriesScreenBodyState();
@@ -126,6 +131,8 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
           child: Column(
             children: [
               SizedBox(height: context.responsiveMargin * 2),
+             
+          widget.sharedCartId != null?  CustomAppBar(title: "categories".tr(),):
               Text(
                 "categories".tr(),
                 style: TextStyles.textViewBold18.copyWith(
@@ -176,13 +183,14 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
       child: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: context.responsiveMargin * 2),
-            Text(
-              "categories".tr(),
-              style: TextStyles.textViewBold18.copyWith(
-                color: AppColors.textPrimary,
+            SizedBox(height:widget.sharedCartId != null? 0: context.responsiveMargin * 2),
+          widget.sharedCartId != null?  CustomAppBar(title: "categories".tr(),):
+              Text(
+                "categories".tr(),
+                style: TextStyles.textViewBold18.copyWith(
+                  color: AppColors.textPrimary,
+                ),
               ),
-            ),
             SizedBox(height: context.responsiveMargin),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -222,17 +230,7 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
     String searchQuery,
   ) {
     if (categories.isEmpty) {
-      return SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: NoCategoriesWidget(
-          isSearchResult: searchQuery.isNotEmpty,
-          onRetry: searchQuery.isEmpty
-              ? () {
-                  context.read<CategoryCubit>().getParentCategories();
-                }
-              : null,
-        ),
-      );
+      return BuildEmptyState(context,isSearchResult: searchQuery.isNotEmpty);
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -309,6 +307,7 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
               SubcategoryScreen(
                 categoryName: category.catName,
                 categoryId: category.catId.toString(),
+                sharedCartId: widget.sharedCartId,
               ),
             );
           },
@@ -332,7 +331,7 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
                       context.responsiveBorderRadius,
                     ),
                     child: CustomCachedImage(
-                      imageUrl: category.catImage!,
+                      imageUrl: category.catImage ?? '',
                       width: context.responsiveIconSize * 2,
                       height: context.responsiveIconSize * 2,
                       fit: BoxFit.cover,

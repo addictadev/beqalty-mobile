@@ -360,7 +360,7 @@ class OrderDetailsScreenBody extends StatelessWidget {
           Text(
             "${item.total} ${"egp".tr()}",
             style: TextStyles.textViewMedium14.copyWith(
-              color: AppColors.primary,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -399,7 +399,7 @@ class OrderDetailsScreenBody extends StatelessWidget {
             "${orderDetails.deliveryFees} ${"egp".tr()}"),
           if (double.parse(orderDetails.discountValue) > 0)
             _buildSummaryRow(context, "discount".tr(), 
-              "-${orderDetails.discountValue} ${"egp".tr()}", isDiscount: true),
+              "- ${orderDetails.discountValue} ${"egp".tr()}", isDiscount: true),
           Divider(color: AppColors.borderLight),
           _buildSummaryRow(context, "total".tr(), 
             "${orderDetails.totalPrice} ${"egp".tr()}", isTotal: true),
@@ -423,9 +423,9 @@ class OrderDetailsScreenBody extends StatelessWidget {
           Text(
             value,
             style: isTotal 
-              ? TextStyles.textViewBold16.copyWith(color: AppColors.primary)
+              ? TextStyles.textViewBold16.copyWith(color: AppColors.textPrimary)
               : TextStyles.textViewMedium14.copyWith(
-                  color: isDiscount ? AppColors.error : AppColors.textPrimary,
+                  color: isDiscount ? AppColors.success : AppColors.textPrimary,
                 ),
           ),
         ],
@@ -488,8 +488,8 @@ class OrderDetailsScreenBody extends StatelessWidget {
           ),
           Text(
             "${payment.amount} ${"egp".tr()}",
-            style: TextStyles.textViewMedium14.copyWith(
-              color: AppColors.primary,
+            style: TextStyles.textViewMedium16.copyWith(
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -526,7 +526,6 @@ class OrderDetailsScreenBody extends StatelessWidget {
             children: [
               Icon(
                 Iconsax.map,
-                color: AppColors.primary,
                 size: context.responsiveIconSize * 1.2,
               ),
               SizedBox(width: context.responsiveMargin),

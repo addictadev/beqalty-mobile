@@ -43,15 +43,15 @@ class ProfileMenuItem extends StatelessWidget {
               children: [
                 // Icon container
                 Container(
-                  width: context.responsiveIconSize * 1.8,
-                  height: context.responsiveIconSize * 1.8,
+                  width: context.responsiveIconSize * 1.95,
+                  height: context.responsiveIconSize * 1.95,
                   decoration: BoxDecoration(
                     color: AppColors.bgProfile,
                     borderRadius: BorderRadius.circular(
-                      context.responsiveBorderRadius * 0.8,
+                      context.responsiveBorderRadius * 1.2,
                     ),
                   ),
-                  padding: EdgeInsets.all(2.5.w),
+                  padding: EdgeInsets.all(2.8.w),
 
                   child: CustomSvgImage(
                     assetName: iconPath,
