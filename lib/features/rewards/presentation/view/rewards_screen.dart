@@ -356,7 +356,7 @@ class _RewardsViewState extends State<RewardsView> {
                   itemCount: state.loyaltyData.transactions.length,
                   itemBuilder: (context, index) {
                     final transaction = state.loyaltyData.transactions[index];
-                    return _buildLoyaltyOfferItem(transaction);
+                    return _buildLoyaltyOfferItem(transaction, state.loyaltyData.balance);
                   },
                 );
               }
@@ -460,7 +460,13 @@ class _RewardsViewState extends State<RewardsView> {
     );
   }
 
-  Widget _buildLoyaltyOfferItem(transaction) {
+  Widget _buildLoyaltyOfferItem(transaction, int currentBalance) {
+    // Parse required points from string to int
+    final requiredPoints = double.tryParse(transaction.pricePoints)?.toInt() ?? 0;
+    
+    // Check if user can redeem: balance > 0 AND balance >= required points
+    final canRedeem = currentBalance > 0 && currentBalance >= requiredPoints && transaction.isActive;
+    
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: context.responsivePadding,
@@ -522,22 +528,19 @@ class _RewardsViewState extends State<RewardsView> {
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-         
-              PrimaryButton(
-                height: 4.5.h,
-                width: 20.w,
-                fontSize: 12.sp,
-                onPressed: transaction.isActive 
-                  ? () => _onLoyaltyOfferGetPressed(transaction)
-                  : null,
-              text: "get".tr(),
+          if (canRedeem)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                PrimaryButton(
+                  height: 4.5.h,
+                  width: 20.w,
+                  fontSize: 12.sp,
+                  onPressed: () => _onLoyaltyOfferGetPressed(transaction),
+                  text: "get".tr(),
                 ),
-              
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );

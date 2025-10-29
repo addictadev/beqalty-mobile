@@ -19,10 +19,41 @@ class FavoriteItemsResponseModel {
 
   /// Creates a FavoriteItemsResponseModel from JSON data
   factory FavoriteItemsResponseModel.fromJson(Map<String, dynamic> json) {
+    final dataValue = json['data'];
+    
+    // Handle both cases: data as array or data as object
+    FavoriteItemsDataModel dataModel;
+    if (dataValue is List) {
+      // Data is a direct array of products
+      dataModel = FavoriteItemsDataModel(
+        products: dataValue
+            .map((item) => FavoriteItemModel.fromJson(item as Map<String, dynamic>))
+            .toList(),
+        warehouse: FavoriteWarehouseModel(
+          available: false,
+          message: '',
+          warehouse: null,
+        ),
+      );
+    } else if (dataValue is Map<String, dynamic>) {
+      // Data is an object with products and warehouse
+      dataModel = FavoriteItemsDataModel.fromJson(dataValue);
+    } else {
+      // Fallback: empty data
+      dataModel = FavoriteItemsDataModel(
+        products: [],
+        warehouse: FavoriteWarehouseModel(
+          available: false,
+          message: '',
+          warehouse: null,
+        ),
+      );
+    }
+    
     return FavoriteItemsResponseModel(
       success: json['success'] as bool? ?? false,
       message: json['message'] as String? ?? '',
-      data: FavoriteItemsDataModel.fromJson(json['data'] as Map<String, dynamic>),
+      data: dataModel,
       code: json['code'] as int? ?? 0,
       timestamp: json['timestamp'] as String? ?? '',
     );
@@ -80,7 +111,13 @@ class FavoriteItemsDataModel extends Equatable {
       products: (json['products'] as List<dynamic>?)
           ?.map((item) => FavoriteItemModel.fromJson(item as Map<String, dynamic>))
           .toList() ?? [],
-      warehouse: FavoriteWarehouseModel.fromJson(json['warehouse'] as Map<String, dynamic>),
+      warehouse: json['warehouse'] != null
+          ? FavoriteWarehouseModel.fromJson(json['warehouse'] as Map<String, dynamic>)
+          : FavoriteWarehouseModel(
+              available: false,
+              message: '',
+              warehouse: null,
+            ),
     );
   }
 

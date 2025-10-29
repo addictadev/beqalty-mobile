@@ -2,21 +2,20 @@ import 'package:baqalty/core/widgets/custom_appbar.dart' show CustomAppBar;
 import 'package:baqalty/features/auth/presentation/widgets/auth_background_widget.dart'
     show AuthBackgroundWidget;
 import 'package:baqalty/features/categories/business/cubit/category_cubit.dart';
-import 'package:baqalty/features/categories/data/models/categories_response_model.dart';
+import 'package:baqalty/features/categories/business/cubit/subcategory_products_cubit.dart';
 import 'package:baqalty/core/widgets/custom_error_widget.dart';
-import 'package:baqalty/core/images_preview/custom_cashed_network_image.dart';
+import 'package:baqalty/features/categories/presentation/widgets/category_grid_view.dart';
 import 'package:baqalty/features/search/presentation/widgets/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
-import 'package:baqalty/core/navigation_services/navigation_manager.dart';
-import 'package:baqalty/features/categories/presentation/widgets/debounced_search_field.dart';
 import 'package:baqalty/features/categories/presentation/view/categories_shimmer_view.dart';
+import 'package:baqalty/core/widgets/custom_textform_field.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:math' as math;
-import 'subcategory_products_screen.dart';
+import 'package:sizer/sizer.dart';
+import 'package:iconsax/iconsax.dart';
 
 class SubcategoryScreen extends StatelessWidget {
   final String categoryName;
@@ -32,8 +31,15 @@ class SubcategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CategoryCubit()..getSubcategories(categoryId),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => CategoryCubit()..getSubcategories(categoryId),
+        ),
+        BlocProvider(
+          create: (context) => SubcategoryProductsCubit(),
+        ),
+      ],
       child: SubcategoryScreenBody(
         categoryName: categoryName,
         categoryId: categoryId,
@@ -59,61 +65,23 @@ class SubcategoryScreenBody extends StatefulWidget {
   State<SubcategoryScreenBody> createState() => _SubcategoryScreenBodyState();
 }
 
-class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late List<AnimationController> _itemAnimationControllers;
-  late List<Animation<double>> _itemAnimations;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeAnimations();
-  }
-
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    // Create staggered animations for each subcategory item
-    _itemAnimationControllers = List.generate(
-      12, // Maximum number of subcategories
-      (index) => AnimationController(
-        duration: const Duration(milliseconds: 600),
-        vsync: this,
-      ),
-    );
-
-    _itemAnimations = _itemAnimationControllers.map((controller) {
-      return Tween<double>(
-        begin: 0.0,
-        end: 1.0,
-      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
-    }).toList();
-  }
-
-  void _startAnimations() {
-    _animationController.forward();
-
-    // Stagger the item animations
-    for (int i = 0; i < _itemAnimationControllers.length; i++) {
-      Future.delayed(Duration(milliseconds: 100 * i), () {
-        if (mounted) {
-          _itemAnimationControllers[i].forward();
-        }
-      });
-    }
-  }
+class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody> {
+  final TextEditingController _searchController = TextEditingController();
+  String? _selectedSubcategoryId;
 
   @override
   void dispose() {
-    _animationController.dispose();
-    for (var controller in _itemAnimationControllers) {
-      controller.dispose();
-    }
+    _searchController.dispose();
     super.dispose();
+  }
+
+  void _onSubcategorySelected(String subcategoryId) {
+    setState(() {
+      _selectedSubcategoryId = subcategoryId;
+    });
+
+    // Load products for selected subcategory
+    context.read<SubcategoryProductsCubit>().loadSubcategoryProducts(subcategoryId);
   }
 
   @override
@@ -121,17 +89,31 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: BlocBuilder<CategoryCubit, CategoryState>(
-        builder: (context, state) {
-          if (state is SubCategoryLoading) {
+        builder: (context, categoryState) {
+          if (categoryState is SubCategoryLoading) {
             return _buildLoadingState(context);
           }
 
-          if (state is SubCategoryError) {
-            return _buildErrorState(context, state.message);
+          if (categoryState is SubCategoryError) {
+            return _buildErrorState(context, categoryState.message);
           }
 
-          if (state is SubCategoryLoaded) {
-            return _buildLoadedState(context, state);
+          if (categoryState is SubCategoryLoaded) {
+            // Show empty state if no subcategories
+            if (categoryState.allSubcategories.isEmpty) {
+              return _buildEmptySubcategoriesState(context);
+            }
+
+            // Auto-select first subcategory on initial load
+            if (_selectedSubcategoryId == null && categoryState.allSubcategories.isNotEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _onSubcategorySelected(
+                  categoryState.allSubcategories.first.catId.toString(),
+                );
+              });
+            }
+
+            return _buildLoadedState(context, categoryState);
           }
 
           return _buildLoadingState(context);
@@ -151,11 +133,10 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
               padding: EdgeInsets.symmetric(
                 horizontal: context.responsivePadding,
               ),
-              child: DebouncedSearchField(
-                hint: "search_subcategories".tr(),
-                onSearch: (query) {},
-                debounceDuration: const Duration(milliseconds: 300),
-                showClearButton: false,
+              child: CustomTextFormField(
+                controller: _searchController,
+                hint: "search_products".tr(),
+                prefixIcon: Icon(Iconsax.search_normal_1),
               ),
             ),
             SizedBox(height: context.responsiveMargin * 2),
@@ -177,11 +158,10 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
               padding: EdgeInsets.symmetric(
                 horizontal: context.responsivePadding,
               ),
-              child: DebouncedSearchField(
-                hint: "search_subcategories".tr(),
-                onSearch: (query) {},
-                debounceDuration: const Duration(milliseconds: 300),
-                showClearButton: false,
+              child: CustomTextFormField(
+                controller: _searchController,
+                hint: "search_products".tr(),
+                prefixIcon: Icon(Iconsax.search_normal_1),
               ),
             ),
             SizedBox(height: context.responsiveMargin * 2),
@@ -209,7 +189,142 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
     );
   }
 
-  Widget _buildLoadedState(BuildContext context, SubCategoryLoaded state) {
+  Widget _buildLoadedState(BuildContext context, SubCategoryLoaded categoryState) {
+    return AuthBackgroundWidget(
+      child: SafeArea(
+        child: Column(
+          children: [
+            CustomAppBar(title: widget.categoryName),
+            SizedBox(height: context.responsiveMargin),
+            
+            // Search Bar
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsivePadding,
+              ),
+              child: CustomTextFormField(
+                controller: _searchController,
+                hint: "search_products".tr(),
+                prefixIcon: Icon(
+                  Iconsax.search_normal_1,
+                  color: AppColors.textSecondary,
+                ),
+                onChanged: (value) {
+                  context.read<SubcategoryProductsCubit>().searchProducts(value);
+                },
+              ),
+            ),
+            
+            SizedBox(height: context.responsiveMargin),
+            
+            // Subcategory Filter Tabs
+            if (categoryState.allSubcategories.isNotEmpty)
+              _buildSubcategoryTabs(context, categoryState),
+            
+            SizedBox(height: context.responsiveMargin),
+            
+            // Products Grid
+            Expanded(
+              child: BlocBuilder<SubcategoryProductsCubit, SubcategoryProductsState>(
+                builder: (context, productsState) {
+                  if (productsState is SubcategoryProductsLoading) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(color: AppColors.primary),
+                          SizedBox(height: context.responsiveMargin),
+                          Text(
+                            "loading_products".tr(),
+                            style: TextStyles.textViewMedium14.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (productsState is SubcategoryProductsError) {
+                    return Center(
+                      child: CustomErrorWidget(
+                        message: productsState.message,
+                        onRetry: () {
+                          if (_selectedSubcategoryId != null) {
+                            context.read<SubcategoryProductsCubit>().loadSubcategoryProducts(_selectedSubcategoryId!);
+                          }
+                        },
+                      ),
+                    );
+                  } else if (productsState is SubcategoryProductsLoaded) {
+                    if (productsState.products.isEmpty) {
+                      return BuildEmptyState(
+                        context,
+                        isSearchResult: productsState.searchQuery.isNotEmpty,
+                      );
+                    }
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        if (_selectedSubcategoryId != null) {
+                          await context.read<SubcategoryProductsCubit>().refreshProducts();
+                        }
+                      },
+                      child: CategoryGridView(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.9,
+                        mainAxisSpacing: 2.w,
+                        products: productsState.products,
+                        onLoadMore: productsState.hasMoreProducts
+                            ? () {
+                                context.read<SubcategoryProductsCubit>().loadMoreProducts();
+                              }
+                            : null,
+                        isLoadingMore: false,
+                        sharedCartId: widget.sharedCartId,
+                        showHeader: false,
+                      ),
+                    );
+                  }
+                  // Show empty state if no subcategory selected yet
+                  if (_selectedSubcategoryId == null) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Iconsax.category,
+                            size: 20.w,
+                            color: AppColors.textSecondary.withOpacity(0.5),
+                          ),
+                          SizedBox(height: context.responsiveMargin * 2),
+                          Text(
+                            "no_subcategories_found".tr(),
+                            style: TextStyles.textViewBold18.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: context.responsiveMargin),
+                          Text(
+                            "categories_will_appear_here".tr(),
+                            style: TextStyles.textViewRegular14.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return SizedBox.shrink();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptySubcategoriesState(BuildContext context) {
     return AuthBackgroundWidget(
       child: SafeArea(
         child: Column(
@@ -220,24 +335,45 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
               padding: EdgeInsets.symmetric(
                 horizontal: context.responsivePadding,
               ),
-              child: DebouncedSearchField(
-                hint: "search_subcategories".tr(),
-                onSearch: (query) {
-                  context.read<CategoryCubit>().searchSubcategories(query);
-                },
-                debounceDuration: const Duration(milliseconds: 300),
-                showClearButton: true,
+              child: CustomTextFormField(
+                controller: _searchController,
+                hint: "search_products".tr(),
+                prefixIcon: Icon(Iconsax.search_normal_1),
               ),
             ),
-            SizedBox(height: context.responsiveMargin * 2),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  context.read<CategoryCubit>().getSubcategories(
-                    widget.categoryId,
-                  );
-                },
-                child: _buildSubcategoriesGrid(context, state),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: context.responsivePadding * 2),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Iconsax.category,
+                        size: 20.w,
+                        color: AppColors.textSecondary.withOpacity(0.5),
+                      ),
+                      SizedBox(height: context.responsiveMargin * 2),
+                      Text(
+                        "no_subcategories_found".tr().isEmpty 
+                            ? "لا توجد أقسام فرعية" 
+                            : "no_subcategories_found".tr(),
+                        style: TextStyles.textViewBold18.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: context.responsiveMargin),
+                      Text(
+                        "categories_will_appear_here".tr(),
+                        style: TextStyles.textViewRegular14.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -246,200 +382,68 @@ class _SubcategoryScreenBodyState extends State<SubcategoryScreenBody>
     );
   }
 
-  Widget _buildSubcategoriesGrid(
-    BuildContext context,
-    SubCategoryLoaded state,
-  ) {
-    if (state.allSubcategories.isEmpty) {
-      return  BuildEmptyState(context,isSearchResult: state.searchQuery.isNotEmpty);
-         
-        
-      
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startAnimations();
-    });
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
-      child: Column(
-        children: [
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.only(top: context.responsiveMargin * 2),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: context.responsiveMargin,
-                mainAxisSpacing: context.responsiveMargin,
-                childAspectRatio: 0.9,
-              ),
-              itemCount: state.allSubcategories.length,
-              itemBuilder: (context, index) {
-                final subcategory = state.allSubcategories[index];
-                final backgroundColor = _getRandomBackgroundColor(
-                  subcategory.catId,
-                );
-
-                return AnimatedBuilder(
-                  animation: index < _itemAnimations.length
-                      ? _itemAnimations[index]
-                      : _itemAnimations[0],
-                  builder: (context, child) {
-                    final animation = index < _itemAnimations.length
-                        ? _itemAnimations[index]
-                        : _itemAnimations[0];
-                    return Transform.scale(
-                      scale: animation.value,
-                      child: Transform.translate(
-                        offset: Offset(0, 50 * (1 - animation.value)),
-                        child: Opacity(
-                          opacity: animation.value.clamp(0.0, 1.0),
-                          child: _buildSubcategoryCard(
-                            context,
-                            subcategory: subcategory,
-                            backgroundColor: backgroundColor,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+  Widget _buildSubcategoryTabs(BuildContext context, SubCategoryLoaded state) {
+    return SizedBox(
+      height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: context.responsivePadding),
+        itemCount: state.allSubcategories.length,
+        itemBuilder: (context, index) {
+          final subcategory = state.allSubcategories[index];
+          final isSelected = _selectedSubcategoryId == subcategory.catId.toString();
+          
+          return _buildTabButton(
+            context: context,
+            label: subcategory.catName,
+            isSelected: isSelected,
+            onTap: () => _onSubcategorySelected(
+              subcategory.catId.toString(),
             ),
-          ),
-          // Load More Button
-          if (state.hasMore)
-            Padding(
-              padding: EdgeInsets.all(context.responsivePadding),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<CategoryCubit>().loadMoreSubcategories();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.white,
-                    padding: EdgeInsets.symmetric(
-                      vertical: context.responsivePadding,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        context.responsiveBorderRadius,
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    "load_more".tr(),
-                    style: TextStyles.textViewMedium14.copyWith(
-                      color: AppColors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildSubcategoryCard(
-    BuildContext context, {
-    required CategoryModel subcategory,
-    required Color backgroundColor,
+  Widget _buildTabButton({
+    required BuildContext context,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: EdgeInsets.only(right: context.responsiveMargin),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
-          onTap: () {
-            _onSubcategoryTap(context, subcategory);
-          },
-          child: Padding(
-            padding: EdgeInsets.all(context.responsivePadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: context.responsiveIconSize * 2,
-                  height: context.responsiveIconSize * 2,
-                  padding: EdgeInsets.all(context.responsivePadding / 2.5),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveBorderRadius,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveBorderRadius,
-                    ),
-                    child: CustomCachedImage(
-                      imageUrl: subcategory.displayImage,
-                      width: context.responsiveIconSize * 2,
-                      height: context.responsiveIconSize * 2,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(25),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.responsivePadding * 1.5,
+              vertical: context.responsivePadding * 0.8,
+            ),
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.primary : AppColors.white,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.grey.withOpacity(0.3),
+                width: 1.5,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyles.textViewMedium14.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.textSecondary,
                 ),
-                SizedBox(height: context.responsiveMargin),
-                Text(
-                  subcategory.catName,
-                  style: TextStyles.textViewMedium14.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Color _getRandomBackgroundColor(int categoryId) {
-    final pastelColors = [
-      const Color(0xFFFFE5E5),
-      const Color(0xFFFFF8E1),
-      const Color(0xFFE8F5E8),
-      const Color(0xFFE3F2FD),
-      const Color(0xFFFFF3E0),
-      const Color(0xFFF3E5F5),
-      const Color(0xFFE0F7FA),
-      const Color(0xFFFCE4EC),
-      const Color(0xFFF1F8E9),
-      const Color(0xFFFFF9C4),
-      const Color(0xFFE1BEE7),
-      const Color(0xFFFFCCBC),
-    ];
-
-    final random = math.Random(categoryId);
-    return pastelColors[random.nextInt(pastelColors.length)];
-  }
-
-  void _onSubcategoryTap(BuildContext context, CategoryModel subcategory) {
-    NavigationManager.navigateTo(
-      SubcategoryProductsScreen(
-        subcategoryName: subcategory.catName,
-        categoryName: widget.categoryName,
-        subcategoryId: subcategory.catId.toString(),
-        sharedCartId: widget.sharedCartId,
       ),
     );
   }
