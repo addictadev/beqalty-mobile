@@ -24,14 +24,16 @@ class AppAssets {
   static const String profileSavedCarts = "$_iconsPath/savedcarts.svg";
   static const String profileHeart = "$_iconsPath/Heart Open.svg";
   static const String profileSettings = "$_iconsPath/settings.svg";
-  static const String profileHelp = "$_iconsPath/help .svg";
+  static const String profileHelp = "$_iconsPath/help.svg";
   static const String profilePhone = "$_iconsPath/pho.svg";
+  static const String callIcon = "$_iconsPath/call.svg";
 
   static const String onboardingPattern = "$_imagesPath/on_boarding_patern.png";
   static const String profileCamera = "$_imagesPath/cam.png";
   static const String promotionalCard = "$_imagesPath/small_patern.png";
   static const String homeIcon = "$_iconsPath/home_icon.svg";
   static const String orderIcon = "$_iconsPath/orders_icon.svg";
+  static const String ordesrIcon = "$_iconsPath/orders.svg";
   static const String searchIcon = "$_iconsPath/search_icon.svg";
   static const String categoryIcon = "$_iconsPath/category_icon.svg";
   static const String profileIcon = "$_iconsPath/profile_icon.svg";

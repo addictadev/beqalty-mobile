@@ -115,9 +115,9 @@ class CustomCachedImage extends StatelessWidget {
       height: height,
       padding: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        // color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(2.w),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
+        // border: Border.all(color: Colors.grey.shade300, width: 1),
       ),
       child: 
       Image.asset(

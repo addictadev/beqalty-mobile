@@ -223,12 +223,9 @@ class _HomeViewBodyState extends State<HomeViewBody> with AutomaticKeepAliveClie
             style: TextStyles.textViewBold16.copyWith(
               color: AppColors.textPrimary,
             ),
-          ),
-        
-      
-
+          ),   
+  
         SizedBox(height: 2.h),
-
     if (homeData.data.discountedProducts.isNotEmpty)   SpecialOffersSection(
           discountProducts: homeData.data.discountedProducts,
           onViewAllTap: () {},

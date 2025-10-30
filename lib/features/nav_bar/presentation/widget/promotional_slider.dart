@@ -18,7 +18,7 @@ class PromotionalSlider extends StatefulWidget {
     this.height = 120,
     this.onCardTap,
     this.autoPlay = true,
-    this.autoPlayInterval = const Duration(seconds: 3),
+    this.autoPlayInterval = const Duration(seconds: 8),
     this.showIndicators = true,
   });
 
@@ -66,8 +66,8 @@ class _PromotionalSliderState extends State<PromotionalSlider> {
     final nextIndex = (_currentIndex + 1) % widget.cards.length;
     _pageController.animateToPage(
       nextIndex,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeInOutCubic,
     );
   }
 

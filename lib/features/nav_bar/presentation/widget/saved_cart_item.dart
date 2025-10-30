@@ -37,15 +37,15 @@ class SavedCartItem extends StatelessWidget {
           children: [
             // Shopping Bag Icon
             Container(
-              width: context.responsiveIconSize * 2.5,
+              width: context.responsiveIconSize * 2.7,
               height: context.responsiveIconSize * 2,
-              padding: EdgeInsets.all(context.responsivePadding * 0.8),
-              decoration: BoxDecoration(
-                color: AppColors.borderLight.withValues(alpha: .4),
-                borderRadius: BorderRadius.circular(
-                  context.responsiveBorderRadius,
-                ),
-              ),
+              padding: EdgeInsets.all(context.responsivePadding * 0.5),
+              // decoration: BoxDecoration(
+              //   color: AppColors.borderLight.withValues(alpha: .4),
+              //   borderRadius: BorderRadius.circular(
+              //     context.responsiveBorderRadius,
+              //   ),
+              // ),
               child: CustomSvgImage(
                 assetName: AppAssets.shoppingBag,
 

@@ -317,11 +317,11 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: context.responsiveIconSize * 2,
-                  height: context.responsiveIconSize * 2,
-                  padding: EdgeInsets.all(context.responsivePadding / 2.5),
+                  width: context.responsiveIconSize * 2.3,
+                  height: context.responsiveIconSize * 2.3,
+                  padding: EdgeInsets.all(context.responsivePadding / 5),
                   decoration: BoxDecoration(
-                    color: backgroundColor,
+                    // color: backgroundColor,
                     borderRadius: BorderRadius.circular(
                       context.responsiveBorderRadius,
                     ),
@@ -337,7 +337,7 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
                       fit: BoxFit.cover,
                       errorWidget: _buildErrorPlaceholder(backgroundColor),
                       placeholderWidget: _buildLoadingPlaceholder(
-                        backgroundColor,
+                        Colors.transparent,
                       ),
                     ),
                   ),
@@ -347,6 +347,7 @@ class _CategoriesScreenBodyState extends State<CategoriesScreenBody>
                   category.catName,
                   style: TextStyles.textViewMedium14.copyWith(
                     color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 2,

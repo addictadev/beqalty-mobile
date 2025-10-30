@@ -166,6 +166,8 @@ class _CheckoutScreenBodyState extends State<CheckoutScreenBody> {
         borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
         image: const DecorationImage(
           image: AssetImage(AppAssets.promotionalCard),
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.color),
+
           fit: BoxFit.cover,
         ),
       ),

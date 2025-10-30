@@ -45,18 +45,18 @@ class CategoryCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
+            SizedBox(
+              width: 12.w,
+              height: 12.w,
+              // decoration: BoxDecoration(
+              //   color: backgroundColor,
+              //   borderRadius: BorderRadius.circular(16),
+              // ),
               child: Center(
                 child: CustomCachedImage(
                   imageUrl: imageUrl ?? '',
-                  width: 40,
-                  height: 40,
+                  width: 40.w,
+                  height: 40.w,
                 ),
               ),
             ),
@@ -68,10 +68,10 @@ class CategoryCard extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 11.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
-                    height: 1.1,
+                    height: 1.2,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 2,

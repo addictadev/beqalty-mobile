@@ -149,7 +149,7 @@ class _CartScreenBodyState extends State<CartScreenBody> {
                         SizedBox(height: context.responsiveMargin * 2),
 
                         // Share Cart Section
-                        // if(state is CartLoaded && state.cartData.items.isNotEmpty) _buildShareCartSection(context),
+                       if(state is CartLoaded && state.cartData.items.isNotEmpty) _buildShareCartSection(context),
 
                         // Cart Items Section
                         _buildCartItemsSection(context, state),
@@ -181,7 +181,14 @@ class _CartScreenBodyState extends State<CartScreenBody> {
     Container(
       margin: EdgeInsets.symmetric(vertical: context.responsivePadding),
       padding: EdgeInsets.all(context.responsivePadding),
-      decoration: BoxDecoration(color: AppColors.primary),
+      decoration: BoxDecoration(color: AppColors.primary,
+        image: DecorationImage(
+          image: AssetImage(AppAssets.promotionalCard),
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.color),
+
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Row(
         children: [
           Container(

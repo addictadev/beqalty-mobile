@@ -162,16 +162,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildLoadingState() {
-    return AuthBackgroundWidget(
+    return 
+    
+    AuthBackgroundWidget(
       child: Scaffold(
         appBar: AppBar(
           title: Text("product_details".tr()),
           backgroundColor: Colors.transparent,
           elevation: 0,
+          leading:
+           IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.black,),
+          ),
         ),
         body: const Center(
           child: CircularProgressIndicator(),
         ),
+        
       ),
     );
   }
@@ -501,23 +509,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               onTap: () {
                
                if(!attribute.products[index].selected){
-                Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider<ProductDetailsCubit>(
-                              create: (context) => ProductDetailsCubit(
-                                ServiceLocator.get<ProductDetailsService>(),
-                              ),
-                            ),
-                            BlocProvider<CartCubit>(
-                              create: (context) => CartCubit(ServiceLocator.get<CartService>()),
-                            ),
-                          ],
-                          child: ProductDetailsScreen(productId: product.productId),
-                        ),
-                      ),
-                    );
+            
+            context.read<ProductDetailsCubit>().getProductDetails(product.productId);
+            
+            
                }
               },
               child: Container(
@@ -529,15 +524,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   color: product.selected ? AppColors.primary : AppColors.white,
                  
                  border: Border.all(color:
-                  AppColors.primary),
+
+                  product.selected ? AppColors.primary : AppColors.grey),
                   borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
                 ),
                 child: Text(
                   '${product.name} \n${product.finalPrice}${'egp'.tr()}',
                   textAlign: TextAlign.center,
                   style: TextStyles.textViewMedium14.copyWith(
-                    
-                    color: product.selected ? AppColors.white : AppColors.primary,
+                    color: product.selected ? AppColors.white : AppColors.grey,
                   ),
                 ),
               ),

@@ -822,6 +822,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         color: AppColors.textPrimary,
         image: DecorationImage(
           image: AssetImage(AppAssets.promotionalCard),
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.color),
           fit: BoxFit.cover,
         ),
         borderRadius: BorderRadius.circular(

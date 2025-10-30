@@ -4,6 +4,7 @@ import 'package:baqalty/core/theme/app_colors.dart';
 import 'package:baqalty/core/utils/responsive_utils.dart';
 import 'package:baqalty/core/utils/styles/styles.dart';
 import 'package:baqalty/core/images_preview/custom_svg_img.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sizer/sizer.dart';
 
 class ProfileMenuItem extends StatelessWidget {
@@ -46,7 +47,7 @@ class ProfileMenuItem extends StatelessWidget {
                   width: context.responsiveIconSize * 1.95,
                   height: context.responsiveIconSize * 1.95,
                   decoration: BoxDecoration(
-                    color: AppColors.bgProfile,
+                    color: AppColors.primary.withOpacity(.1),
                     borderRadius: BorderRadius.circular(
                       context.responsiveBorderRadius * 1.2,
                     ),
@@ -57,6 +58,7 @@ class ProfileMenuItem extends StatelessWidget {
                     assetName: iconPath,
                     width: context.responsiveIconSize * 0.1,
                     height: context.responsiveIconSize * 0.1,
+                    color: title == "contact".tr() ? AppColors.primary.withOpacity(.7) : null,
                   ),
                 ),
 

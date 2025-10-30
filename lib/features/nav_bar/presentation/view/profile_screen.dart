@@ -216,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                           ),
                       
                           ProfileMenuItem(
-                            iconPath: AppAssets.profileOrders,
+                            iconPath: AppAssets.ordesrIcon,
                             title: "orders".tr(),
                             onTap: () {
                              final navBarCubit = context.read<NavBarCubit>();
